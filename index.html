@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexa-Vault | Private Terminal</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="app-wrapper">
+    <header class="top-nav">
+        <div class="logo-area">
+            <span class="logo-text">NEXA-VAULT</span>
+        </div>
+    </header>
+
+    <main class="gate-container">
+        <section class="danger-box">
+            <h3 class="danger-title">⚠️ अत्यंत महत्वपूर्ण चेतावनी</h3>
+            <p class="danger-msg">
+                अपनी **FREE FIRE UID** और **NICKNAME** डालने में गलती न करें। 
+                गलत डेटा होने पर आपका **PAYMENT REQUEST** तुरंत **REJECT** कर दिया जाएगा। 
+                Nexa-Vault कोई रिफंड नहीं देता।
+            </p>
+        </section>
+
+        <div class="auth-card">
+            <div class="input-field">
+                <label>GAMER UID (FREE FIRE)</label>
+                <input type="number" id="uidInput" placeholder="उदा: 1029384756">
+            </div>
+
+            <div class="input-field">
+                <label>IN-GAME NICKNAME</label>
+                <input type="text" id="nickInput" placeholder="उदा: SHADOW_PRO">
+            </div>
+
+            <div class="latin-shield">
+                <strong>LEGALIS TERMS (CAVEAT EMPTOR):</strong><br>
+                Nexa-Vault non est reus damni moralis. Minimum withdrawal ₹4,000. 
+                Referral commission 10% instant credit setup.
+            </div>
+
+            <label class="terms-label" style="font-size: 11px; cursor: pointer;">
+                <input type="checkbox" id="termsCheck"> I AGREE TO ALL RISK FACTORS
+            </label>
+
+            <button id="enterBtn" class="main-btn" disabled style="margin-top: 20px;">INITIALIZE VAULT SYNC</button>
+        </div>
+    </main>
+</div>
+
+<script src="engine.js"></script>
+</body>
+</html>
+
