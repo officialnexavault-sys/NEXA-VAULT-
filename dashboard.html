@@ -3,83 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexa-Vault | Dashboard</title>
+    <title>Nexa-Vault | Prime</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --neon: #00f2ff; --bg: #050505; --card: #111; --gold: #ffd700; }
-        body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; padding: 20px; text-align: center; }
-        .logo { font-size: 24px; color: var(--neon); font-weight: bold; letter-spacing: 2px; margin-bottom: 30px; }
-        .wallet { background: linear-gradient(145deg, #1a1a1a, #000); border: 1px solid var(--gold); border-radius: 15px; padding: 20px; margin-bottom: 20px; }
-        .game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .card { background: var(--card); border: 1px solid #222; border-radius: 12px; padding: 15px; }
-        .p-bar { background: #222; height: 10px; border-radius: 5px; margin: 10px 0; overflow: hidden; }
-        .p-fill { background: var(--neon); width: 2%; height: 100%; box-shadow: 0 0 10px var(--neon); }
-        .btn { width: 100%; padding: 12px; background: var(--neon); color: black; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        :root { --neon: #00f2ff; --gold: #ffd700; --bg: #0a0a0b; --card: #16161a; }
+        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 80px; overflow-x: hidden; }
+        
+        /* Top Header & Logo */
+        .header { background: rgba(0,0,0,0.8); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 1000; }
+        .logo-box { display: flex; align-items: center; gap: 10px; }
+        .logo-img { width: 35px; height: 35px; background: var(--neon); border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 10px var(--neon); }
+        .logo-text { font-family: 'Orbitron'; font-size: 16px; color: var(--neon); }
+
+        /* Wallet Section */
+        .premium-wallet { margin: 20px; background: linear-gradient(135deg, #1e1e26, #0a0a0b); border: 1px solid var(--gold); border-radius: 20px; padding: 20px; position: relative; overflow: hidden; }
+        .premium-wallet::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent, rgba(255,215,0,0.1), transparent); transform: rotate(45deg); animation: shine 3s infinite; }
+        @keyframes shine { 0% { left: -100%; } 100% { left: 100%; } }
+
+        /* 3D Game Cards (Flipkart Style) */
+        .section-title { margin: 0 20px 15px; font-family: 'Orbitron'; font-size: 14px; color: #888; display: flex; justify-content: space-between; }
+        .game-scroll { display: flex; gap: 15px; overflow-x: auto; padding: 0 20px; scrollbar-width: none; }
+        .game-card-3d { min-width: 140px; height: 180px; background: var(--card); border-radius: 15px; border: 1px solid #333; transition: 0.3s; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 15px; }
+        .game-card-3d:active { transform: scale(0.95) rotateY(10deg); border-color: var(--neon); }
+        .game-icon { width: 60px; height: 60px; margin-bottom: 20px; filter: drop-shadow(0 0 10px var(--neon)); }
+
+        /* Diamond Purchase Section */
+        .bundle-grid { padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .bundle-item { background: #1c1c21; border-radius: 12px; padding: 15px; text-align: center; border: 1px solid #222; }
+        .diamond-count { color: var(--neon); font-weight: bold; font-size: 18px; }
+        .price-tag { color: var(--gold); font-size: 12px; margin-top: 5px; }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #222; display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; }
+        .nav-item { font-size: 10px; color: #555; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .nav-item.active { color: var(--neon); }
+        .nav-icon { width: 20px; height: 20px; background: #222; border-radius: 4px; }
+
+        /* Progress Quest */
+        .quest-box { margin: 25px 20px; background: #111; padding: 15px; border-radius: 15px; border-left: 4px solid var(--gold); }
     </style>
 </head>
 <body>
 
-    <div class="logo">NEXA-VAULT</div>
-
-    <div class="wallet">
-        <div style="font-size: 10px; color: var(--gold);">EARNINGS</div>
-        <div id="bal" style="font-size: 30px; margin: 10px 0;">₹0.00</div>
-        <button onclick="window.location.href='withdraw.html'" style="background:transparent; border:1px solid var(--neon); color:var(--neon); padding:5px 15px; border-radius:5px; font-size:12px;">WITHDRAW</button>
+    <div class="header">
+        <div class="logo-box">
+            <div class="logo-img"></div> <span class="logo-text">NEXA-VAULT</span>
+        </div>
+        <div style="font-size: 10px; color: #00ff00;">● LIVE</div>
     </div>
 
-    <div class="game-grid">
-        <div class="card">
-            <div style="font-size:12px; color:var(--neon);">FREE FIRE</div>
-            <p style="font-size:10px; color:#666;">Earn ₹1 per loop</p>
-            <button id="adBtn" onclick="startAds()" class="btn">START ADS</button>
+    <div class="premium-wallet">
+        <div style="font-size: 10px; color: var(--gold); letter-spacing: 2px;">VAULT BALANCE</div>
+        <div style="font-size: 32px; font-family: 'Orbitron'; margin: 5px 0;">₹0.00</div>
+        <div style="font-size: 10px; color: #666;">ID: <span id="display-uid">SYNCING...</span></div>
+    </div>
+
+    <div class="section-title"><span>TOP GAMES</span> <span>View All</span></div>
+    <div class="game-scroll">
+        <div class="game-card-3d" onclick="alert('Starting FF Ad-Loop...')">
+            <img src="https://img.icons8.com/color/96/free-fire.png" class="game-icon">
+            <span style="font-size: 12px; font-weight: bold;">FREE FIRE</span>
+            <span style="font-size: 9px; color: var(--neon);">EARN MODE</span>
         </div>
-        <div class="card" style="opacity:0.5;">
-            <div style="font-size:12px; color:#666;">BGMI</div>
-            <button disabled class="btn" style="background:#333;">LOCKED</button>
+        <div class="game-card-3d">
+            <img src="https://img.icons8.com/color/96/pubg.png" class="game-icon">
+            <span style="font-size: 12px; font-weight: bold;">BGMI</span>
+            <span style="font-size: 9px; color: #555;">COMING SOON</span>
+        </div>
+        <div class="game-card-3d">
+            <img src="https://img.icons8.com/color/96/minecraft.png" class="game-icon">
+            <span style="font-size: 12px; font-weight: bold;">MINECRAFT</span>
+            <span style="font-size: 9px; color: #555;">LOCKED</span>
         </div>
     </div>
 
-    <div class="card" style="margin-top: 25px; border-color: var(--gold);">
-        <div id="setup-area">
-            <p style="font-size:12px;">पसंदीदा फोन का नाम डालें:</p>
-            <input type="text" id="p-name" placeholder="उदा: IPHONE 16" style="width:80%; padding:10px; background:#000; border:1px solid #333; color:white; border-radius:5px; margin-bottom:10px;">
-            <button onclick="setDream()" class="btn" style="background:var(--gold);">SET GOAL</button>
+    <div class="section-title" style="margin-top: 30px;"><span>DIAMOND BUNDLES</span></div>
+    <div class="bundle-grid">
+        <div class="bundle-item">
+            <div class="diamond-count">💎 100+10</div>
+            <div class="price-tag">₹80.00</div>
+            <button style="width:100%; margin-top:10px; background:var(--neon); border:none; padding:5px; border-radius:5px; font-size:10px; font-weight:bold;">BUY</button>
         </div>
-        <div id="active-area" style="display:none;">
-            <div style="color:var(--gold); font-size:14px; font-weight:bold;">QUEST: <span id="goal-name"></span></div>
-            <div class="p-bar"><div class="p-fill"></div></div>
-            <div style="font-size:10px; color:#555;">0/300 Referrals</div>
+        <div class="bundle-item">
+            <div class="diamond-count">💎 310+33</div>
+            <div class="price-tag">₹240.00</div>
+            <button style="width:100%; margin-top:10px; background:var(--neon); border:none; padding:5px; border-radius:5px; font-size:10px; font-weight:bold;">BUY</button>
         </div>
     </div>
+
+    <div class="quest-box">
+        <div style="color: var(--gold); font-size: 12px; font-weight: bold;">📱 DREAM DEVICE QUEST</div>
+        <p id="target-phone" style="font-size: 14px; margin: 5px 0; color: var(--neon);">NOT SET</p>
+        <div style="background: #222; height: 6px; border-radius: 3px; margin: 10px 0;"><div style="background: var(--neon); width: 2%; height: 100%;"></div></div>
+        <div style="font-size: 9px; color: #555;">Progress: 0/300 Referrals</div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active"><div class="nav-icon" style="background: var(--neon);"></div>HOME</a>
+        <a href="withdraw.html" class="nav-item"><div class="nav-icon"></div>WALLET</a>
+        <a href="#" class="nav-item"><div class="nav-icon"></div>GAMES</a>
+        <a href="admin.html" class="nav-item"><div class="nav-icon"></div>ADMIN</a>
+    </nav>
 
     <script>
-        // एड लूप और पैसा बढ़ने का लॉजिक
-        let balance = 0;
-        function startAds() {
-            let btn = document.getElementById('adBtn');
-            btn.disabled = true;
-            let count = 0;
-            let loop = setInterval(() => {
-                count++;
-                btn.innerText = "AD " + count + "/5...";
-                if(count >= 5) {
-                    clearInterval(loop);
-                    balance += 1;
-                    document.getElementById('bal').innerText = "₹" + balance.toFixed(2);
-                    btn.disabled = false;
-                    btn.innerText = "START ADS";
-                    alert("₹1 जोड़ा गया!");
-                }
-            }, 3000); // 3 सेकंड का एड
-        }
-
-        function setDream() {
-            let name = document.getElementById('p-name').value;
-            if(name) {
-                document.getElementById('setup-area').style.display = 'none';
-                document.getElementById('active-area').style.display = 'block';
-                document.getElementById('goal-name').innerText = name.toUpperCase();
-            }
-        }
+        // UID और गेम फेच करना
+        document.getElementById('display-uid').innerText = localStorage.getItem('nexa_uid') || "NOT FOUND";
+        document.getElementById('target-phone').innerText = localStorage.getItem('user_dream_phone') || "TAP TO SET DREAM";
     </script>
+
 </body>
 </html>
