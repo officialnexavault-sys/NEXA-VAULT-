@@ -3,85 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexa-Vault | Secure Access</title>
+    <title>Nexa-Vault | Access Gate</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-
-<div class="app-wrapper" id="auth-container">
-    <span class="logo-text" style="display:block; margin-bottom:30px;">NEXA-VAULT</span>
+<div class="app-wrapper">
+    <span class="logo-text">NEXA-VAULT</span>
 
     <div id="step-1" class="auth-card">
-        <h3 style="font-size: 14px; margin-bottom: 20px; color:#888;">SYSTEM AUTHENTICATION</h3>
-        <button onclick="nextStep(2)" class="main-btn" style="background: white; color: black; display: flex; align-items: center; justify-content: center; gap: 10px; opacity:1;">
-            <img src="https://www.google.com/favicon.ico" width="20"> SIGN IN WITH GOOGLE
+        <button onclick="document.getElementById('step-1').style.display='none'; document.getElementById('step-2').style.display='block';" class="main-btn" style="background:white; color:black; opacity:1;">
+            <img src="https://www.google.com/favicon.ico" width="18"> SIGN IN WITH GOOGLE
         </button>
-        <p style="font-size: 10px; color: #555; margin-top: 15px;">SECURE 256-BIT ENCRYPTION ACTIVE</p>
     </div>
 
-    <div id="step-2" class="auth-card" style="display: none;">
-        <h3 style="font-size: 14px; margin-bottom: 20px; color:var(--neon-cyan);">CHOOSE YOUR GAME</h3>
-        <div class="game-select-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <button class="game-opt" onclick="selectGame('FREE FIRE')">FREE FIRE</button>
-            <button class="game-opt" onclick="selectGame('BGMI')">BGMI</button>
-            <button class="game-opt" onclick="selectGame('MINECRAFT')">MINECRAFT</button>
-            <button class="game-opt" onclick="selectGame('OTHERS')">OTHERS</button>
+    <div id="step-2" class="auth-card" style="display:none;">
+        <h4 style="font-size:12px; margin-bottom:15px; color:#00f2ff;">SELECT GAME</h4>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <button onclick="localStorage.setItem('game','FF'); document.getElementById('step-2').style.display='none'; document.getElementById('step-3').style.display='block';" class="game-opt" style="background:#000; border:1px solid #333; color:white; padding:10px; border-radius:5px;">FREE FIRE</button>
+            <button onclick="localStorage.setItem('game','BGMI'); document.getElementById('step-2').style.display='none'; document.getElementById('step-3').style.display='block';" class="game-opt" style="background:#000; border:1px solid #333; color:white; padding:10px; border-radius:5px;">BGMI</button>
         </div>
     </div>
 
-    <div id="step-3" class="auth-card" style="display: none;">
-        <div class="danger-box" style="margin-top: 0; border-color:#ff3333; background:rgba(255,51,51,0.1);">
-            <span style="color: #ff3333; font-size: 10px; font-weight: bold;">⚠️ WARNING: WRONG ID = REJECTED</span>
-        </div>
-        <h4 id="selected-game-name" style="color: var(--neon-cyan); font-size: 12px; margin: 15px 0;"></h4>
+    <div id="step-3" class="auth-card" style="display:none;">
+        <input type="number" id="u_id" placeholder="ENTER UID" style="width:100%; padding:12px; margin-bottom:10px; background:#000; border:1px solid #333; color:white; border-radius:8px;">
+        <input type="text" id="u_nick" placeholder="NICKNAME" style="width:100%; padding:12px; margin-bottom:15px; background:#000; border:1px solid #333; color:white; border-radius:8px;">
         
-        <div class="input-field" style="text-align:left; margin-bottom:15px;">
-            <label style="font-size:10px; color:#666;">ENTER PLAYER UID</label>
-            <input type="number" id="final-uid" placeholder="Enter UID..." style="width:100%; padding:12px; background:#000; border:1px solid #333; color:#fff; border-radius:8px;">
-        </div>
-        <div class="input-field" style="text-align:left; margin-bottom:20px;">
-            <label style="font-size:10px; color:#666;">ENTER PLAYER NAME</label>
-            <input type="text" id="final-nick" placeholder="Enter Nickname..." style="width:100%; padding:12px; background:#000; border:1px solid #333; color:#fff; border-radius:8px;">
-        </div>
-
-        <button onclick="finalizeSync()" class="main-btn" style="opacity:1;">CONFIRM & ENTER VAULT</button>
+        <button onclick="if(document.getElementById('u_id').value.length > 5){ window.location.href='dashboard.html'; }else{ alert('ID सही डालें!'); }" class="main-btn" style="opacity:1;">CONFIRM & ENTER</button>
     </div>
 </div>
-
-<script>
-    function nextStep(step) {
-        document.getElementById('step-1').style.display = 'none';
-        document.getElementById('step-2').style.display = 'none';
-        document.getElementById('step-3').style.display = 'none';
-        document.getElementById('step-' + step).style.display = 'block';
-    }
-
-    function selectGame(game) {
-        localStorage.setItem('selected_game', game);
-        document.getElementById('selected-game-name').innerText = "LINKING TO: " + game;
-        nextStep(3);
-    }
-
-    function finalizeSync() {
-        const uid = document.getElementById('final-uid').value;
-        const nick = document.getElementById('final-nick').value;
-        
-        if(uid.length > 5 && nick.length > 2) {
-            localStorage.setItem('nexa_uid', uid);
-            localStorage.setItem('nexa_nick', nick);
-            alert("SYNC SUCCESSFUL! WELCOME AGENT.");
-            window.location.href = "dashboard.html";
-        } else {
-            alert("कृपया सही UID और नाम भरें!");
-        }
-    }
-</script>
-
-<style>
-    .game-opt { background: #000; border: 1px solid #333; color: white; padding: 15px; border-radius: 10px; cursor: pointer; font-family: 'Orbitron'; font-size: 10px; transition: 0.3s; }
-    .game-opt:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); }
-</style>
-
 </body>
 </html>
