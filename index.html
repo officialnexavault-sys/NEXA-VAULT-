@@ -3,56 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexa-Vault | Private Terminal</title>
+    <title>Nexa-Vault | Secure Access</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<div class="app-wrapper">
-    <header class="top-nav">
-        <div class="logo-area">
-            <span class="logo-text">NEXA-VAULT</span>
+<div class="app-wrapper" id="auth-container">
+    <span class="logo-text">NEXA-VAULT</span>
+
+    <div id="step-1" class="auth-card">
+        <h3 style="font-size: 14px; margin-bottom: 20px;">SYSTEM AUTHENTICATION</h3>
+        <button onclick="nextStep(2)" class="main-btn" style="background: white; color: black; display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <img src="https://www.google.com/favicon.ico" width="20"> SIGN IN WITH GOOGLE
+        </button>
+        <p style="font-size: 10px; color: #555; margin-top: 15px;">SECURE 256-BIT ENCRYPTION ACTIVE</p>
+    </div>
+
+    <div id="step-2" class="auth-card" style="display: none;">
+        <h3 style="font-size: 14px; margin-bottom: 20px;">CHOOSE YOUR GAME</h3>
+        <div class="game-select-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <button class="game-opt" onclick="selectGame('FREE FIRE')">FREE FIRE</button>
+            <button class="game-opt" onclick="selectGame('BGMI')">BGMI</button>
+            <button class="game-opt" onclick="selectGame('MINECRAFT')">MINECRAFT</button>
+            <button class="game-opt" onclick="selectGame('OTHERS')">OTHERS</button>
         </div>
-    </header>
+    </div>
 
-    <main class="gate-container">
-        <section class="danger-box">
-            <h3 class="danger-title">⚠️ अत्यंत महत्वपूर्ण चेतावनी</h3>
-            <p class="danger-msg">
-                अपनी **FREE FIRE UID** और **NICKNAME** डालने में गलती न करें। 
-                गलत डेटा होने पर आपका **PAYMENT REQUEST** तुरंत **REJECT** कर दिया जाएगा। 
-                Nexa-Vault कोई रिफंड नहीं देता।
-            </p>
-        </section>
-
-        <div class="auth-card">
-            <div class="input-field">
-                <label>GAMER UID (FREE FIRE)</label>
-                <input type="number" id="uidInput" placeholder="उदा: 1029384756">
-            </div>
-
-            <div class="input-field">
-                <label>IN-GAME NICKNAME</label>
-                <input type="text" id="nickInput" placeholder="उदा: SHADOW_PRO">
-            </div>
-
-            <div class="latin-shield">
-                <strong>LEGALIS TERMS (CAVEAT EMPTOR):</strong><br>
-                Nexa-Vault non est reus damni moralis. Minimum withdrawal ₹4,000. 
-                Referral commission 10% instant credit setup.
-            </div>
-
-            <label class="terms-label" style="font-size: 11px; cursor: pointer;">
-                <input type="checkbox" id="termsCheck"> I AGREE TO ALL RISK FACTORS
-            </label>
-
-            <button id="enterBtn" class="main-btn" disabled style="margin-top: 20px;">INITIALIZE VAULT SYNC</button>
+    <div id="step-3" class="auth-card" style="display: none;">
+        <div class="danger-box" style="margin-top: 0;">
+            <span style="color: #ff3333; font-size: 10px; font-weight: bold;">⚠️ WARNING: WRONG ID = REJECTED</span>
         </div>
-    </main>
+        <h4 id="selected-game-name" style="color: var(--neon-cyan); font-size: 12px;"></h4>
+        
+        <div class="input-field">
+            <label>ENTER PLAYER UID</label>
+            <input type="number" id="final-uid" placeholder="UID here...">
+        </div>
+        <div class="input-field">
+            <label>ENTER PLAYER NAME</label>
+            <input type="text" id="final-nick" placeholder="Name here...">
+        </div>
+
+        <button onclick="finalizeSync()" class="main-btn">CONFIRM & ENTER VAULT</button>
+    </div>
 </div>
 
-<script src="engine.js"></script>
+<script>
+    function nextStep(step) {
+        document.getElementById('step-1').style.display = 'none';
+        document.getElementById('step-2').style.display = 'none';
+        document.getElementById('step-3').style.display = 'none';
+        document.getElementById('step-' + step).style.display = 'block';
+    }
+
+    function selectGame(game) {
+        localStorage.setItem('selected_game', game);
+        document.getElementById('selected-game-name').innerText = "LINKING TO: " + game;
+        nextStep(3);
+    }
+
+    function finalizeSync() {
+        const uid = document.getElementById('final-uid').value;
+        const nick = document.getElementById('final-nick').value;
+        
+        if(uid.length > 5 && nick.length > 2) {
+            localStorage.setItem('nexa_uid', uid);
+            localStorage.setItem('nexa_nick', nick);
+            alert("SYNC SUCCESSFUL! WELCOME AGENT.");
+            window.location.href = "dashboard.html";
+        } else {
+            alert("कृपया सही UID और नाम भरें!");
+        }
+    }
+</script>
+
+<style>
+    .game-opt { background: #000; border: 1px solid #333; color: white; padding: 15px; border-radius: 10px; cursor: pointer; font-family: 'Orbitron'; font-size: 10px; transition: 0.3s; }
+    .game-opt:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); }
+</style>
+
 </body>
 </html>
-
