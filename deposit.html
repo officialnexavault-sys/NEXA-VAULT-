@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexa-Vault | Secure Deposit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --neon: #00f2ff; --bg: #000; --gold: #ffd700; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; padding: 20px; text-align: center; }
+        .logo { font-family: 'Orbitron'; font-size: 20px; color: var(--neon); margin-bottom: 30px; }
+        
+        .deposit-card { background: #111; border: 1px solid #222; border-radius: 20px; padding: 25px; max-width: 400px; margin: 0 auto; }
+        .qr-placeholder { width: 200px; height: 200px; background: white; margin: 0 auto 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; overflow: hidden; }
+        
+        .step-info { text-align: left; font-size: 11px; color: #888; margin-bottom: 20px; line-height: 1.6; }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        input { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; }
+        
+        .verify-btn { width: 100%; padding: 15px; background: var(--neon); color: black; border: none; border-radius: 10px; font-weight: bold; font-family: 'Orbitron'; cursor: pointer; }
+        .warning { font-size: 10px; color: #ff3333; margin-top: 15px; border: 1px dashed #ff3333; padding: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="logo">NEXA-VAULT DEPOSIT</div>
+
+    <div class="deposit-card">
+        <div class="qr-placeholder">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=YOUR_UPI_ID_HERE" alt="Scan to Pay">
+        </div>
+        
+        <div class="step-info">
+            1. ऊपर दिए गए QR कोड को किसी भी UPI ऐप (Paytm/GPay) से स्कैन करें।<br>
+            2. ₹4,000 (VIP Access) या डायमंड्स की राशि भुगतान करें।<br>
+            3. पेमेंट के बाद **UTR/Ref No.** यहाँ दर्ज करें।
+        </div>
+
+        <div class="input-group">
+            <label style="font-size: 10px;">TRANSACTION UTR NO. (12 Digits)</label>
+            <input type="number" id="utr" placeholder="Enter UTR Number">
+        </div>
+
+        <div class="input-group">
+            <label style="font-size: 10px;">UPLOAD PAYMENT SCREENSHOT</label>
+            <input type="file" id="screenshot" accept="image/*" style="border:none; padding: 5px;">
+        </div>
+
+        <button onclick="submitDeposit()" class="verify-btn">VERIFY DEPOSIT</button>
+
+        <div class="warning">
+            चेतावनी: यदि आपने बिना भुगतान किए फर्जी UTR डाला, तो आपकी ID को Nexa-Vault से हमेशा के लिए बैन (Blacklist) कर दिया जाएगा।
+        </div>
+    </div>
+
+    <script>
+        function submitDeposit() {
+            const utr = document.getElementById('utr').value;
+            if(utr.length === 12) {
+                alert("DEPOSIT REQUEST SENT!\nआपका ट्रांजैक्शन ID: " + utr + " वेरिफिकेशन के लिए एडमिन के पास भेज दिया गया है। 30 मिनट में वॉलेट अपडेट हो जाएगा।");
+                window.location.href = "dashboard.html";
+            } else {
+                alert("कृपया सही 12-अंकों का UTR नंबर डालें।");
+            }
+        }
+    </script>
+</body>
+</html>
+
