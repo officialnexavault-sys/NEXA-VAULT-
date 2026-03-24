@@ -10,18 +10,18 @@
 <body>
 
 <div class="app-wrapper" id="auth-container">
-    <span class="logo-text">NEXA-VAULT</span>
+    <span class="logo-text" style="display:block; margin-bottom:30px;">NEXA-VAULT</span>
 
     <div id="step-1" class="auth-card">
-        <h3 style="font-size: 14px; margin-bottom: 20px;">SYSTEM AUTHENTICATION</h3>
-        <button onclick="nextStep(2)" class="main-btn" style="background: white; color: black; display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <h3 style="font-size: 14px; margin-bottom: 20px; color:#888;">SYSTEM AUTHENTICATION</h3>
+        <button onclick="nextStep(2)" class="main-btn" style="background: white; color: black; display: flex; align-items: center; justify-content: center; gap: 10px; opacity:1;">
             <img src="https://www.google.com/favicon.ico" width="20"> SIGN IN WITH GOOGLE
         </button>
         <p style="font-size: 10px; color: #555; margin-top: 15px;">SECURE 256-BIT ENCRYPTION ACTIVE</p>
     </div>
 
     <div id="step-2" class="auth-card" style="display: none;">
-        <h3 style="font-size: 14px; margin-bottom: 20px;">CHOOSE YOUR GAME</h3>
+        <h3 style="font-size: 14px; margin-bottom: 20px; color:var(--neon-cyan);">CHOOSE YOUR GAME</h3>
         <div class="game-select-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
             <button class="game-opt" onclick="selectGame('FREE FIRE')">FREE FIRE</button>
             <button class="game-opt" onclick="selectGame('BGMI')">BGMI</button>
@@ -31,21 +31,21 @@
     </div>
 
     <div id="step-3" class="auth-card" style="display: none;">
-        <div class="danger-box" style="margin-top: 0;">
+        <div class="danger-box" style="margin-top: 0; border-color:#ff3333; background:rgba(255,51,51,0.1);">
             <span style="color: #ff3333; font-size: 10px; font-weight: bold;">⚠️ WARNING: WRONG ID = REJECTED</span>
         </div>
-        <h4 id="selected-game-name" style="color: var(--neon-cyan); font-size: 12px;"></h4>
+        <h4 id="selected-game-name" style="color: var(--neon-cyan); font-size: 12px; margin: 15px 0;"></h4>
         
-        <div class="input-field">
-            <label>ENTER PLAYER UID</label>
-            <input type="number" id="final-uid" placeholder="UID here...">
+        <div class="input-field" style="text-align:left; margin-bottom:15px;">
+            <label style="font-size:10px; color:#666;">ENTER PLAYER UID</label>
+            <input type="number" id="final-uid" placeholder="Enter UID..." style="width:100%; padding:12px; background:#000; border:1px solid #333; color:#fff; border-radius:8px;">
         </div>
-        <div class="input-field">
-            <label>ENTER PLAYER NAME</label>
-            <input type="text" id="final-nick" placeholder="Name here...">
+        <div class="input-field" style="text-align:left; margin-bottom:20px;">
+            <label style="font-size:10px; color:#666;">ENTER PLAYER NAME</label>
+            <input type="text" id="final-nick" placeholder="Enter Nickname..." style="width:100%; padding:12px; background:#000; border:1px solid #333; color:#fff; border-radius:8px;">
         </div>
 
-        <button onclick="finalizeSync()" class="main-btn">CONFIRM & ENTER VAULT</button>
+        <button onclick="finalizeSync()" class="main-btn" style="opacity:1;">CONFIRM & ENTER VAULT</button>
     </div>
 </div>
 
