@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexa-Vault | Game Library</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --neon: #00f2ff; --bg: #000; --card: #111; }
+        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding: 20px; text-align: center; }
+        .back-btn { display: block; text-align: left; color: var(--neon); text-decoration: none; font-size: 12px; margin-bottom: 20px; font-family: 'Orbitron'; }
+        
+        /* Pinterest Style Grid */
+        .game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .game-item { background: var(--card); border: 1px solid #222; border-radius: 15px; padding: 20px; transition: 0.3s; position: relative; overflow: hidden; }
+        .game-item:active { transform: scale(0.95); border-color: var(--neon); }
+        .game-item img { width: 60px; height: 60px; filter: drop-shadow(0 0 5px var(--neon)); margin-bottom: 10px; }
+        .game-item p { margin: 0; font-size: 11px; font-weight: bold; font-family: 'Orbitron'; letter-spacing: 1px; }
+        .badge { position: absolute; top: 5px; right: 5px; background: #ff3333; font-size: 8px; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <a href="dashboard.html" class="back-btn">< BACK TO VAULT</a>
+    <h2 style="font-family: 'Orbitron'; font-size: 18px; color: var(--neon); margin-bottom: 30px;">ALL VAULT GAMES</h2>
+
+    <div class="game-grid">
+        <div class="game-item" onclick="alert('Starting Free Fire Mode...')">
+            <span class="badge">HOT</span>
+            <img src="https://img.icons8.com/color/96/free-fire.png">
+            <p>FREE FIRE</p>
+        </div>
+
+        <div class="game-item">
+            <img src="https://img.icons8.com/color/96/pubg-mobile.png">
+            <p>BGMI</p>
+        </div>
+
+        <div class="game-item">
+            <img src="https://img.icons8.com/color/96/minecraft.png">
+            <p>MINECRAFT</p>
+        </div>
+
+        <div class="game-item">
+            <img src="https://img.icons8.com/color/96/cod-mobile.png">
+            <p>COD MOBILE</p>
+        </div>
+
+        <div class="game-item">
+            <img src="https://img.icons8.com/color/96/valorant.png">
+            <p>VALORANT M</p>
+        </div>
+
+        <div class="game-item">
+            <img src="https://img.icons8.com/color/96/roblox.png">
+            <p>ROBLOX</p>
+        </div>
+
+        <div class="game-item">
+            <img src="https://img.icons8.com/color/96/fortnite.png">
+            <p>WARZONE M</p>
+        </div>
+
+        <div class="game-item">
+            <img src="https://img.icons8.com/color/96/clash-of-clans.png">
+            <p>COC</p>
+        </div>
+
+        <div class="game-item">
+            <img src="https://img.icons8.com/color/96/8-ball-pool.png">
+            <p>8 BALL POOL</p>
+        </div>
+
+        <div class="game-item">
+            <img src="https://img.icons8.com/color/96/subway-surfers.png">
+            <p>SUBWAY SURF</p>
+        </div>
+    </div>
+
+    <p style="margin-top: 40px; font-size: 10px; color: #333;">NEXA-DATABASE v3.2 CONNECTED</p>
+
+</body>
+</html>
+
