@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexa-Vault | Admin Panel</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        .admin-card { background: #111; border: 1px solid var(--neon-cyan); border-radius: 20px; padding: 25px; margin-top: 20px; }
+        .request-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 12px; }
+        .request-table th { text-align: left; color: #666; padding: 10px; border-bottom: 1px solid #222; }
+        .request-table td { padding: 15px 10px; border-bottom: 1px solid #1a1a1a; }
+        .status-pending { color: #ffd700; font-weight: bold; }
+        .btn-approve { background: #00ff00; color: #000; border: none; padding: 5px 10px; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        .btn-reject { background: #ff3333; color: #fff; border: none; padding: 5px 10px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-left: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="app-wrapper" style="max-width: 600px;">
+    <header style="margin: 20px 0; display: flex; justify-content: space-between; align-items: center;">
+        <span class="logo-text" style="font-size: 18px; margin: 0;">NEXA-ADMIN</span>
+        <span style="font-size: 10px; color: var(--neon-cyan);">SYSTEM MASTER ACCESS</span>
+    </header>
+
+    <div class="admin-card">
+        <h2 style="font-family: 'Orbitron'; font-size: 16px; color: #fff; margin-bottom: 20px;">PENDING PAYOUT REQUESTS</h2>
+        
+        <table class="request-table">
+            <thead>
+                <tr>
+                    <th>UID / NICKNAME</th>
+                    <th>AMOUNT</th>
+                    <th>UPI ID</th>
+                    <th>ACTION</th>
+                </tr>
+            </thead>
+            <tbody id="request-list">
+                <tr>
+                    <td>1029384756<br><small style="color:#555;">Shadow_Gamer</small></td>
+                    <td style="color:#00f2ff;">₹400.00</td>
+                    <td>user@upi</td>
+                    <td>
+                        <button class="btn-approve" onclick="alert('Payment Approved!')">DONE</button>
+                        <button class="btn-reject" onclick="alert('Payment Rejected!')">X</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="admin-card" style="margin-top:20px; border-color: #ffd700;">
+        <h3 style="font-size: 12px; color: #ffd700;">DEPOSIT VERIFICATION (SCREENS)</h3>
+        <p style="font-size: 10px; color: #666;">यहाँ यूजर द्वारा भेजे गए ₹4,000 के डिपॉजिट स्क्रीनशॉट दिखेंगे।</p>
+    </div>
+</div>
+
+</body>
+</html>
+
