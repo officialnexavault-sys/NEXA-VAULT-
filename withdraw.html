@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexa-Vault | Secure Withdrawal</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        .withdraw-card { background: #111; border: 1px solid #222; border-radius: 20px; padding: 30px; margin-top: 20px; text-align: left; }
+        .method-box { background: #000; border: 1px solid #333; padding: 15px; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .method-box.active { border-color: var(--neon-cyan); box-shadow: 0 0 10px rgba(0,242,255,0.1); }
+        .limit-info { font-size: 11px; color: #666; margin-top: 15px; border-top: 1px solid #222; padding-top: 15px; }
+        .status-badge { background: rgba(255,215,0,0.1); color: #ffd700; font-size: 10px; padding: 4px 10px; border-radius: 5px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+    <header style="margin: 20px 0; display: flex; justify-content: space-between; align-items: center;">
+        <span class="logo-text" style="font-size: 18px; margin: 0;">NEXA-VAULT</span>
+        <span class="status-badge">PAYOUT: ONLINE</span>
+    </header>
+
+    <div class="withdraw-card">
+        <h2 style="font-family: 'Orbitron'; font-size: 18px; color: var(--neon-cyan); margin-bottom: 20px;">WITHDRAW FUNDS</h2>
+        
+        <div class="input-field">
+            <label>ENTER UPI ID (PhonePe/GPay/Paytm)</label>
+            <input type="text" id="upi-id" placeholder="example@ybl">
+        </div>
+
+        <div class="input-field">
+            <label>AMOUNT (INR)</label>
+            <input type="number" id="amount" placeholder="Minimum ₹400 for Referral">
+        </div>
+
+        <div class="method-box active">
+            <input type="radio" checked>
+            <span style="font-size: 13px; font-weight: bold;">INSTANT UPI TRANSFER</span>
+        </div>
+
+        <button class="main-btn" id="withdraw-btn">REQUEST PAYOUT</button>
+
+        <div class="limit-info">
+            <strong>नियम और शर्तें:</strong><br>
+            • गेमिंग वॉलेट विथड्रॉल लिमिट: ₹4,000<br>
+            • <span style="color: #00f2ff;">रेफरल बोनस (₹400) विथड्रॉल: तुरंत उपलब्ध (No Limit)</span><br>
+            • ट्रांजैक्शन 24 घंटे के भीतर आपके खाते में जमा हो जाएगा।
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('withdraw-btn').onclick = function() {
+        const upi = document.getElementById('upi-id').value;
+        const amt = document.getElementById('amount').value;
+
+        if(upi.includes('@') && amt >= 400) {
+            this.innerText = "PROCESSING...";
+            this.disabled = true;
+            setTimeout(() => {
+                alert("PAYOUT REQUEST SENT!\nआपका रेफरल बोनस सुरक्षित रूप से भेज दिया गया है। एडमिन द्वारा सत्यापित होने के बाद पैसा आपके खाते में आ जाएगा।");
+                window.location.href = "dashboard.html";
+            }, 2000);
+        } else {
+            alert("कृपया सही UPI ID और न्यूनतम ₹400 की राशि डालें।");
+        }
+    }
+</script>
+
+</body>
+</html>
+
