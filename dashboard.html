@@ -1,42 +1,85 @@
-<div class="quest-section" id="wishlist-area">
-    <div style="color: #ffd700; font-size: 12px; font-weight: bold; margin-bottom: 10px;">🏆 YOUR DREAM DEVICE QUEST</div>
-    
-    <div id="setup-wishlist">
-        <input type="text" id="phone-name" placeholder="Enter Your Dream Phone Name..." style="width:70%; padding:8px; background:#000; border:1px solid #333; color:#fff; font-size:10px; border-radius:5px;">
-        <button onclick="setGoal()" style="padding:8px; background:#ffd700; border:none; border-radius:5px; font-size:10px; font-weight:bold;">SET GOAL</button>
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexa-Vault | Dashboard</title>
+    <style>
+        :root { --neon: #00f2ff; --bg: #050505; --card: #111; --gold: #ffd700; }
+        body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; padding: 20px; text-align: center; }
+        .logo { font-size: 24px; color: var(--neon); font-weight: bold; letter-spacing: 2px; margin-bottom: 30px; }
+        .wallet { background: linear-gradient(145deg, #1a1a1a, #000); border: 1px solid var(--gold); border-radius: 15px; padding: 20px; margin-bottom: 20px; }
+        .game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .card { background: var(--card); border: 1px solid #222; border-radius: 12px; padding: 15px; }
+        .p-bar { background: #222; height: 10px; border-radius: 5px; margin: 10px 0; overflow: hidden; }
+        .p-fill { background: var(--neon); width: 2%; height: 100%; box-shadow: 0 0 10px var(--neon); }
+        .btn { width: 100%; padding: 12px; background: var(--neon); color: black; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="logo">NEXA-VAULT</div>
+
+    <div class="wallet">
+        <div style="font-size: 10px; color: var(--gold);">EARNINGS</div>
+        <div id="bal" style="font-size: 30px; margin: 10px 0;">₹0.00</div>
+        <button onclick="window.location.href='withdraw.html'" style="background:transparent; border:1px solid var(--neon); color:var(--neon); padding:5px 15px; border-radius:5px; font-size:12px;">WITHDRAW</button>
     </div>
 
-    <div id="active-goal" style="display:none;">
-        <p style="font-size: 11px; color: #fff; margin: 5px 0;">Goal: <span id="display-phone" style="color:#00f2ff; font-weight:bold;"></span></p>
-        <div class="p-bar"><div class="p-fill" id="goal-bar" style="width: 1%;"></div></div>
-        <div style="display: flex; justify-content: space-between; font-size: 9px; color: #555;">
-            <span id="prog-text">0/300 Referrals</span>
-            <span>Target: Premium Unlocked</span>
+    <div class="game-grid">
+        <div class="card">
+            <div style="font-size:12px; color:var(--neon);">FREE FIRE</div>
+            <p style="font-size:10px; color:#666;">Earn ₹1 per loop</p>
+            <button id="adBtn" onclick="startAds()" class="btn">START ADS</button>
+        </div>
+        <div class="card" style="opacity:0.5;">
+            <div style="font-size:12px; color:#666;">BGMI</div>
+            <button disabled class="btn" style="background:#333;">LOCKED</button>
         </div>
     </div>
-</div>
 
-<script>
-    function setGoal() {
-        const name = document.getElementById('phone-name').value;
-        if(name.trim() !== "") {
-            document.getElementById('setup-wishlist').style.display = 'none';
-            document.getElementById('active-goal').style.display = 'block';
-            document.getElementById('display-phone').innerText = name.toUpperCase();
-            localStorage.setItem('user_dream_phone', name);
-        } else {
-            alert("Please enter a phone name!");
+    <div class="card" style="margin-top: 25px; border-color: var(--gold);">
+        <div id="setup-area">
+            <p style="font-size:12px;">पसंदीदा फोन का नाम डालें:</p>
+            <input type="text" id="p-name" placeholder="उदा: IPHONE 16" style="width:80%; padding:10px; background:#000; border:1px solid #333; color:white; border-radius:5px; margin-bottom:10px;">
+            <button onclick="setDream()" class="btn" style="background:var(--gold);">SET GOAL</button>
+        </div>
+        <div id="active-area" style="display:none;">
+            <div style="color:var(--gold); font-size:14px; font-weight:bold;">QUEST: <span id="goal-name"></span></div>
+            <div class="p-bar"><div class="p-fill"></div></div>
+            <div style="font-size:10px; color:#555;">0/300 Referrals</div>
+        </div>
+    </div>
+
+    <script>
+        // एड लूप और पैसा बढ़ने का लॉजिक
+        let balance = 0;
+        function startAds() {
+            let btn = document.getElementById('adBtn');
+            btn.disabled = true;
+            let count = 0;
+            let loop = setInterval(() => {
+                count++;
+                btn.innerText = "AD " + count + "/5...";
+                if(count >= 5) {
+                    clearInterval(loop);
+                    balance += 1;
+                    document.getElementById('bal').innerText = "₹" + balance.toFixed(2);
+                    btn.disabled = false;
+                    btn.innerText = "START ADS";
+                    alert("₹1 जोड़ा गया!");
+                }
+            }, 3000); // 3 सेकंड का एड
         }
-    }
 
-    // अगर पहले से सेट है तो दिखाओ
-    window.onload = () => {
-        const savedPhone = localStorage.getItem('user_dream_phone');
-        if(savedPhone) {
-            document.getElementById('setup-wishlist').style.display = 'none';
-            document.getElementById('active-goal').style.display = 'block';
-            document.getElementById('display-phone').innerText = savedPhone.toUpperCase();
+        function setDream() {
+            let name = document.getElementById('p-name').value;
+            if(name) {
+                document.getElementById('setup-area').style.display = 'none';
+                document.getElementById('active-area').style.display = 'block';
+                document.getElementById('goal-name').innerText = name.toUpperCase();
+            }
         }
-    }
-</script>
-
+    </script>
+</body>
+</html>
