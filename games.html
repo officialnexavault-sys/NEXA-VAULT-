@@ -1,54 +1,56 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexa-Vault | Official Database</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        :root { --neon: #00f2ff; --bg: #000; --card: #151518; }
-        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding: 20px; text-align: center; }
-        .back-nav { display: flex; align-items: center; gap: 8px; color: var(--neon); text-decoration: none; font-size: 11px; margin-bottom: 30px; font-family: 'Orbitron'; }
-        
-        /* Premium Grid Design */
-        .game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .game-item { background: var(--card); border: 1px solid #222; border-radius: 20px; padding: 15px; transition: 0.3s; position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-        .game-item:active { transform: scale(0.95); border-color: var(--neon); }
-        
-        /* Official HD Logos */
-        .game-item img { width: 100%; max-width: 90px; height: 90px; border-radius: 18px; object-fit: cover; margin-bottom: 12px; border: 1px solid #333; }
-        .game-item p { margin: 0; font-size: 10px; font-weight: 800; font-family: 'Orbitron'; letter-spacing: 0.5px; color: #fff; text-transform: uppercase; }
-        .badge-hot { position: absolute; top: 10px; right: 10px; background: #ff0000; color: #fff; font-size: 8px; padding: 3px 7px; border-radius: 5px; font-weight: bold; box-shadow: 0 0 10px #ff0000; }
-    </style>
-</head>
-<body>
+<style>
+    .view-all-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* एक लाइन में 3 गेम */
+        gap: 12px;
+        padding: 20px;
+        background: #000;
+    }
+    .game-item {
+        background: #0a0a0a;
+        border: 1px solid #1a1a1a;
+        border-radius: 12px;
+        padding: 10px;
+        text-align: center;
+        transition: 0.3s;
+    }
+    .game-item img {
+        width: 100%;
+        border-radius: 10px;
+        margin-bottom: 6px;
+    }
+    .game-item span {
+        color: #eee;
+        font-size: 9px;
+        font-weight: 600;
+        display: block;
+        text-transform: uppercase;
+        font-family: 'Inter', sans-serif;
+    }
+</style>
 
-    <a href="dashboard.html" class="back-nav">← BACK TO VAULT</a>
-    <h2 style="font-family: 'Orbitron'; font-size: 16px; color: var(--neon); margin-bottom: 30px; letter-spacing: 2px;">GLOBAL GAME DATABASE</h2>
+<div class="view-all-grid">
+    <div class="game-item"><img src="assets/ff.png"><span>Free Fire</span></div>
+    <div class="game-item"><img src="assets/bgmi.png"><span>BGMI</span></div>
+    <div class="game-item"><img src="assets/cod.png"><span>COD Mobile</span></div>
+    <div class="game-item"><img src="assets/warzone.png"><span>Warzone</span></div>
+    <div class="game-item"><img src="assets/blood.png"><span>Blood Strike</span></div>
 
-    <div class="game-grid">
-        <div class="game-item"><span class="badge-hot">TRENDING</span><img src="https://m.media-amazon.com/images/I/719fI0-zX5L.png" alt="FF"><p>FREE FIRE MAX</p></div>
-        
-        <div class="game-item"><img src="https://m.media-amazon.com/images/I/51fS8K99N2L.png" alt="BGMI"><p>BGMI / PUBG</p></div>
-        
-        <div class="game-item"><img src="https://m.media-amazon.com/images/I/71R2o+6B7zL.png" alt="Warzone"><p>WARZONE M</p></div>
-        
-        <div class="game-item"><img src="https://m.media-amazon.com/images/I/412pNo390DL.png" alt="Minecraft"><p>MINECRAFT</p></div>
-        
-        <div class="game-item"><img src="https://pbs.twimg.com/profile_images/1271100523490795521/yU1p_S_V_400x400.jpg" alt="Valorant"><p>VALORANT M</p></div>
-        
-        <div class="game-item"><img src="https://m.media-amazon.com/images/I/81+mUfVl1WL.png" alt="CODM"><p>COD MOBILE</p></div>
+    <div class="game-item"><img src="assets/hok.png"><span>H.O.K</span></div>
+    <div class="game-item"><img src="assets/mlbb.png"><span>MLBB</span></div>
+    <div class="game-item"><img src="assets/coc.png"><span>C.O.C</span></div>
+    <div class="game-item"><img src="assets/royale.png"><span>C. Royale</span></div>
 
-        <div class="game-item"><img src="https://play-lh.googleusercontent.com/97yC5N1YQ5yZ6Y_rZ8E4_zVnS-zX9n_zX9n_zX9n_zX9n_zX9n_zX9n_zX9n_zX9n" alt="BloodStrike"><p>BLOOD STRIKE</p></div>
+    <div class="game-item"><img src="assets/val.png"><span>Valorant</span></div>
+    <div class="game-item"><img src="assets/cs2.png"><span>CS 2</span></div>
+    <div class="game-item"><img src="assets/gta5.png"><span>GTA V</span></div>
+    <div class="game-item"><img src="assets/mc_pc.png"><span>MC Java</span></div>
 
-        <div class="game-item"><img src="https://m.media-amazon.com/images/I/61L9pXo5r3L.png" alt="Roblox"><p>ROBLOX</p></div>
-
-        <div class="game-item"><img src="https://play-lh.googleusercontent.com/O61L_n8W0P4f-S4K5Z6a5z7v-zX9n_zX9n_zX9n_zX9n_zX9n_zX9n_zX9n_zX9n" alt="HoK"><p>HONOR OF KINGS</p></div>
-
-        <div class="game-item"><img src="https://m.media-amazon.com/images/I/81I-zX9-zXL.png" alt="COC"><p>CLASH OF CLANS</p></div>
-    </div>
-
-    <p style="margin-top: 40px; font-size: 8px; color: #333; font-family: 'Orbitron';">OFFICIAL LOGO DATABASE SYNC v5.0</p>
-
-</body>
-</html>
+    <div class="game-item"><img src="assets/asphalt.png"><span>Asphalt 9</span></div>
+    <div class="game-item"><img src="assets/farlight.png"><span>Farlight 84</span></div>
+    <div class="game-item"><img src="assets/stumble.png"><span>Stumble Guys</span></div>
+    <div class="game-item"><img src="assets/roblox.png"><span>Roblox</span></div>
+    <div class="game-item"><img src="assets/mc.png"><span>Minecraft</span></div>
+    <div class="game-item"><img src="assets/ludo.png"><span>Ludo King</span></div>
+    <div class="game-item"><img src="assets/pool.png"><span>8 Ball Pool</span></div>
+</div>
