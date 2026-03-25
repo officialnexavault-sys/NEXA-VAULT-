@@ -3,144 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexa Vault | Dynamic System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <title>Nexa Vault | Elite Business Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     
     <style>
-        :root { --cyan: #00f2ff; --bg: #050505; --card: #121212; --gold: #ffd700; }
+        :root { 
+            --bg: #050505; 
+            --card: #0d0d0d; 
+            --cyan: #00f2ff; 
+            --gold: #FFD700; 
+            --border: rgba(255, 255, 255, 0.05);
+        }
+        
         body { margin: 0; background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
-        /* 1. HEADER (Perfect Center & Safe) */
+        /* 🏆 ELITE HEADER */
         #nexa-header {
             position: sticky; top: 0; z-index: 1000;
-            display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
-            padding: 12px 18px; background: rgba(0, 0, 0, 0.98); backdrop-filter: blur(20px);
-            border-bottom: 1.5px solid rgba(0, 242, 255, 0.15); box-shadow: 0 5px 30px #000;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 20px; background: rgba(5, 5, 5, 0.98); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border); height: 62px;
         }
-        .header-center { display: flex; justify-content: center; }
-        .brand-text-ui { font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 800; color: #fff; text-shadow: 0 0 10px var(--cyan); letter-spacing: 2px; }
-        
-        .menu-btn { cursor: pointer; display: flex; flex-direction: column; gap: 5.5px; width: 26px; z-index: 1002; transition: 0.3s; }
-        .menu-btn span { width: 100%; height: 2px; background: #fff; border-radius: 10px; transition: 0.3s; }
-        .menu-btn.open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .menu-btn { cursor: pointer; display: flex; flex-direction: column; gap: 6px; width: 24px; z-index: 1100; }
+        .menu-btn span { width: 100%; height: 2px; background: #fff; border-radius: 5px; transition: 0.3s; }
+        .menu-btn.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
         .menu-btn.open span:nth-child(2) { opacity: 0; }
-        .menu-btn.open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+        .menu-btn.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
-        .header-logo { width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid var(--cyan); cursor: pointer; box-shadow: 0 0 10px rgba(0,242,255,0.2); }
+        .logo-box { width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid var(--gold); overflow: hidden; box-shadow: 0 0 15px rgba(255, 215, 0, 0.15); }
+        .logo-box img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* 2. SIDEBAR WITH PROFILE */
+        .header-center { position: absolute; left: 50%; transform: translateX(-50%); pointer-events: none; }
+        .brand-img { height: 38px; width: auto; filter: drop-shadow(0 0 8px rgba(255,255,255,0.2)); }
+
+        /* 📂 SIDEBAR CONTROL */
         #sidebar { 
-            position: fixed; top: 0; left: 0; width: 285px; height: 100%; 
-            background: #0a0a0a; z-index: 1001; transform: translateX(-100%); 
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-right: 1px solid #222;
+            position: fixed; top: 0; left: 0; width: 300px; height: 100%; 
+            background: #080808; z-index: 1050; transform: translateX(-100%); 
+            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border-right: 1px solid var(--border);
+            overflow-y: auto; scrollbar-width: none;
         }
-        #sidebar.active { transform: translateX(0); }
-        .side-profile { padding: 60px 20px 25px 20px; border-bottom: 1px solid #222; background: linear-gradient(180deg, rgba(0,242,255,0.05), transparent); }
-        .profile-img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--cyan); margin-bottom: 12px; }
-        .user-name { display: block; font-weight: 800; font-size: 16px; color: #fff; }
-        .user-meta { display: block; font-size: 10px; color: var(--cyan); margin-top: 4px; letter-spacing: 1px; }
+        #sidebar::-webkit-scrollbar { display: none; }
+        #sidebar.active { transform: translateX(0); box-shadow: 30px 0 60px rgba(0,0,0,0.9); }
 
-        /* 3. DYNAMIC CATEGORY SCROLL */
-        .category-wrapper { display: flex; gap: 18px; padding: 20px; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x mandatory; }
-        .category-wrapper::-webkit-scrollbar { display: none; }
-        .cat-node { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 65px; cursor: pointer; scroll-snap-align: center; transition: 0.3s; }
-        .node-icon-wrap { width: 62px; height: 62px; background: var(--card); border-radius: 18px; border: 1.5px solid #222; display: flex; align-items: center; justify-content: center; overflow: hidden; transition: 0.3s; }
-        .node-icon-wrap img { width: 100%; height: 100%; object-fit: cover; }
-        .cat-node.active .node-icon-wrap { border-color: var(--cyan); box-shadow: 0 0 15px rgba(0,242,255,0.4); transform: translateY(-3.5px); }
-        .node-label { font-size: 9px; color: #777; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-        .cat-node.active .node-label { color: #fff; }
+        .side-auth { padding: 75px 25px 30px 25px; border-bottom: 1px solid var(--border); }
+        .welcome-txt { font-size: 14px; color: var(--gold); font-weight: 800; letter-spacing: 1px; }
+        .login-btn { 
+            margin-top: 15px; width: 100%; padding: 14px; background: #fff; color: #000; 
+            border: none; border-radius: 14px; font-weight: 800; font-size: 12px; 
+            cursor: pointer; transition: 0.3s; 
+        }
 
-        #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); opacity: 0; pointer-events: none; z-index: 999; transition: 0.3s; }
+        .side-section { padding: 20px 25px; }
+        .section-label { font-size: 9px; color: #444; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; display: block; }
+        
+        .side-menu { display: flex; flex-direction: column; gap: 5px; }
+        .menu-item { 
+            color: #777; text-decoration: none; font-size: 14px; font-weight: 600; 
+            padding: 12px 15px; border-radius: 10px; display: flex; align-items: center; gap: 12px; 
+            transition: 0.3s ease; 
+        }
+        .menu-item:hover { color: #fff; background: rgba(255,255,255,0.02); transform: translateX(6px); }
+        .menu-item.active { 
+            color: var(--cyan); background: rgba(0, 242, 255, 0.04); 
+            border-left: 2px solid var(--cyan); border-radius: 0 10px 10px 0; 
+        }
+
+        #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); opacity: 0; pointer-events: none; z-index: 1040; transition: 0.4s; }
         #overlay.active { opacity: 1; pointer-events: auto; }
+
+        /* 🎮 DYNAMIC LIST */
+        .game-wrapper { display: flex; gap: 20px; padding: 25px 20px; overflow-x: auto; scrollbar-width: none; }
+        .game-node { display: flex; flex-direction: column; align-items: center; min-width: 72px; cursor: pointer; }
+        .game-img { width: 66px; height: 66px; background: #111; border-radius: 20px; border: 1.5px solid #1a1a1a; overflow: hidden; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .game-node.active .game-img { border-color: var(--cyan); box-shadow: 0 0 20px rgba(0,242,255,0.2); transform: translateY(-6px); }
+        .game-label { font-size: 9px; color: #444; font-weight: 800; margin-top: 12px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; max-width: 80px; }
+        .game-node.active .game-label { color: #fff; }
     </style>
 </head>
 <body>
 
     <header id="nexa-header">
-        <div style="display:flex; justify-content:flex-start;">
-            <div class="menu-btn" id="menuBtn" onclick="toggleMenu()">
-                <span></span><span></span><span></span>
-            </div>
+        <div class="header-left">
+            <div class="menu-btn" id="menuBtn" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+            <div class="logo-box"><img src="assets/logo.png" alt="X"></div>
         </div>
-        <div class="header-center"><span class="brand-text-ui">NEXA VAULT</span></div>
-        <div style="display:flex; justify-content:flex-end;">
-            <img src="assets/logo.png" alt="Logo" class="header-logo" onclick="location.reload()" onerror="this.src='https://cdn-icons-png.flaticon.com/512/811/811440.png'">
-        </div>
+        <div class="header-center"><img src="assets/nexa-vault-brand.png" alt="NEXA" class="brand-img"></div>
+        <div style="width:75px;"></div>
     </header>
 
     <div id="sidebar">
-        <div class="side-profile" onclick="location.reload()">
-            <img src="assets/logo.png" alt="P" class="profile-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
-            <span class="user-name">VALMIKI KUMAR</span>
-            <span class="user-meta">ID: NEXA-786 | BALANCE: ₹0.00</span>
+        <div class="side-auth">
+            <span class="welcome-txt">नमस्ते, GUEST</span>
+            <button class="login-btn" onclick="alert('Google Login Coming Soon 🚀')">LOGIN WITH GOOGLE</button>
+        </div>
+
+        <div class="side-section">
+            <span class="section-label">Main Menu</span>
+            <nav class="side-menu">
+                <a href="#" class="menu-item active">🎮 Explore Games</a>
+                <a href="#" class="menu-item">🔥 Trending</a>
+                <a href="#" class="menu-item">⭐ Featured Deals</a>
+            </nav>
+        </div>
+
+        <div class="side-section">
+            <span class="section-label">Inventory</span>
+            <nav class="side-menu">
+                <a href="#" class="menu-item">💰 My Wallet</a>
+                <a href="#" class="menu-item">📦 My Orders</a>
+            </nav>
+        </div>
+
+        <div class="side-section" style="margin-top:auto;">
+            <span class="section-label">Support</span>
+            <nav class="side-menu">
+                <a href="#" class="menu-item">📞 Contact Us</a>
+                <a href="#" class="menu-item">📜 Terms & Privacy</a>
+            </nav>
         </div>
     </div>
-    <div id="overlay" onclick="toggleMenu()"></div>
 
-    <div class="category-section">
-        <div class="category-wrapper" id="gameContainer">
-            </div>
-    </div>
+    <div id="overlay" onclick="toggleMenu()"></div>
+    <div class="game-wrapper" id="gameBox"></div>
 
     <script>
-        // 🚀 THE GAME ASSETS ENGINE (तुम्हारे फोल्डर की इमेजेस के हिसाब से)
-        const games = [
-            { id: 'ff', name: 'Free Fire' },
-            { id: 'bgmi', name: 'BGMI' },
-            { id: 'cod', name: 'COD Mobile' },
-            { id: 'coc', name: 'Clash Clans' },
-            { id: 'mc', name: 'Minecraft' },
-            { id: 'gta5', name: 'GTA 5' },
-            { id: 'asphalt', name: 'Asphalt 9' },
-            { id: 'roblox', name: 'Roblox' },
-            { id: 'ludo', name: 'Ludo King' },
-            { id: 'pool', name: '8 Ball Pool' },
-            { id: 'stumble', name: 'Stumble Guys' },
-            { id: 'val', name: 'Valorant' },
-            { id: 'cs2', name: 'CS 2' },
-            { id: 'mlbb', name: 'MLBB' },
-            { id: 'genshin', name: 'Genshin' },
-            { id: 'royale', name: 'Clash Royale' },
-            { id: 'hok', name: 'HOK' },
-            { id: 'farlight', name: 'Farlight 84' },
-            { id: 'blood', name: 'Blood Strike' },
-            { id: 'mc_pc', name: 'Minecraft PC' }
-        ];
-
-        const container = document.getElementById('gameContainer');
-
-        // 🛠️ AUTOMATIC GAME LOADER
-        games.forEach((game, index) => {
-            const node = document.createElement('div');
-            node.className = `cat-node ${index === 0 ? 'active' : ''}`;
-            node.onclick = function() { activateCat(this); };
-            
-            node.innerHTML = `
-                <div class="node-icon-wrap">
-                    <img src="assets/${game.id}.png" alt="${game.name}" 
-                         onerror="this.src='https://cdn-icons-png.flaticon.com/512/811/811440.png'; this.style.opacity='0.5'">
-                </div>
-                <span class="node-label">${game.name}</span>
-            `;
-            container.appendChild(node);
-        });
-
         function toggleMenu() {
-            const sidebar = document.getElementById('sidebar');
-            const btn = document.getElementById('menuBtn');
-            const over = document.getElementById('overlay');
-            const isOpen = sidebar.classList.toggle('active');
-            btn.classList.toggle('open', isOpen);
-            over.classList.toggle('active', isOpen);
+            document.getElementById('menuBtn').classList.toggle('open');
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
         }
 
-        function activateCat(el) {
-            document.querySelectorAll('.cat-node').forEach(n => n.classList.remove('active'));
-            el.classList.add('active');
-            el.scrollIntoView({ behavior: "smooth", inline: "center" });
-        }
+        // 🚀 ELITE GAME LOADER
+        const gameNames = {
+            ff: "Free Fire", bgmi: "BGMI", cod: "COD Mobile", coc: "Clash Clans",
+            mc: "Minecraft", gta5: "GTA 5", asphalt: "Asphalt 9", roblox: "Roblox",
+            ludo: "Ludo King", pool: "8 Ball Pool", stumble: "Stumble Guys", val: "Valorant",
+            cs2: "CS2", mlbb: "Mobile Legends", genshin: "Genshin", royale: "Clash Royale",
+            hok: "Honor Kings", farlight: "Farlight 84", blood: "Blood Strike", mc_pc: "Minecraft PC"
+        };
 
-        document.addEventListener('keydown', (e) => { if(e.key === 'Escape') { const s = document.getElementById('sidebar'); if(s.classList.contains('active')) toggleMenu(); } });
+        const list = Object.keys(gameNames);
+        const box = document.getElementById('gameBox');
+
+        list.forEach((id, i) => {
+            const el = document.createElement('div');
+            el.className = `game-node ${i===0?'active':''}`;
+            el.onclick = function() { 
+                document.querySelectorAll('.game-node').forEach(n=>n.classList.remove('active')); 
+                this.classList.add('active'); 
+                this.scrollIntoView({behavior:"smooth",inline:"center"}); 
+            };
+            el.innerHTML = `<div class="game-img"><img src="assets/${id}.png"></div><span class="game-label">${gameNames[id]}</span>`;
+            box.appendChild(el);
+        });
     </script>
 </body>
 </html>
