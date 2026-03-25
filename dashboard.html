@@ -3,140 +3,159 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nexa Vault | Dashboard</title>
+
+<title>Nexa Vault</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
 :root{
-    --cyan:#00f2ff;
-    --bg:#050505;
-    --glass:rgba(0,0,0,0.85);
+--cyan:#00f2ff;
+--bg:#050505;
+--gold:#ffd700;
 }
 
-/* BASE */
 body{
-    margin:0;
-    font-family:'Inter',sans-serif;
-    background:var(--bg);
-    color:#fff;
-    overflow-x:hidden;
-    padding-bottom:80px;
+margin:0;
+background:var(--bg);
+color:#fff;
+font-family:'Inter',sans-serif;
+padding-bottom:80px;
 }
 
 /* HEADER */
 #header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:12px 20px;
-    background:var(--glass);
-    backdrop-filter:blur(15px);
-    position:sticky;
-    top:0;
-    z-index:1000;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:12px 20px;
+background:rgba(0,0,0,0.85);
+backdrop-filter:blur(12px);
+position:sticky;
+top:0;
+z-index:1000;
 }
 
 #logo{
-    height:40px;
-    mix-blend-mode:screen;
-    filter:drop-shadow(0 0 8px var(--cyan));
+height:40px;
+filter:drop-shadow(0 0 12px rgba(0,242,255,0.7));
 }
 
-/* MENU BUTTON */
+/* MENU */
 #menu-btn{
-    width:28px;
-    height:18px;
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-    cursor:pointer;
+width:28px;
+height:18px;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+cursor:pointer;
 }
 
 #menu-btn span{
-    height:3px;
-    background:var(--cyan);
-    border-radius:10px;
-    transition:.4s;
+height:3px;
+background:var(--cyan);
+border-radius:10px;
+transition:.4s cubic-bezier(.68,-0.6,.32,1.6);
 }
 
 #menu-btn.active span:nth-child(1){
-    transform:translateY(7px) rotate(45deg);
+transform:translateY(7px) rotate(45deg);
 }
 #menu-btn.active span:nth-child(2){
-    opacity:0;
+opacity:0;
 }
 #menu-btn.active span:nth-child(3){
-    transform:translateY(-7px) rotate(-45deg);
+transform:translateY(-7px) rotate(-45deg);
 }
 
 /* SIDEBAR */
 #sidebar{
-    position:fixed;
-    top:0;
-    right:0;
-    transform:translateX(100%);
-    width:280px;
-    height:100%;
-    background:#0a0a0a;
-    padding:80px 20px;
-    transition:.5s;
-    z-index:1001;
+position:fixed;
+top:0;
+right:0;
+width:280px;
+height:100%;
+background:#0a0a0a;
+transform:translateX(100%);
+transition:.4s;
+padding:80px 20px;
+z-index:1001;
 }
+
 #sidebar.active{
-    transform:translateX(0);
+transform:translateX(0);
 }
 
 .nav-link{
-    display:block;
-    color:#aaa;
-    text-decoration:none;
-    padding:15px 0;
+display:block;
+color:#aaa;
+padding:15px 0;
+text-decoration:none;
 }
 .nav-link:hover{
-    color:var(--cyan);
+color:var(--cyan);
 }
 
 /* OVERLAY */
 #overlay{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.6);
-    opacity:0;
-    pointer-events:none;
-    transition:.3s;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.6);
+opacity:0;
+pointer-events:none;
+transition:.3s;
 }
 #overlay.active{
-    opacity:1;
-    pointer-events:auto;
+opacity:1;
+pointer-events:auto;
 }
 
 /* WALLET */
 .wallet{
-    margin:20px;
-    padding:20px;
-    border-radius:20px;
-    border:1px solid rgba(0,242,255,0.2);
+margin:20px;
+padding:25px;
+border-radius:20px;
+background:linear-gradient(135deg,#0a0a0a,#050505);
+border:1px solid rgba(255,215,0,0.3);
+box-shadow:0 0 25px rgba(0,0,0,0.6);
+}
+
+.label{
+color:var(--gold);
+font-size:12px;
 }
 
 .amount{
-    font-size:32px;
-    font-family:'Orbitron';
+font-size:36px;
+font-family:'Orbitron';
+text-shadow:0 0 10px rgba(0,242,255,0.4);
 }
 
-/* GAMES */
-.grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:15px;
-    padding:20px;
+/* GAME */
+.game-card{
+margin:20px;
+padding:20px;
+background:#111;
+border-radius:20px;
+text-align:center;
+border:1px solid #222;
+transition:.3s;
 }
 
-.card{
-    background:#111;
-    border-radius:15px;
-    padding:15px;
-    text-align:center;
+.game-card img{
+width:80px;
+border-radius:12px;
+}
+
+.game-card:hover{
+transform:translateY(-5px);
+border-color:var(--cyan);
+box-shadow:0 0 15px rgba(0,242,255,0.2);
+}
+
+.status{
+color:var(--cyan);
+font-size:12px;
 }
 </style>
 </head>
@@ -144,30 +163,31 @@ body{
 <body>
 
 <header id="header">
-    <img src="assets/Nexa-vault-brand.png" id="logo">
-    <div id="menu-btn">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
+<img src="./assets/nexa-vault-brand.png" id="logo">
+<div id="menu-btn">
+<span></span>
+<span></span>
+<span></span>
+</div>
 </header>
 
 <div id="sidebar">
-    <a href="#" class="nav-link">Dashboard</a>
-    <a href="wallet.html" class="nav-link">Wallet</a>
-    <a href="games.html" class="nav-link">Games</a>
+<a href="#" class="nav-link">Dashboard</a>
+<a href="wallet.html" class="nav-link">Wallet</a>
+<a href="games.html" class="nav-link">Games</a>
 </div>
 
 <div id="overlay"></div>
 
 <div class="wallet">
-    <div>Balance</div>
-    <div class="amount" id="balance">₹0</div>
+<div class="label">VAULT BALANCE</div>
+<div class="amount" id="balance">₹0</div>
 </div>
 
-<div class="grid">
-    <div class="card">FREE FIRE</div>
-    <div class="card">COMING SOON</div>
+<div class="game-card">
+<img src="assets/ff.png">
+<div>FREE FIRE</div>
+<span class="status">ACTIVE</span>
 </div>
 
 <script>
@@ -175,35 +195,32 @@ const btn=document.getElementById("menu-btn");
 const sidebar=document.getElementById("sidebar");
 const overlay=document.getElementById("overlay");
 
-btn.onclick=()=>{
-    btn.classList.toggle("active");
-    sidebar.classList.toggle("active");
-    overlay.classList.toggle("active");
-};
+function toggle(){
+btn.classList.toggle("active");
+sidebar.classList.toggle("active");
+overlay.classList.toggle("active");
+}
 
-overlay.onclick=()=>{
-    btn.classList.remove("active");
-    sidebar.classList.remove("active");
-    overlay.classList.remove("active");
-};
+btn.onclick=toggle;
+overlay.onclick=toggle;
 
 document.addEventListener("keydown",e=>{
-    if(e.key==="Escape"){
-        btn.classList.remove("active");
-        sidebar.classList.remove("active");
-        overlay.classList.remove("active");
-    }
+if(e.key==="Escape"){
+btn.classList.remove("active");
+sidebar.classList.remove("active");
+overlay.classList.remove("active");
+}
 });
 
-/* BALANCE ANIMATION */
-let val=0;
-let target=7860;
+/* BALANCE */
+let v=0;
+let t=7900;
 function run(){
-    if(val<target){
-        val+=Math.ceil(target/50);
-        document.getElementById("balance").innerText="₹"+val;
-        requestAnimationFrame(run);
-    }
+if(v<t){
+v+=Math.ceil(t/60);
+document.getElementById("balance").innerText="₹"+v;
+requestAnimationFrame(run);
+}
 }
 run();
 </script>
