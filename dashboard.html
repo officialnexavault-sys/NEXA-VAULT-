@@ -3,228 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexa Vault | Professional Master Dashboard</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <title>Nexa Vault | Dynamic System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     
     <style>
-        :root { --cyan: #00f2ff; --bg: #050505; --card: #151515; --red-hot: linear-gradient(45deg, #ff0000, #ff5f6d); }
-        
-        body { 
-            margin: 0; background: var(--bg); color: #fff; 
-            font-family: 'Inter', sans-serif; overflow-x: hidden; 
-            -webkit-tap-highlight-color: transparent;
-        }
+        :root { --cyan: #00f2ff; --bg: #050505; --card: #121212; --gold: #ffd700; }
+        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
-        /* 1. PREMIUM HEADER (Animated & Interactive) */
+        /* 1. HEADER (Perfect Center & Safe) */
         #nexa-header {
             position: sticky; top: 0; z-index: 1000;
-            display: flex; align-items: center; padding: 12px 20px;
-            background: rgba(0, 0, 0, 0.96); backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(0, 242, 255, 0.15);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.9); gap: 15px;
-            transform: translateZ(0);
+            display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+            padding: 12px 18px; background: rgba(0, 0, 0, 0.98); backdrop-filter: blur(20px);
+            border-bottom: 1.5px solid rgba(0, 242, 255, 0.15); box-shadow: 0 5px 30px #000;
         }
-
-        .menu-btn {
-            cursor: pointer; display: flex; flex-direction: column; 
-            justify-content: space-around; width: 24px; height: 18px;
-            z-index: 1002; border: none; background: none; padding: 0;
-        }
-        .menu-btn span {
-            width: 100%; height: 2px; background: #fff; border-radius: 10px;
-            transition: transform 0.3s cubic-bezier(0.68, -0.6, 0.32, 1.6), opacity 0.2s;
-        }
-        .menu-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-        .menu-btn.open span:nth-child(2) { opacity: 0; transform: translateX(-10px); }
-        .menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-        .nexa-logo-group { display: flex; align-items: center; gap: 12px; flex: 1; transition: 0.3s; cursor: pointer; }
-        .brand-logo-wrap { width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; position: relative; }
-        .brand-logo { height: 38px; width: 38px; border-radius: 50%; border: 1.5px solid var(--cyan); animation: logoPulse 4s infinite ease-in-out; }
-        .brand-text { height: 20px; width: auto; object-fit: contain; filter: drop-shadow(0 0 8px rgba(0,242,255,0.5)); }
-
-        @keyframes logoPulse { 0%, 100% { box-shadow: 0 0 5px rgba(0, 242, 255, 0.2); } 50% { box-shadow: 0 0 20px rgba(0, 242, 255, 0.5); } }
-
-        /* 2. CATEGORY SYSTEM (Flipkart Snap Style) */
-        .category-section { padding: 10px 0; }
-        .category-wrapper { 
-            display: flex; gap: 18px; padding: 15px 20px 25px 20px;
-            overflow-x: auto; scroll-behavior: smooth; 
-            scrollbar-width: none; scroll-snap-type: x mandatory;
-        }
-        .category-wrapper::-webkit-scrollbar { display: none; }
-
-        .cat-node {
-            display: flex; flex-direction: column; align-items: center; gap: 8px;
-            min-width: 65px; cursor: pointer; position: relative; transition: 0.3s;
-            scroll-snap-align: center; padding-top: 8px;
-        }
-
-        .badge-hot {
-            position: absolute; top: 0px; right: -5px;
-            background: var(--red-hot); color: white; font-size: 7px;
-            font-weight: 900; padding: 2px 6px; border-radius: 5px;
-            text-transform: uppercase; z-index: 10;
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
-            animation: pulseBadge 1.5s infinite;
-        }
-        @keyframes pulseBadge { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-
-        .node-icon-wrap {
-            width: 62px; height: 62px; background: var(--card);
-            border-radius: 18px; border: 1.5px solid #222;
-            display: flex; align-items: center; justify-content: center;
-            overflow: hidden; transition: 0.3s;
-        }
-        .node-icon-wrap img { width: 100%; height: 100%; object-fit: cover; }
-        .node-label { font-size: 10px; font-weight: 600; color: #777; white-space: nowrap; transition: 0.3s; }
-
-        .cat-node.active .node-icon-wrap { border-color: var(--cyan); box-shadow: 0 0 15px rgba(0, 242, 255, 0.4); background: rgba(0, 242, 255, 0.1); transform: translateY(-3px); }
-        .cat-node.active .node-label { color: #fff; }
-        .active-indicator { position: absolute; bottom: -12px; width: 0; height: 3px; background: var(--cyan); border-radius: 10px; transition: 0.4s; box-shadow: 0 0 10px var(--cyan); }
-        .cat-node.active .active-indicator { width: 32px; }
-
-        /* 3. ANIMATED PREMIUM BANNER */
-        .main-content { padding: 0 20px; }
-        .nexa-banner {
-            position: relative; width: 100%; height: 180px; background: #000;
-            border-radius: 25px; margin-top: 15px; overflow: hidden;
-            border: 1px solid rgba(0, 242, 255, 0.2);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
-            animation: bannerGlow 4s infinite ease-in-out;
-        }
-        @keyframes bannerGlow {
-            0%, 100% { border-color: rgba(0, 242, 255, 0.2); }
-            50% { border-color: rgba(0, 242, 255, 0.5); box-shadow: 0 10px 40px rgba(0, 242, 255, 0.15); }
-        }
-
-        .banner-img { position: absolute; right: -20px; bottom: -10px; height: 120%; opacity: 0.4; filter: drop-shadow(0 0 15px var(--cyan)); transform: rotate(-5deg); animation: floatImg 6s infinite ease-in-out; }
-        @keyframes floatImg { 0%, 100% { transform: rotate(-5deg) translateY(0); } 50% { transform: rotate(-3deg) translateY(-10px); } }
-
-        .banner-overlay { position: relative; z-index: 2; padding: 25px; display: flex; flex-direction: column; justify-content: center; height: 100%; background: linear-gradient(90deg, rgba(0,0,0,0.9) 30%, transparent 100%); }
-        .banner-tag { font-size: 8px; color: var(--cyan); letter-spacing: 2px; font-weight: 800; margin-bottom: 5px; }
-        .banner-title { font-family: 'Orbitron', sans-serif; font-size: 18px; margin: 0; color: #fff; text-shadow: 0 0 10px rgba(0, 242, 255, 0.5); }
-        .banner-desc { font-size: 10px; color: #aaa; margin: 5px 0 15px 0; }
+        .header-center { display: flex; justify-content: center; }
+        .brand-text-ui { font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 800; color: #fff; text-shadow: 0 0 10px var(--cyan); letter-spacing: 2px; }
         
-        .banner-btn { 
-            width: fit-content; padding: 10px 25px; background: var(--cyan); color: #000; 
-            border: none; border-radius: 10px; font-family: 'Orbitron', sans-serif; font-size: 11px; font-weight: 900; 
-            cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .banner-btn:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 25px rgba(0, 242, 255, 0.6); }
-        .banner-btn:active { transform: scale(0.95); }
+        .menu-btn { cursor: pointer; display: flex; flex-direction: column; gap: 5.5px; width: 26px; z-index: 1002; transition: 0.3s; }
+        .menu-btn span { width: 100%; height: 2px; background: #fff; border-radius: 10px; transition: 0.3s; }
+        .menu-btn.open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+        .menu-btn.open span:nth-child(2) { opacity: 0; }
+        .menu-btn.open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
 
-        /* 4. SIDEBAR & OVERLAY SYSTEM */
+        .header-logo { width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid var(--cyan); cursor: pointer; box-shadow: 0 0 10px rgba(0,242,255,0.2); }
+
+        /* 2. SIDEBAR WITH PROFILE */
         #sidebar { 
-            position: fixed; top: 0; left: 0; width: 280px; height: 100%; 
+            position: fixed; top: 0; left: 0; width: 285px; height: 100%; 
             background: #0a0a0a; z-index: 1001; transform: translateX(-100%); 
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-right: 1px solid #222;
-            padding: 80px 20px 20px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-right: 1px solid #222;
         }
         #sidebar.active { transform: translateX(0); }
+        .side-profile { padding: 60px 20px 25px 20px; border-bottom: 1px solid #222; background: linear-gradient(180deg, rgba(0,242,255,0.05), transparent); }
+        .profile-img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--cyan); margin-bottom: 12px; }
+        .user-name { display: block; font-weight: 800; font-size: 16px; color: #fff; }
+        .user-meta { display: block; font-size: 10px; color: var(--cyan); margin-top: 4px; letter-spacing: 1px; }
+
+        /* 3. DYNAMIC CATEGORY SCROLL */
+        .category-wrapper { display: flex; gap: 18px; padding: 20px; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x mandatory; }
+        .category-wrapper::-webkit-scrollbar { display: none; }
+        .cat-node { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 65px; cursor: pointer; scroll-snap-align: center; transition: 0.3s; }
+        .node-icon-wrap { width: 62px; height: 62px; background: var(--card); border-radius: 18px; border: 1.5px solid #222; display: flex; align-items: center; justify-content: center; overflow: hidden; transition: 0.3s; }
+        .node-icon-wrap img { width: 100%; height: 100%; object-fit: cover; }
+        .cat-node.active .node-icon-wrap { border-color: var(--cyan); box-shadow: 0 0 15px rgba(0,242,255,0.4); transform: translateY(-3.5px); }
+        .node-label { font-size: 9px; color: #777; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .cat-node.active .node-label { color: #fff; }
+
         #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); opacity: 0; pointer-events: none; z-index: 999; transition: 0.3s; }
         #overlay.active { opacity: 1; pointer-events: auto; }
-
-        .side-user-card { background: var(--card); padding: 15px; border-radius: 15px; border: 1px solid #222; }
-        .user-name { display: block; font-size: 14px; font-weight: bold; color: #fff; }
-        .user-wallet { display: block; font-size: 11px; color: var(--cyan); margin-top: 5px; }
-        .side-item { display: flex; align-items: center; gap: 15px; color: #888; text-decoration: none; font-size: 14px; font-weight: 600; padding: 12px; border-radius: 12px; transition: 0.3s; }
-        .side-item:hover { color: var(--cyan); background: rgba(0, 242, 255, 0.05); transform: translateX(5px); }
     </style>
 </head>
 <body>
 
     <header id="nexa-header">
-        <button class="menu-btn" id="menuToggle" onclick="toggleMenu()" aria-label="Menu">
-            <span></span><span></span><span></span>
-        </button>
-        <div class="nexa-logo-group" onclick="location.reload()">
-            <div class="brand-logo-wrap">
-                <img src="assets/logo.png" alt="Logo" class="brand-logo">
+        <div style="display:flex; justify-content:flex-start;">
+            <div class="menu-btn" id="menuBtn" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
             </div>
-            <img src="assets/nexa-vault-brand.png" alt="Nexa Vault" class="brand-text">
+        </div>
+        <div class="header-center"><span class="brand-text-ui">NEXA VAULT</span></div>
+        <div style="display:flex; justify-content:flex-end;">
+            <img src="assets/logo.png" alt="Logo" class="header-logo" onclick="location.reload()" onerror="this.src='https://cdn-icons-png.flaticon.com/512/811/811440.png'">
         </div>
     </header>
 
     <div id="sidebar">
-        <div class="side-user-card">
+        <div class="side-profile" onclick="location.reload()">
+            <img src="assets/logo.png" alt="P" class="profile-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
             <span class="user-name">VALMIKI KUMAR</span>
-            <span class="user-wallet">Balance: ₹0.00</span>
-        </div>
-        <a href="#" class="side-item"><i>👤</i> My Profile</a>
-        <a href="#" class="side-item"><i>💰</i> Wallet & Topup</a>
-        <a href="#" class="side-item"><i>📦</i> My Orders</a>
-        <a href="#" class="side-item"><i>⚙️</i> Settings</a>
-        <div style="margin-top: auto;">
-            <a href="#" class="side-item" style="color: #ff4444;"><i>🚪</i> Logout</a>
+            <span class="user-meta">ID: NEXA-786 | BALANCE: ₹0.00</span>
         </div>
     </div>
     <div id="overlay" onclick="toggleMenu()"></div>
 
     <div class="category-section">
-        <div class="category-wrapper" id="catScroll">
-            <div class="cat-node active" onclick="activateCat(this)">
-                <div class="badge-hot">TRENDING</div>
-                <div class="node-icon-wrap"><img src="assets/ff.png" alt="FF" onerror="this.parentNode.innerHTML='🔥'"></div>
-                <span class="node-label">Free Fire</span><div class="active-indicator"></div>
+        <div class="category-wrapper" id="gameContainer">
             </div>
-            <div class="cat-node" onclick="activateCat(this)">
-                <div class="badge-hot" style="background: linear-gradient(45deg, #ff8c00, #ffbd33);">HOT</div>
-                <div class="node-icon-wrap"><img src="assets/bgmi.png" alt="BGMI" onerror="this.parentNode.innerHTML='🔫'"></div>
-                <span class="node-label">BGMI</span><div class="active-indicator"></div>
-            </div>
-            <div class="cat-node" onclick="activateCat(this)">
-                <div class="node-icon-wrap">⭐</div><span class="node-label">For You</span><div class="active-indicator"></div>
-            </div>
-            <div class="cat-node" onclick="activateCat(this)">
-                <div class="node-icon-wrap"><img src="assets/mc.png" alt="MC" onerror="this.parentNode.innerHTML='🧱'"></div>
-                <span class="node-label">Minecraft</span><div class="active-indicator"></div>
-            </div>
-            <div class="cat-node" onclick="activateCat(this)">
-                <div class="node-icon-wrap"><img src="assets/gta5.png" alt="GTA" onerror="this.parentNode.innerHTML='🚗'"></div>
-                <span class="node-label">GTA 5</span><div class="active-indicator"></div>
-            </div>
-            <div class="cat-node" onclick="activateCat(this)">
-                <div class="node-icon-wrap"><img src="assets/asphalt.png" alt="A" onerror="this.parentNode.innerHTML='🏎️'"></div>
-                <span class="node-label">Asphalt</span><div class="active-indicator"></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="main-content">
-        <div class="nexa-banner">
-            <div class="banner-overlay">
-                <span class="banner-tag">EXCLUSIVE ACCESS</span>
-                <h2 class="banner-title">NEXA VAULT STORE</h2>
-                <p class="banner-desc">Verified Accounts & Instant Delivery</p>
-                <button class="banner-btn">EXPLORE NOW</button>
-            </div>
-            <img src="assets/nexa-vault-brand.png" alt="Banner" class="banner-img">
-        </div>
     </div>
 
     <script>
-        const btn = document.getElementById('menuToggle');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
+        // 🚀 THE GAME ASSETS ENGINE (तुम्हारे फोल्डर की इमेजेस के हिसाब से)
+        const games = [
+            { id: 'ff', name: 'Free Fire' },
+            { id: 'bgmi', name: 'BGMI' },
+            { id: 'cod', name: 'COD Mobile' },
+            { id: 'coc', name: 'Clash Clans' },
+            { id: 'mc', name: 'Minecraft' },
+            { id: 'gta5', name: 'GTA 5' },
+            { id: 'asphalt', name: 'Asphalt 9' },
+            { id: 'roblox', name: 'Roblox' },
+            { id: 'ludo', name: 'Ludo King' },
+            { id: 'pool', name: '8 Ball Pool' },
+            { id: 'stumble', name: 'Stumble Guys' },
+            { id: 'val', name: 'Valorant' },
+            { id: 'cs2', name: 'CS 2' },
+            { id: 'mlbb', name: 'MLBB' },
+            { id: 'genshin', name: 'Genshin' },
+            { id: 'royale', name: 'Clash Royale' },
+            { id: 'hok', name: 'HOK' },
+            { id: 'farlight', name: 'Farlight 84' },
+            { id: 'blood', name: 'Blood Strike' },
+            { id: 'mc_pc', name: 'Minecraft PC' }
+        ];
+
+        const container = document.getElementById('gameContainer');
+
+        // 🛠️ AUTOMATIC GAME LOADER
+        games.forEach((game, index) => {
+            const node = document.createElement('div');
+            node.className = `cat-node ${index === 0 ? 'active' : ''}`;
+            node.onclick = function() { activateCat(this); };
+            
+            node.innerHTML = `
+                <div class="node-icon-wrap">
+                    <img src="assets/${game.id}.png" alt="${game.name}" 
+                         onerror="this.src='https://cdn-icons-png.flaticon.com/512/811/811440.png'; this.style.opacity='0.5'">
+                </div>
+                <span class="node-label">${game.name}</span>
+            `;
+            container.appendChild(node);
+        });
 
         function toggleMenu() {
-            const isOpen = btn.classList.toggle('open');
-            sidebar.classList.toggle('active', isOpen);
-            overlay.classList.toggle('active', isOpen);
+            const sidebar = document.getElementById('sidebar');
+            const btn = document.getElementById('menuBtn');
+            const over = document.getElementById('overlay');
+            const isOpen = sidebar.classList.toggle('active');
+            btn.classList.toggle('open', isOpen);
+            over.classList.toggle('active', isOpen);
         }
 
         function activateCat(el) {
             document.querySelectorAll('.cat-node').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
-            el.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+            el.scrollIntoView({ behavior: "smooth", inline: "center" });
         }
 
-        // Close on ESC
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && btn.classList.contains('open')) toggleMenu();
-        });
+        document.addEventListener('keydown', (e) => { if(e.key === 'Escape') { const s = document.getElementById('sidebar'); if(s.classList.contains('active')) toggleMenu(); } });
     </script>
 </body>
 </html>
