@@ -3,161 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexa Vault | Elite Business Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    
+    <title>Nexa Vault | Elite Business Engine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --bg: #050505; 
-            --card: #0d0d0d; 
-            --cyan: #00f2ff; 
-            --gold: #FFD700; 
-            --border: rgba(255, 255, 255, 0.05);
+        :root { --bg:#050505; --cyan:#00f2ff; --silver:rgba(255,255,255,0.1); --border:rgba(255,255,255,0.08); --card:#0d0d0d; }
+        body { margin:0; background:var(--bg); color:#fff; font-family:'Inter',sans-serif; overflow-x:hidden; -webkit-tap-highlight-color: transparent; }
+
+        /* 🏆 THE ELITE HEADER */
+        #header {
+            display: grid; grid-template-columns: auto 1fr auto; align-items: center;
+            padding: 0 16px; height: 65px; background: #050505; border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(20px);
         }
-        
-        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
+        .left { display: flex; align-items: center; gap: 12px; }
+        .menu { width: 24px; display: flex; flex-direction: column; gap: 5px; cursor: pointer; }
+        .menu span { height: 2px; background: #fff; border-radius: 5px; }
+        .logo { width: 40px; height: 40px; border-radius: 50%; border: 1.2px solid var(--silver); overflow: hidden; }
+        .logo img { width: 100%; height: 100%; object-fit: cover; }
+        .center { display: flex; justify-content: center; align-items: center; }
+        .center img { height: 34px; max-width: 160px; object-fit: contain; }
+        .right { width: 40px; }
 
-        /* 🏆 ELITE HEADER */
-        #nexa-header {
-            position: sticky; top: 0; z-index: 1000;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 10px 20px; background: rgba(5, 5, 5, 0.98); backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border); height: 62px;
-        }
-        .header-left { display: flex; align-items: center; gap: 15px; }
-        .menu-btn { cursor: pointer; display: flex; flex-direction: column; gap: 6px; width: 24px; z-index: 1100; }
-        .menu-btn span { width: 100%; height: 2px; background: #fff; border-radius: 5px; transition: 0.3s; }
-        .menu-btn.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-        .menu-btn.open span:nth-child(2) { opacity: 0; }
-        .menu-btn.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
-
-        .logo-box { width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid var(--gold); overflow: hidden; box-shadow: 0 0 15px rgba(255, 215, 0, 0.15); }
-        .logo-box img { width: 100%; height: 100%; object-fit: cover; }
-
-        .header-center { position: absolute; left: 50%; transform: translateX(-50%); pointer-events: none; }
-        .brand-img { height: 38px; width: auto; filter: drop-shadow(0 0 8px rgba(255,255,255,0.2)); }
-
-        /* 📂 SIDEBAR CONTROL */
-        #sidebar { 
-            position: fixed; top: 0; left: 0; width: 300px; height: 100%; 
-            background: #080808; z-index: 1050; transform: translateX(-100%); 
-            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border-right: 1px solid var(--border);
-            overflow-y: auto; scrollbar-width: none;
-        }
-        #sidebar::-webkit-scrollbar { display: none; }
-        #sidebar.active { transform: translateX(0); box-shadow: 30px 0 60px rgba(0,0,0,0.9); }
-
-        .side-auth { padding: 75px 25px 30px 25px; border-bottom: 1px solid var(--border); }
-        .welcome-txt { font-size: 14px; color: var(--gold); font-weight: 800; letter-spacing: 1px; }
-        .login-btn { 
-            margin-top: 15px; width: 100%; padding: 14px; background: #fff; color: #000; 
-            border: none; border-radius: 14px; font-weight: 800; font-size: 12px; 
-            cursor: pointer; transition: 0.3s; 
-        }
-
-        .side-section { padding: 20px 25px; }
-        .section-label { font-size: 9px; color: #444; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; display: block; }
-        
-        .side-menu { display: flex; flex-direction: column; gap: 5px; }
-        .menu-item { 
-            color: #777; text-decoration: none; font-size: 14px; font-weight: 600; 
-            padding: 12px 15px; border-radius: 10px; display: flex; align-items: center; gap: 12px; 
-            transition: 0.3s ease; 
-        }
-        .menu-item:hover { color: #fff; background: rgba(255,255,255,0.02); transform: translateX(6px); }
-        .menu-item.active { 
-            color: var(--cyan); background: rgba(0, 242, 255, 0.04); 
-            border-left: 2px solid var(--cyan); border-radius: 0 10px 10px 0; 
-        }
-
-        #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); opacity: 0; pointer-events: none; z-index: 1040; transition: 0.4s; }
+        /* 📂 SIDEBAR (Usable Navigation) */
+        #sidebar { position: fixed; top: 0; left: 0; width: 280px; height: 100%; background: #080808; transform: translateX(-100%); transition: 0.4s; z-index: 2000; border-right: 1px solid var(--border); padding: 75px 20px; }
+        #sidebar.active { transform: translateX(0); }
+        .menu-item { padding: 14px; border-radius: 12px; color: #666; font-weight: 700; font-size: 14px; margin-bottom: 8px; cursor: pointer; transition: 0.3s; }
+        .menu-item.active { background: rgba(0, 242, 255, 0.05); color: var(--cyan); border-left: 2px solid var(--cyan); border-radius: 0 12px 12px 0; }
+        #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); opacity: 0; pointer-events: none; transition: 0.3s; z-index: 1500; }
         #overlay.active { opacity: 1; pointer-events: auto; }
 
-        /* 🎮 DYNAMIC LIST */
-        .game-wrapper { display: flex; gap: 20px; padding: 25px 20px; overflow-x: auto; scrollbar-width: none; }
-        .game-node { display: flex; flex-direction: column; align-items: center; min-width: 72px; cursor: pointer; }
-        .game-img { width: 66px; height: 66px; background: #111; border-radius: 20px; border: 1.5px solid #1a1a1a; overflow: hidden; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .game-node.active .game-img { border-color: var(--cyan); box-shadow: 0 0 20px rgba(0,242,255,0.2); transform: translateY(-6px); }
-        .game-label { font-size: 9px; color: #444; font-weight: 800; margin-top: 12px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; max-width: 80px; }
-        .game-node.active .game-label { color: #fff; }
+        /* 🎮 GAME GRID */
+        .games { display: flex; gap: 18px; padding: 25px 18px; overflow-x: auto; scrollbar-width: none; }
+        .games::-webkit-scrollbar { display: none; }
+        .game { min-width: 85px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .frame { width: 78px; height: 78px; background: var(--card); border-radius: 22px; border: 1.5px solid #1a1a1a; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 8px; }
+        .frame img { width: 100%; height: 100%; object-fit: contain; }
+        .game.active .frame { border-color: var(--cyan); box-shadow: 0 0 20px rgba(0,242,255,0.15); transform: translateY(-8px); }
+        .label { font-size: 10px; margin-top: 12px; font-weight: 800; color: #444; text-transform: uppercase; letter-spacing: 1px; }
+        .game.active .label { color: #fff; }
+
+        /* 💰 STORE AREA */
+        #store-section { padding: 15px 18px; border-top: 1px solid var(--border); min-height: 300px; }
+        .store-header { color: var(--cyan); font-family: 'Orbitron', sans-serif; font-size: 12px; margin-bottom: 20px; letter-spacing: 2px; text-transform: uppercase; }
+        .product-card { background: var(--card); border-radius: 20px; border: 1px solid var(--border); padding: 20px; margin-bottom: 15px; }
+        .p-name { font-size: 15px; font-weight: 800; display: block; margin-bottom: 6px; color: #eee; }
+        .p-price { font-size: 18px; color: #fff; font-weight: 900; }
+        .p-price span { color: var(--cyan); font-size: 11px; margin-right: 3px; }
+        .buy-btn { margin-top: 15px; width: 100%; padding: 12px; background: #fff; color:#000; border:none; border-radius:12px; font-weight:900; font-size:11px; cursor:pointer; }
     </style>
 </head>
 <body>
 
-    <header id="nexa-header">
-        <div class="header-left">
-            <div class="menu-btn" id="menuBtn" onclick="toggleMenu()"><span></span><span></span><span></span></div>
-            <div class="logo-box"><img src="assets/logo.png" alt="X"></div>
-        </div>
-        <div class="header-center"><img src="assets/nexa-vault-brand.png" alt="NEXA" class="brand-img"></div>
-        <div style="width:75px;"></div>
+    <header id="header">
+        <div class="left"><div class="menu" onclick="toggleMenu()"><span></span><span></span><span></span></div><div class="logo"><img src="assets/logo.png"></div></div>
+        <div class="center"><img src="assets/nexa-vault-brand.png"></div>
+        <div class="right"></div>
     </header>
 
     <div id="sidebar">
-        <div class="side-auth">
-            <span class="welcome-txt">नमस्ते, GUEST</span>
-            <button class="login-btn" onclick="alert('Google Login Coming Soon 🚀')">LOGIN WITH GOOGLE</button>
-        </div>
-
-        <div class="side-section">
-            <span class="section-label">Main Menu</span>
-            <nav class="side-menu">
-                <a href="#" class="menu-item active">🎮 Explore Games</a>
-                <a href="#" class="menu-item">🔥 Trending</a>
-                <a href="#" class="menu-item">⭐ Featured Deals</a>
-            </nav>
-        </div>
-
-        <div class="side-section">
-            <span class="section-label">Inventory</span>
-            <nav class="side-menu">
-                <a href="#" class="menu-item">💰 My Wallet</a>
-                <a href="#" class="menu-item">📦 My Orders</a>
-            </nav>
-        </div>
-
-        <div class="side-section" style="margin-top:auto;">
-            <span class="section-label">Support</span>
-            <nav class="side-menu">
-                <a href="#" class="menu-item">📞 Contact Us</a>
-                <a href="#" class="menu-item">📜 Terms & Privacy</a>
-            </nav>
-        </div>
+        <div class="menu-item active">🎮 Explore Store</div>
+        <div class="menu-item">🔥 Trending</div>
+        <div class="menu-item">💰 My Wallet</div>
+        <div class="menu-item">📦 My Orders</div>
+        <div class="menu-item">⚙️ Settings</div>
     </div>
-
     <div id="overlay" onclick="toggleMenu()"></div>
-    <div class="game-wrapper" id="gameBox"></div>
+
+    <div id="gameBox" class="games"></div>
+
+    <div id="store-section">
+        <div class="store-header" id="storeTitle">SELECT A GAME</div>
+        <div id="productGrid"></div>
+    </div>
 
     <script>
         function toggleMenu() {
-            document.getElementById('menuBtn').classList.toggle('open');
-            document.getElementById('sidebar').classList.toggle('active');
-            document.getElementById('overlay').classList.toggle('active');
+            document.querySelector("#sidebar").classList.toggle("active");
+            document.querySelector("#overlay").classList.toggle("active");
         }
 
-        // 🚀 ELITE GAME LOADER
-        const gameNames = {
-            ff: "Free Fire", bgmi: "BGMI", cod: "COD Mobile", coc: "Clash Clans",
-            mc: "Minecraft", gta5: "GTA 5", asphalt: "Asphalt 9", roblox: "Roblox",
-            ludo: "Ludo King", pool: "8 Ball Pool", stumble: "Stumble Guys", val: "Valorant",
-            cs2: "CS2", mlbb: "Mobile Legends", genshin: "Genshin", royale: "Clash Royale",
-            hok: "Honor Kings", farlight: "Farlight 84", blood: "Blood Strike", mc_pc: "Minecraft PC"
-        };
+        // 🧠 SCALABLE PRODUCT ENGINE
+        const products = [
+            { game: "ff", name: "Elite Pass ID - Lvl 72", price: "1,499" },
+            { game: "ff", name: "Old Sakura Bundle ID", price: "4,999" },
+            { game: "bgmi", name: "Glacier M416 + Mummy Set", price: "8,999" },
+            { game: "mc", name: "Minecraft Java Edition", price: "1,999" }
+        ];
 
-        const list = Object.keys(gameNames);
-        const box = document.getElementById('gameBox');
+        const gameNames = { ff:"Free Fire", bgmi:"BGMI", cod:"COD Mobile", coc:"Clash Clans", mc:"Minecraft", gta5:"GTA 5", asphalt:"Asphalt 9", roblox:"Roblox", ludo:"Ludo King", pool:"8 Ball Pool", stumble:"Stumble", val:"Valorant", cs2:"CS2", mlbb:"MLBB", genshin:"Genshin", royale:"Royale", hok:"HOK", farlight:"Farlight", blood:"Blood Strike", mc_pc:"MC PC" };
 
-        list.forEach((id, i) => {
-            const el = document.createElement('div');
-            el.className = `game-node ${i===0?'active':''}`;
-            el.onclick = function() { 
-                document.querySelectorAll('.game-node').forEach(n=>n.classList.remove('active')); 
-                this.classList.add('active'); 
-                this.scrollIntoView({behavior:"smooth",inline:"center"}); 
+        const box = document.getElementById("gameBox");
+        const grid = document.getElementById("productGrid");
+        const title = document.getElementById("storeTitle");
+
+        function loadProducts(gameId) {
+            title.innerText = `${gameNames[gameId].toUpperCase()} STORE`;
+            // Filter products based on selected game
+            const filtered = products.filter(p => p.game === gameId);
+            
+            if(filtered.length === 0) {
+                grid.innerHTML = `<p style="color:#333; font-size:12px; margin-top:20px;"> स्टॉक अभी खाली है, भाई 😏</p>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(p => `
+                <div class="product-card">
+                    <span class="p-name">${p.name}</span>
+                    <div class="p-price"><span>₹</span>${p.price}</div>
+                    <button class="buy-btn" onclick="startBuy('${p.name}', '${p.price}')">BUY NOW</button>
+                </div>
+            `).join("");
+        }
+
+        function startBuy(name, price) {
+            alert(`Proceeding to Secure Checkout...\n\nProduct: ${name}\nAmount: ₹${price}`);
+        }
+
+        // INIT GAMES
+        Object.keys(gameNames).forEach((id, i) => {
+            const el = document.createElement("div");
+            el.className = `game ${id === 'ff' ? 'active' : ''}`;
+            el.onclick = function() {
+                document.querySelectorAll(".game").forEach(n => n.classList.remove("active"));
+                this.classList.add("active");
+                this.scrollIntoView({ behavior: "smooth", inline: "center" });
+                loadProducts(id);
             };
-            el.innerHTML = `<div class="game-img"><img src="assets/${id}.png"></div><span class="game-label">${gameNames[id]}</span>`;
+            el.innerHTML = `<div class="frame"><img src="assets/${id}.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1055/1055687.png'"></div><div class="label">${gameNames[id]}</div>`;
             box.appendChild(el);
         });
+
+        window.onload = () => loadProducts("ff");
     </script>
 </body>
 </html>
