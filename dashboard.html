@@ -3,49 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexa Vault | Elite Shield Build</title>
+    <title>Nexa Vault | Elite V32.2</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         :root { --bg:#050505; --cyan:#00f2ff; --silver:rgba(255,255,255,0.2); --border:rgba(255,255,255,0.08); --card:#0d0d0d; }
         body { margin:0; background:var(--bg); color:#fff; font-family:'Inter',sans-serif; overflow-x:hidden; -webkit-tap-highlight-color: transparent; }
 
-        /* 🏆 THE PRO HEADER */
+        /* 🏆 HEADER */
         #header { display: grid; grid-template-columns: auto 1fr auto; align-items: center; padding: 0 16px; height: 65px; background: #050505; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(20px); }
         .left { display: flex; align-items: center; gap: 12px; }
         .menu { width: 24px; display: flex; flex-direction: column; gap: 5px; cursor: pointer; }
         .menu span { height: 2px; background: #fff; border-radius: 5px; }
-        .logo { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--silver); overflow: hidden; }
+        .logo { width: 40px; height: 40px; border-radius: 50%; border: 1.2px solid var(--silver); overflow: hidden; }
         .logo img { width: 100%; height: 100%; object-fit: cover; }
         .center { display: flex; justify-content: center; align-items: center; }
-        .center img { height: 35px; max-width: 160px; object-fit: contain; opacity: 0.95; }
+        .center img { height: 35px; max-width: 160px; object-fit: contain; }
         .right { width: 45px; }
 
-        /* 📂 SIDEBAR */
-        #sidebar { position: fixed; top: 0; left: 0; width: 280px; height: 100%; background: #080808; transform: translateX(-100%); transition: 0.4s; z-index: 2000; border-right: 1px solid var(--border); padding: 75px 20px; }
-        #sidebar.active { transform: translateX(0); }
-        .menu-item { padding: 14px; border-radius: 12px; color: #555; font-weight: 700; font-size: 14px; margin-bottom: 8px; cursor: pointer; }
-        .menu-item.active { background: rgba(0, 242, 255, 0.05); color: var(--cyan); border-left: 2px solid var(--cyan); }
-        #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); opacity: 0; pointer-events: none; transition: 0.3s; z-index: 1500; }
-        #overlay.active { opacity: 1; pointer-events: auto; }
+        /* 🔥 BADGE STYLE (Trending/Hot) */
+        .badge { position: absolute; top: -5px; right: -5px; background: var(--cyan); color: #000; font-size: 8px; font-weight: 900; padding: 3px 8px; border-radius: 6px; text-transform: uppercase; box-shadow: 0 0 10px rgba(0,242,255,0.3); z-index: 10; }
 
         /* 🎮 GAME NODES */
-        .games { display: flex; gap: 18px; padding: 25px 18px; overflow-x: auto; scrollbar-width: none; }
+        .games { display: flex; gap: 20px; padding: 30px 20px; overflow-x: auto; scrollbar-width: none; }
         .games::-webkit-scrollbar { display: none; }
-        .game { min-width: 85px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .game { min-width: 85px; text-align: center; cursor: pointer; transition: 0.3s; position: relative; }
         .frame { width: 76px; height: 76px; background: var(--card); border-radius: 24px; border: 1.5px solid #1a1a1a; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .frame img { width: 100%; height: 100%; object-fit: cover; opacity: 0.9; }
         .game.active .frame { border-color: var(--cyan); box-shadow: 0 0 20px rgba(0,242,255,0.15); transform: translateY(-10px); }
         .label { font-size: 10px; margin-top: 14px; font-weight: 800; color: #444; text-transform: uppercase; letter-spacing: 1px; }
         .game.active .label { color: #fff; }
 
-        /* 💰 STORE AREA */
+        /* 📂 SIDEBAR & OVERLAY */
+        #sidebar { position: fixed; top: 0; left: 0; width: 280px; height: 100%; background: #080808; transform: translateX(-100%); transition: 0.4s; z-index: 2000; border-right: 1px solid var(--border); padding: 75px 20px; }
+        #sidebar.active { transform: translateX(0); }
+        #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); opacity: 0; pointer-events: none; transition: 0.3s; z-index: 1500; }
+        #overlay.active { opacity: 1; pointer-events: auto; }
+        .menu-item { padding: 14px; border-radius: 12px; color: #555; font-weight: 700; margin-bottom: 8px; cursor: pointer; }
+        .menu-item.active { background: rgba(0, 242, 255, 0.05); color: var(--cyan); border-left: 2px solid var(--cyan); }
+
+        /* 💰 STORE SECTION */
         #store-section { padding: 15px 18px; border-top: 1px solid var(--border); min-height: 300px; }
-        .store-header { color: var(--cyan); font-family: 'Orbitron', sans-serif; font-size: 11px; margin-bottom: 20px; letter-spacing: 1.5px; text-transform: uppercase; }
+        .store-header { color: var(--cyan); font-family: 'Orbitron', sans-serif; font-size: 11px; margin-bottom: 20px; letter-spacing: 1.5px; }
         .product-card { background: var(--card); border-radius: 20px; border: 1px solid var(--border); padding: 20px; margin-bottom: 15px; }
         .p-name { font-size: 15px; font-weight: 800; display: block; margin-bottom: 8px; color: #eee; }
         .p-price { font-size: 18px; color: #fff; font-weight: 900; }
-        .p-price span { color: var(--cyan); font-size: 12px; margin-right: 3px; }
-        .buy-btn { margin-top: 15px; width: 100%; padding: 12px; background: #fff; color:#000; border:none; border-radius:12px; font-weight:900; font-size:11px; cursor:pointer; }
+        .buy-btn { margin-top: 15px; width: 100%; padding: 12px; background: #fff; color:#000; border:none; border-radius:12px; font-weight:900; cursor:pointer; }
     </style>
 </head>
 <body>
@@ -59,8 +61,8 @@
     <div id="sidebar">
         <div class="menu-item active">🎮 Explore Store</div>
         <div class="menu-item">🔥 Trending</div>
-        <div class="menu-item">💰 My Wallet</div>
-        <div class="menu-item">📦 My Orders</div>
+        <div class="menu-item">💰 Wallet</div>
+        <div class="menu-item">📦 Orders</div>
     </div>
     <div id="overlay" onclick="toggleMenu()"></div>
 
@@ -77,10 +79,7 @@
     <script>
         // 🛡️ CRASH PROTECTION
         if(typeof CONFIG === "undefined" || typeof PRODUCTS === "undefined") {
-            document.body.innerHTML = `<div style="padding:50px; text-align:center; color:#555; font-family:sans-serif;">
-                <h2 style="color:red;">⚠️ System Error</h2>
-                <p>Config or Products files are missing in your folder, भाई 😏</p>
-            </div>`;
+            document.body.innerHTML = `<div style="padding:50px; text-align:center; color:#555;"><h2>⚠️ System Error</h2><p>Files are missing, भाई 😏</p></div>`;
         }
 
         function toggleMenu() {
@@ -88,25 +87,14 @@
             document.querySelector("#overlay").classList.toggle("active");
         }
 
-        const box = document.getElementById("gameBox");
-        const grid = document.getElementById("productGrid");
-        const title = document.getElementById("storeTitle");
-
         function loadProducts(gameId) {
-            // 🔥 PREMIUM DYNAMIC HEADER
-            title.innerText = `${CONFIG.siteName} • ${GAME_NAMES[gameId]}`;
-            
+            const gameData = GAME_NAMES[gameId];
+            document.getElementById("storeTitle").innerText = `${CONFIG.siteName} • ${gameData.name}`;
             const filtered = PRODUCTS.filter(p => p.game === gameId);
+            const grid = document.getElementById("productGrid");
             
             if(filtered.length === 0) {
-                // 🔥 EMPTY STOCK UI UPGRADE
-                grid.innerHTML = `
-                <div style="text-align:center; margin-top:40px; padding:20px; border:1px dashed #222; border-radius:15px;">
-                  <p style="color:#555; font-size:13px; margin-bottom:15px;">${CONFIG.emptyStockMsg}</p>
-                  <button style="padding:10px 18px; border:none; border-radius:10px; background:#111; color:#fff; font-size:11px; font-weight:700; cursor:pointer;" onclick="alert('Notification set! 🔔')">
-                    Notify Me 🔔
-                  </button>
-                </div>`;
+                grid.innerHTML = `<div style="text-align:center; margin-top:40px; color:#555; font-size:13px;">${CONFIG.emptyStockMsg}</div>`;
                 return;
             }
 
@@ -114,13 +102,14 @@
                 <div class="product-card">
                     <span class="p-name">${p.name}</span>
                     <div class="p-price"><span>${CONFIG.currency}</span>${p.price}</div>
-                    <button class="buy-btn" onclick="alert('Proceeding to Checkout: ${p.name}')">BUY NOW</button>
+                    <button class="buy-btn" onclick="alert('Checking out: ${p.name}')">BUY NOW</button>
                 </div>
             `).join("");
         }
 
-        // INIT GAMES FROM config.js
+        // 🚀 LOOP: Generating Games with Badges
         Object.keys(GAME_NAMES).forEach((id, i) => {
+            const gameData = GAME_NAMES[id];
             const el = document.createElement("div");
             el.className = `game ${id === CONFIG.defaultGame ? 'active' : ''}`;
             el.onclick = function() {
@@ -129,12 +118,19 @@
                 this.scrollIntoView({ behavior: "smooth", inline: "center" });
                 loadProducts(id);
             };
-            // 🔥 INFINITE LOOP PROTECTION
-            el.innerHTML = `<div class="frame"><img src="assets/${id}.png" onerror="this.onerror=null;this.src='https://cdn-icons-png.flaticon.com/512/1055/1055687.png'"></div><div class="label">${GAME_NAMES[id]}</div>`;
-            box.appendChild(el);
+
+            const tagHTML = gameData.tag ? `<span class="badge">${gameData.tag}</span>` : '';
+
+            el.innerHTML = `
+                ${tagHTML}
+                <div class="frame"><img src="assets/${id}.png" onerror="this.onerror=null;this.src='https://cdn-icons-png.flaticon.com/512/1055/1055687.png'"></div>
+                <div class="label">${gameData.name}</div>
+            `;
+            document.getElementById("gameBox").appendChild(el);
         });
 
         window.onload = () => loadProducts(CONFIG.defaultGame);
     </script>
 </body>
 </html>
+
