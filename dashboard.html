@@ -1,120 +1,256 @@
-/**
- * 🏆 THE NEXA REACTIVE ENGINE (v3.2)
- * Fix: Sidebar Swipe + Overlay Sync Leak
- */
-const NexaCore = (() => {
-    let _dom = {};
-    let _data = {};
-
-    // 🧊 TRUE IMMUTABLE STATE
-    const _stateObj = { menuOpen: false, isBusy: false, activeGame: null };
-    const _state = new Proxy(_stateObj, {
-        set(target, key, value) {
-            if (target[key] === value) return true;
-            target[key] = value;
-            _renderSync(key);
-            return true;
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Nexa Vault | Final Master v4.0</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #050505; --card: #0d0d0d; --cyan: #00f2ff;
+            --red: #ff3c3c; --orange: #ff9d00; --border: rgba(255,255,255,0.08);
+            --sidebar-w: 280px; --header-h: 95px;
+            --anim-ios: cubic-bezier(0.22, 1, 0.36, 1);
         }
-    });
 
-    const _renderSync = (key) => {
-        requestAnimationFrame(() => {
-            if (key === 'menuOpen') {
-                const isOpen = _state.menuOpen;
-                _dom.sidebar.classList.toggle('is-active', isOpen);
-                _dom.trigger.classList.toggle('is-active', isOpen);
-                _dom.scrim.classList.toggle('is-active', isOpen);
-                
-                // 🛑 Leak Fix: Reset styles when closing
-                if (!isOpen) {
-                    _dom.sidebar.style.transform = "";
-                    _dom.scrim.style.opacity = "";
-                }
-            }
-            if (key === 'activeGame') _renderStore();
-        });
-    };
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
 
-    return {
-        boot({ games, products, config }) {
-            _data = { games, products, config };
-            _dom = {
-                trigger: document.getElementById('menu_trigger'),
-                sidebar: document.getElementById('sidebar_nav'),
-                scrim: document.getElementById('ui_scrim'),
-                track: document.getElementById('game_track'),
-                canvas: document.getElementById('store_canvas')
-            };
-            this._initUI();
-            this._bindGlobalEvents();
-            _state.activeGame = config.defaultGame;
-        },
-
-        _initUI() {
-            _dom.track.innerHTML = Object.keys(_data.games).map(id => {
-                const data = _data.games[id];
-                const tagClass = data.tag ? data.tag.toLowerCase() : "";
-                const tagHTML = data.tag ? `<span class="market-badge ${tagClass}">${data.tag}</span>` : "";
-                return `
-                    <div class="market-node ${id === _data.config.defaultGame ? 'is-active' : ''}" data-id="${id}">
-                        ${tagHTML}
-                        <div class="node-frame"><img src="assets/${id}.png" loading="lazy"></div>
-                        <div class="label">${data.name}</div>
-                    </div>
-                `;
-            }).join("");
-        },
-
-        _bindGlobalEvents() {
-            _dom.trigger.onclick = () => _state.menuOpen = !_state.menuOpen;
-            _dom.scrim.onclick = () => _state.menuOpen = false;
-
-            // 🖐️ GESTURE ENGINE (Leak-Proof v3.2)
-            let startX = 0;
-            const sidebarW = 280;
-
-            _dom.sidebar.ontouchstart = (e) => {
-                if (!_state.menuOpen) return;
-                startX = e.touches[0].clientX;
-                _dom.sidebar.style.transition = "none";
-                _dom.scrim.style.transition = "none";
-            };
-
-            _dom.sidebar.ontouchmove = (e) => {
-                if (!_state.menuOpen) return;
-                let diff = e.touches[0].clientX - startX;
-                if (diff < 0) {
-                    _dom.sidebar.style.transform = `translateX(${diff}px)`;
-                    // 🎯 Overlay opacity syncs with finger movement
-                    _dom.scrim.style.opacity = Math.max(0, 1 + (diff / sidebarW));
-                }
-            };
-
-            _dom.sidebar.ontouchend = (e) => {
-                if (!_state.menuOpen) return;
-                _dom.sidebar.style.transition = "";
-                _dom.scrim.style.transition = "";
-                let diff = e.changedTouches[0].clientX - startX;
-                
-                if (diff < -80) {
-                    _state.menuOpen = false; // 🚀 Trigger Full Close
-                } else {
-                    _dom.sidebar.style.transform = "translateX(0)";
-                    _dom.scrim.style.opacity = "1";
-                }
-            };
-
-            // Game Switch & Store Render Logic...
-            _dom.track.onclick = (e) => {
-                const node = e.target.closest('.market-node');
-                if (node) {
-                    document.querySelectorAll('.market-node').forEach(n => n.classList.remove('is-active'));
-                    node.classList.add('is-active');
-                    _state.activeGame = node.dataset.id;
-                    node.scrollIntoView({ behavior: "smooth", inline: "center" });
-                }
-            };
+        /* ⬇️ COMPONENT: THE BULLSEYE HEADER ⬇️ */
+        #header { 
+            display: flex; align-items: center; padding: 0 20px; height: var(--header-h); 
+            background: var(--bg); border-bottom: 1px solid var(--border); 
+            position: sticky; top: 0; z-index: 1000; justify-content: space-between;
         }
-    };
-})();
+
+        /* Animated Hamburger to X */
+        .menu-btn { 
+            cursor: pointer; width: 30px; height: 18px; display: flex; 
+            flex-direction: column; justify-content: space-between; 
+            background: none; border: none; z-index: 2100; padding: 0;
+        }
+        .menu-btn span { display: block; width: 100%; height: 2.5px; background: #fff; border-radius: 10px; transition: 0.4s var(--anim-ios); }
+        .menu-btn.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+        .menu-btn.active span:nth-child(2) { opacity: 0; }
+        .menu-btn.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+        /* Raised X Logo & Center Massive Text */
+        .logo-raised { position: absolute; left: 65px; height: 45px; width: 45px; border-radius: 14px; object-fit: cover; box-shadow: 0 0 15px rgba(255, 60, 60, 0.3); }
+        
+        .brand-center { position: absolute; left: 50%; transform: translateX(-50%); pointer-events: none; text-align: center; width: 100%; }
+        .brand-text { 
+            height: clamp(50px, 12vw, 72px); max-width: 280px; object-fit: contain; 
+            animation: breathing 2.5s infinite alternate ease-in-out;
+        }
+        @keyframes breathing {
+            from { filter: drop-shadow(0 0 5px rgba(0,242,255,0.2)); transform: scale(1); }
+            to { filter: drop-shadow(0 0 18px rgba(0,242,255,0.5)); transform: scale(1.02); }
+        }
+
+        /* ⬇️ COMPONENT: GAME SCROLL (LOCKED CURVATURE) ⬇️ */
+        .games-area { 
+            display: flex; gap: 22px; padding: 35px 20px; 
+            overflow-x: auto; scrollbar-width: none; scroll-snap-type: x mandatory; 
+        }
+        .games-area::-webkit-scrollbar { display: none; }
+
+        .game-item { min-width: 82px; text-align: center; cursor: pointer; position: relative; scroll-snap-align: center; transition: 0.3s; }
+        
+        .frame { 
+            width: 72px; height: 72px; border-radius: 24px; /* 🚀 LEGENDARY CURVE */
+            border: 2px solid #1a1a1a; background: var(--card); 
+            display: flex; align-items: center; justify-content: center; 
+            overflow: hidden; transition: 0.4s var(--anim-ios); 
+        }
+        .frame img { width: 100%; height: 100%; object-fit: contain; padding: 10px; opacity: 0.6; transition: 0.4s; }
+
+        .game-item.active .frame { border-color: var(--cyan); transform: translateY(-12px); box-shadow: 0 12px 25px rgba(0,242,255,0.25); }
+        .game-item.active .frame img { opacity: 1; transform: scale(1.1); }
+        .game-item.active .badge { transform: translateY(-12px); } /* 🚀 JUMPING BADGE */
+
+        .badge { 
+            position: absolute; top: -8px; right: -5px; font-size: 8px; font-weight: 900; 
+            padding: 3px 8px; border-radius: 6px; text-transform: uppercase; color: #fff; z-index: 10; 
+            animation: popIn 0.4s var(--anim-ios);
+        }
+        @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
+        .trending { background: var(--red); } .hot { background: var(--orange); color: #000; }
+
+        .label { font-size: 9px; margin-top: 14px; color: #444; font-weight: 800; text-transform: uppercase; transition: 0.3s; }
+        .game-item.active .label { color: #fff; }
+
+        /* ⬇️ COMPONENT: SIDEBAR (IOS DRAG SYSTEM) ⬇️ */
+        #sidebar { 
+            position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100%; 
+            background: #080808; transform: translateX(-100%); 
+            transition: transform 0.4s var(--anim-ios); z-index: 2000; 
+            padding: 110px 24px; border-right: 1px solid var(--border);
+            box-shadow: 15px 0 50px rgba(0,0,0,0.9); touch-action: pan-y;
+        }
+        #sidebar.active { transform: translateX(0); }
+        
+        #overlay { 
+            position: fixed; inset: 0; background: rgba(0,0,0,0.6); 
+            backdrop-filter: blur(12px); opacity: 0; pointer-events: none; 
+            transition: opacity 0.4s ease; z-index: 1500;
+        }
+        #overlay.active { opacity: 1; pointer-events: auto; }
+
+        /* ⬇️ COMPONENT: STORE TILES ⬇️ */
+        #store-section { padding: 20px; border-top: 1px solid var(--border); min-height: 300px; transition: opacity 0.3s ease; }
+        .product-card { background: var(--card); border-radius: 22px; padding: 25px; margin-bottom: 20px; border: 1px solid var(--border); }
+        .buy-btn { 
+            width: 100%; padding: 15px; background: #fff; color: #000; border-radius: 14px; 
+            font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; font-size: 11px;
+        }
+        .buy-btn:active { transform: scale(0.96); }
+    </style>
+</head>
+<body>
+
+    <header id="header">
+        <button class="menu-btn" id="menu_trigger"><span></span><span></span><span></span></button>
+        <img src="assets/logo.png" alt="X" class="logo-raised">
+        <div class="brand-center">
+            <img src="assets/nexa-vault-brand.png" alt="NEXA VAULT" class="brand-text">
+        </div>
+        <div style="width: 35px;"></div>
+    </header>
+
+    <nav id="sidebar">
+        <div style="color:var(--cyan); font-family:Orbitron; font-weight:900; font-size:20px; margin-bottom:45px; letter-spacing:1px;">NEXA SYSTEM</div>
+        <a href="#" style="color:#666; text-decoration:none; display:block; margin-bottom:25px; font-weight:700;">Marketplace</a>
+        <a href="#" style="color:#666; text-decoration:none; display:block; font-weight:700;">My Wallet</a>
+    </nav>
+    <div id="overlay" id="main_overlay"></div>
+
+    <main>
+        <div class="games-area" id="game_box"></div>
+        <div id="store-section"></div>
+    </main>
+
+    <script src="config.js"></script>
+    <script src="products.js"></script>
+
+    <script>
+        /**
+         * 🧠 THE NEXA CORE ENGINE (v4.0)
+         * State Driven + Gesture Optimized
+         */
+        const Nexa = (() => {
+            let _dom = {};
+            
+            // 🧊 REAL-TIME PROXY STATE
+            const _stateObj = { menuOpen: false, activeGame: null };
+            const _state = new Proxy(_stateObj, {
+                set(target, key, value) {
+                    if (target[key] === value) return true;
+                    target[key] = value;
+                    _syncUI(key);
+                    return true;
+                }
+            });
+
+            const _syncUI = (key) => {
+                requestAnimationFrame(() => {
+                    if (key === 'menuOpen') {
+                        const open = _state.menuOpen;
+                        _dom.sidebar.classList.toggle('active', open);
+                        _dom.btn.classList.toggle('active', open);
+                        _dom.overlay.classList.toggle('active', open);
+                        if (!open) { _dom.sidebar.style.transform = ""; _dom.overlay.style.opacity = ""; }
+                    }
+                    if (key === 'activeGame') _renderProducts();
+                });
+            };
+
+            const _renderProducts = () => {
+                const gameId = _state.activeGame;
+                const items = PRODUCTS.filter(p => p.game === gameId);
+                _dom.store.style.opacity = "0";
+                
+                setTimeout(() => {
+                    _dom.store.innerHTML = items.length ? items.map(p => `
+                        <div class="product-card">
+                            <span style="color:#00ff88; font-size:9px; font-weight:800; letter-spacing:1px;">VERIFIED ACCOUNT</span>
+                            <div style="font-size:17px; font-weight:800; margin:10px 0;">${p.name}</div>
+                            <div style="font-size:20px; font-weight:900;">₹${p.price}</div>
+                            <button class="buy-btn" onclick="window.open('https://wa.me/91XXXXXXXXXX?text=Order:${p.name}')">Order Now</button>
+                        </div>
+                    `).join("") : `<div style="text-align:center; padding:80px; color:#333;">${CONFIG.emptyStockMsg}</div>`;
+                    _dom.store.style.opacity = "1";
+                }, 200);
+            };
+
+            return {
+                boot() {
+                    _dom = {
+                        btn: document.getElementById('menu_trigger'),
+                        sidebar: document.getElementById('sidebar'),
+                        overlay: document.getElementById('overlay'),
+                        gameBox: document.getElementById('game_box'),
+                        store: document.getElementById('store-section')
+                    };
+                    this._initUI();
+                    this._bindEvents();
+                    _state.activeGame = CONFIG.defaultGame;
+                },
+
+                _initUI() {
+                    _dom.gameBox.innerHTML = Object.keys(GAME_NAMES).map(id => {
+                        const data = GAME_NAMES[id];
+                        const tagClass = data.tag ? data.tag.toLowerCase() : "";
+                        const badgeHTML = data.tag ? `<span class="badge ${tagClass}">${data.tag}</span>` : "";
+                        return `
+                            <div class="game-item ${id === CONFIG.defaultGame ? 'active' : ''}" data-id="${id}">
+                                ${badgeHTML}
+                                <div class="frame"><img src="assets/${id}.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1055/1055687.png'"></div>
+                                <div class="label">${data.name}</div>
+                            </div>
+                        `;
+                    }).join("");
+                },
+
+                _bindEvents() {
+                    _dom.btn.onclick = () => _state.menuOpen = !_state.menuOpen;
+                    _dom.overlay.onclick = () => _state.menuOpen = false;
+
+                    // 🖐️ GESTURE ENGINE (IOS SWIPE)
+                    let startX = 0;
+                    _dom.sidebar.ontouchstart = (e) => { if(_state.menuOpen) { startX = e.touches[0].clientX; _dom.sidebar.style.transition = "none"; _dom.overlay.style.transition = "none"; }};
+                    _dom.sidebar.ontouchmove = (e) => {
+                        if(!_state.menuOpen) return;
+                        let diff = e.touches[0].clientX - startX;
+                        if(diff < 0) {
+                            _dom.sidebar.style.transform = `translateX(${diff}px)`;
+                            _dom.overlay.style.opacity = Math.max(0, 1 + (diff / 280));
+                        }
+                    };
+                    _dom.sidebar.ontouchend = (e) => {
+                        if(!_state.menuOpen) return;
+                        _dom.sidebar.style.transition = ""; _dom.overlay.style.transition = "";
+                        let diff = e.changedTouches[0].clientX - startX;
+                        if(diff < -80) _state.menuOpen = false;
+                        else { _dom.sidebar.style.transform = "translateX(0)"; _dom.overlay.style.opacity = "1"; }
+                    };
+
+                    _dom.gameBox.onclick = (e) => {
+                        const node = e.target.closest('.game-item');
+                        if(node) {
+                            document.querySelectorAll('.game-item').forEach(n => n.classList.remove('active'));
+                            node.classList.add('active');
+                            _state.activeGame = node.dataset.id;
+                            node.scrollIntoView({ behavior: "smooth", inline: "center" });
+                        }
+                    };
+                }
+            };
+        })();
+
+        document.addEventListener("DOMContentLoaded", () => Nexa.boot());
+    </script>
+</body>
+</html>
 
