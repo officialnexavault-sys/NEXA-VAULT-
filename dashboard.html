@@ -3,27 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexa Vault | Elite V32.2</title>
+    <title>Nexa Vault | Professional Elite</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         :root { --bg:#050505; --cyan:#00f2ff; --silver:rgba(255,255,255,0.2); --border:rgba(255,255,255,0.08); --card:#0d0d0d; }
         body { margin:0; background:var(--bg); color:#fff; font-family:'Inter',sans-serif; overflow-x:hidden; -webkit-tap-highlight-color: transparent; }
 
-        /* 🏆 HEADER */
+        /* 🏆 HEADER (Center Brand Fix) */
         #header { display: grid; grid-template-columns: auto 1fr auto; align-items: center; padding: 0 16px; height: 65px; background: #050505; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(20px); }
         .left { display: flex; align-items: center; gap: 12px; }
         .menu { width: 24px; display: flex; flex-direction: column; gap: 5px; cursor: pointer; }
         .menu span { height: 2px; background: #fff; border-radius: 5px; }
-        .logo { width: 40px; height: 40px; border-radius: 50%; border: 1.2px solid var(--silver); overflow: hidden; }
+        .logo { width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid var(--silver); overflow: hidden; }
         .logo img { width: 100%; height: 100%; object-fit: cover; }
         .center { display: flex; justify-content: center; align-items: center; }
         .center img { height: 35px; max-width: 160px; object-fit: contain; }
         .right { width: 45px; }
 
-        /* 🔥 BADGE STYLE (Trending/Hot) */
+        /* 🔥 BADGE STYLE (The Trending/Hot look) */
         .badge { position: absolute; top: -5px; right: -5px; background: var(--cyan); color: #000; font-size: 8px; font-weight: 900; padding: 3px 8px; border-radius: 6px; text-transform: uppercase; box-shadow: 0 0 10px rgba(0,242,255,0.3); z-index: 10; }
 
-        /* 🎮 GAME NODES */
+        /* 🎮 GAME NODES (76px + 24px Curves) */
         .games { display: flex; gap: 20px; padding: 30px 20px; overflow-x: auto; scrollbar-width: none; }
         .games::-webkit-scrollbar { display: none; }
         .game { min-width: 85px; text-align: center; cursor: pointer; transition: 0.3s; position: relative; }
@@ -41,13 +41,13 @@
         .menu-item { padding: 14px; border-radius: 12px; color: #555; font-weight: 700; margin-bottom: 8px; cursor: pointer; }
         .menu-item.active { background: rgba(0, 242, 255, 0.05); color: var(--cyan); border-left: 2px solid var(--cyan); }
 
-        /* 💰 STORE SECTION */
+        /* 💰 STORE AREA */
         #store-section { padding: 15px 18px; border-top: 1px solid var(--border); min-height: 300px; }
         .store-header { color: var(--cyan); font-family: 'Orbitron', sans-serif; font-size: 11px; margin-bottom: 20px; letter-spacing: 1.5px; }
         .product-card { background: var(--card); border-radius: 20px; border: 1px solid var(--border); padding: 20px; margin-bottom: 15px; }
         .p-name { font-size: 15px; font-weight: 800; display: block; margin-bottom: 8px; color: #eee; }
         .p-price { font-size: 18px; color: #fff; font-weight: 900; }
-        .buy-btn { margin-top: 15px; width: 100%; padding: 12px; background: #fff; color:#000; border:none; border-radius:12px; font-weight:900; cursor:pointer; }
+        .buy-btn { margin-top: 15px; width: 100%; padding: 12px; background: #fff; color:#000; border:none; border-radius:12px; font-weight:900; cursor:pointer; font-size:11px; }
     </style>
 </head>
 <body>
@@ -77,11 +77,6 @@
     <script src="products.js"></script>
 
     <script>
-        // 🛡️ CRASH PROTECTION
-        if(typeof CONFIG === "undefined" || typeof PRODUCTS === "undefined") {
-            document.body.innerHTML = `<div style="padding:50px; text-align:center; color:#555;"><h2>⚠️ System Error</h2><p>Files are missing, भाई 😏</p></div>`;
-        }
-
         function toggleMenu() {
             document.querySelector("#sidebar").classList.toggle("active");
             document.querySelector("#overlay").classList.toggle("active");
@@ -107,7 +102,7 @@
             `).join("");
         }
 
-        // 🚀 LOOP: Generating Games with Badges
+        // 🚀 THE MAGIC LOOP (Badges + Design)
         Object.keys(GAME_NAMES).forEach((id, i) => {
             const gameData = GAME_NAMES[id];
             const el = document.createElement("div");
