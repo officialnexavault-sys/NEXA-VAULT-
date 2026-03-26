@@ -3,201 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nexa Vault v28.0 | The Immortal Build</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
-    
+    <title>Nexa Vault v30.1 | Final Engine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* 🔒 [NEXA CONSTITUTION - IMMUTABLE LOCKS] */
-        :root { --bg:#050505; --card:#0d0d0d; --cyan:#00f2ff; --radius:24px; --nav-h:75px; }
-        * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; outline:none; }
-        html { scroll-behavior: smooth; }
-        body { background:var(--bg); color:#fff; font-family: 'Inter', sans-serif; overflow-x:hidden; -webkit-font-smoothing: antialiased; }
-
-        /* 🛡️ HEADER & DYNAMIC 'X' MENU (Always Visible) */
-        #header { display:flex; align-items:center; justify-content:space-between; padding:0 20px; height:90px; border-bottom:1px solid rgba(255,255,255,0.05); position:sticky; top:0; background:var(--bg); z-index:1000; }
-        .menu-btn { width:28px; height:18px; display:flex; flex-direction:column; justify-content:space-between; cursor:pointer; z-index:3500; position:relative; }
-        .menu-btn span { height:3px; background:#fff; border-radius:10px; transition:.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .menu-btn.active span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); background: var(--cyan); }
-        .menu-btn.active span:nth-child(2) { opacity:0; }
-        .menu-btn.active span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); background: var(--cyan); }
-        .brand-text { height:55px; pointer-events:none; }
-
-        /* 🛡️ SIDEBAR & SWIPE-TO-CLOSE GESTURE (ChatGPT'S VISION) */
-        #sidebar { position:fixed; top:0; left:0; width:280px; height:100%; background:#080808; transform:translateX(-100%); transition:0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index:3000; border-right:1px solid #111; padding-top:110px; box-shadow: 20px 0 50px rgba(0,0,0,0.8); }
-        #sidebar.active { transform:translateX(0); }
-        
-        .profile-sec { padding:0 24px 30px 24px; border-bottom:1px solid #111; margin-bottom:20px; }
-        .side-item { padding:16px 24px; font-weight:700; color:#666; cursor:pointer; display:flex; align-items:center; gap:15px; transition:0.3s; }
-        .side-item:active { background:#111; color:var(--cyan); }
-
-        #overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(5px); opacity:0; pointer-events:none; transition:0.4s; z-index:2500; }
-        #overlay.active { opacity:1; pointer-events:auto; }
-
-        /* 🛡️ BANNER & PROGRESS */
-        .banner { margin:15px; height:160px; border-radius:22px; overflow:hidden; position:relative; border:1px solid #1a1a1a; }
-        .banner img { width:100%; height:100%; object-fit:cover; }
-        .progress { position:absolute; bottom:0; left:0; height:3px; background:var(--cyan); box-shadow:0 0 15px var(--cyan); animation:load 4s linear infinite; }
-        @keyframes load { from{width:0%} to{width:100%} }
-
-        /* 🛡️ ICON FRAME HARD LOCK (Fix for image_1.png and image_2.png Square Issue) */
-        .games { display:flex; gap:18px; padding:20px; overflow-x:auto; scrollbar-width:none; scroll-snap-type:x mandatory; -webkit-overflow-scrolling: touch; }
-        .game { text-align:center; scroll-snap-align:center; min-width:85px; cursor:pointer; position:relative; transition: 0.3s; }
-        .frame { 
-            width:74px !important; height:74px !important; border-radius:var(--radius) !important; 
-            background:var(--card); border:2px solid #1a1a1a; display:flex; align-items:center; 
-            justify-content:center; overflow:hidden; position:relative; transition:0.3s;
+        :root {
+            --bg: #050505; --card: #0d0d0d; --cyan: #00f2ff; --radius: 24px;
+            --border: rgba(255, 255, 255, 0.08); --header-h: 85px; --nav-h: 75px;
+            --sidebar-w: 280px; --font-main: 'Inter', sans-serif; --font-brand: 'Orbitron', sans-serif;
         }
-        .frame img { width:100% !important; height:100% !important; object-fit:contain !important; padding:8px; border-radius:var(--radius) !important; }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; outline: none; }
+        body { background: var(--bg); color: #fff; font-family: var(--font-main); overflow-x: hidden; -webkit-overflow-scrolling: touch; }
 
-        /* ACTIVE & GLOW */
-        .game.active { transform: translateY(-8px); }
-        .game.active .frame { border-color:var(--cyan); box-shadow:0 0 25px rgba(0,242,255,0.4); }
-        .game.active .frame img { transform: scale(1.1); }
-        .label { font-size:10px; margin-top:12px; color:#555; font-weight:800; text-transform:uppercase; letter-spacing: 0.5px; }
-        .game.active .label { color:#fff; }
+        /* 🛡️ PAGE ENGINE */
+        .page { display: none; width: 100%; min-height: 100vh; padding-bottom: calc(var(--nav-h) + 20px); }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 🛡️ BADGE SYSTEM (DYNAMIC GLOW) */
-        .badge { position:absolute; top:-5px; right:-5px; font-size:8px; padding:3px 8px; border-radius:6px; font-weight:900; z-index:10; color:#fff; animation: glow 1.5s infinite alternate; }
-        @keyframes glow { from { opacity: 0.7; transform: scale(1); } to { opacity: 1; transform: scale(1.1); } }
-        .frame::after { content:""; position:absolute; width:0; height:0; background:rgba(0,242,255,0.3); border-radius:50%; top:50%; left:50%; transform:translate(-50%,-50%); }
-        .frame.ripple::after { animation:ripple .5s; }
-        @keyframes ripple { to { width:150px; height:150px; opacity:0; } }
+        /* 🛡️ HEADER & SEARCH */
+        header { display: flex; align-items: center; justify-content: space-between; padding: 0 20px; height: var(--header-h); background: rgba(5, 5, 5, 0.85); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 2000; }
+        .menu-btn { width: 30px; height: 20px; position: relative; cursor: pointer; z-index: 4000; }
+        .menu-btn span { position: absolute; width: 100%; height: 3px; background: #fff; border-radius: 10px; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .menu-btn span:nth-child(1) { top: 0; } .menu-btn span:nth-child(2) { top: 50%; transform: translateY(-50%); } .menu-btn span:nth-child(3) { bottom: 0; }
+        .menu-btn.active span:nth-child(1) { transform: translateY(8.5px) rotate(45deg); background: var(--cyan); }
+        .menu-btn.active span:nth-child(2) { opacity: 0; } .menu-btn.active span:nth-child(3) { transform: translateY(-8.5px) rotate(-45deg); background: var(--cyan); }
 
-        /* 🛡️ TRADING BADGE (Cosmic Vision) */
-        .trending { background:#ff3b3b; box-shadow: 0 0 10px #ff3b3b; }
-        .hot { background:#ff9800; color:#000; box-shadow: 0 0 10px #ff9800; }
-        .new { background:#2196f3; box-shadow: 0 0 10px #2196f3; }
-
-        /* 🛡️ SCROLLABLE STORE & FOOTER SECTION */
-        #main-app { height: calc(100vh - (90px + var(--nav-h))); overflow-y:auto; scroll-behavior: smooth; padding-bottom: 20px; }
-        #store { padding:0 20px; }
+        /* 🛡️ SEARCH OVERLAY (REAL LOGIC) */
+        #search-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 5000; display: none; padding: 20px; animation: fadeIn 0.3s ease; }
+        .search-input-box { background: #111; border: 1px solid var(--border); border-radius: 15px; padding: 12px 18px; display: flex; align-items: center; gap: 10px; }
+        .search-input-box input { background: none; border: none; color: #fff; flex: 1; font-size: 16px; font-weight: 600; }
         
-        #footer { padding: 40px 20px; text-align: center; border-top: 1px solid #111; color: #333; font-weight: 800; font-size: 11px; margin-top: 40px; }
-        .footer-links { display: flex; justify-content: center; gap: 20px; margin-top: 10px; color: #555; }
+        /* 🛡️ SIDEBAR & GESTURE */
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); opacity: 0; pointer-events: none; transition: 0.4s; z-index: 2500; }
+        .overlay.active { opacity: 1; pointer-events: auto; }
+        .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100%; background: #080808; transform: translateX(-100%); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 3000; border-right: 1px solid var(--border); display: flex; flex-direction: column; touch-action: none; }
+        .sidebar.active { transform: translateX(0); }
 
-        /* 🛡️ FULL BOTTOM NAV (CUSTOM SVGs) */
-        .bottom { position:fixed; bottom:0; width:100%; height:var(--nav-h); background:rgba(0,0,0,0.95); backdrop-filter: blur(15px); display:flex; justify-content:space-around; align-items:center; border-top:1px solid #111; z-index:2000; padding-bottom:15px; }
-        .nav { display:flex; flex-direction:column; align-items:center; gap:5px; color:#444; transition: 0.3s; cursor: pointer; }
-        .nav svg { width:22px; height:22px; fill: currentColor; transition: 0.3s; }
-        .nav.active { color:var(--cyan); transform: translateY(-3px); text-shadow:0 0 10px var(--cyan); }
+        /* 🛡️ GALAXY & INDICATOR */
+        .icon-row { display: flex; gap: 20px; padding: 10px 20px 25px; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x mandatory; position: relative; }
+        .icon-row::-webkit-scrollbar { display: none; }
+        .game-node { min-width: 82px; display: flex; flex-direction: column; align-items: center; scroll-snap-align: center; cursor: pointer; position: relative; }
+        .nexa-frame { width: 74px; height: 74px; border-radius: var(--radius); background: var(--card); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden; transition: 0.3s; }
+        .game-node.active .nexa-frame { border-color: var(--cyan); box-shadow: 0 0 20px rgba(0,242,255,0.3); transform: translateY(-5px); }
+        .indicator-wrap { position: absolute; bottom: 12px; height: 3px; background: var(--cyan); border-radius: 10px; box-shadow: 0 0 10px var(--cyan); transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); pointer-events: none; }
+
+        /* 🛡️ BOTTOM NAV */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: var(--nav-h); background: rgba(5,5,5,0.95); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid var(--border); z-index: 2000; padding-bottom: 12px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #444; cursor: pointer; transition: 0.3s; }
+        .nav-item svg { width: 22px; height: 22px; fill: currentColor; }
+        .nav-item.active { color: var(--cyan); transform: translateY(-3px); }
     </style>
 </head>
 <body>
 
-<div id="overlay"></div>
-<div id="sidebar">
-    <div class="profile-sec">
-        <div style="width:50px; height:50px; background:#111; border-radius:50%; border:2px solid var(--cyan); display:flex; align-items:center; justify-content:center; font-size:20px; margin-bottom:15px;">👤</div>
-        <div style="color:#fff; font-weight:800; font-size:16px;">HARIOM</div>
-        <div style="color:#444; font-size:11px; font-weight:700;">hariom@nexavault.com</div>
+<div id="nexa-overlay" class="overlay"></div>
+<aside id="nexa-sidebar" class="sidebar">
+    <div style="padding: 110px 24px 30px; border-bottom: 1px solid var(--border);">
+        <div style="width:55px; height:55px; background:#111; border-radius:50%; border:2px solid var(--cyan); display:flex; align-items:center; justify-content:center; color:var(--cyan); font-size:24px;">👤</div>
+        <div style="margin-top:15px; font-weight:800; font-size:18px;">GUEST USER</div>
     </div>
-    <div class="side-item">🏠 Home</div>
-    <div class="side-item">🔥 Trending</div>
-    <div class="side-item">New Games</div>
-    <div class="side-item"> Wishlist</div>
-    <div class="side-item"> Orders</div>
-    <div class="side-item"> Rewards</div>
-    <div class="side-item" style="margin-top:20px; color:#ff3b3b;">Logout</div>
+</aside>
+
+<div id="search-overlay">
+    <div class="search-input-box">
+        <input type="text" id="liveSearch" placeholder="Type game name...">
+        <span onclick="toggleSearch()" style="color:var(--cyan); font-weight:800; cursor:pointer;">CLOSE</span>
+    </div>
+    <div id="searchResults" style="margin-top:20px; display:grid; gap:15px;"></div>
 </div>
 
-<header id="header">
+<header>
     <div class="menu-btn" id="menuBtn"><span></span><span></span><span></span></div>
-    <img src="assets/nexa-vault-brand.png" class="brand-text">
-    <div style="width:28px;"></div>
+    <div style="font-family:var(--font-brand); font-size:16px; letter-spacing:2px;">NEXA <span style="color:var(--cyan); font-weight:400;">VAULT</span></div>
+    <div onclick="toggleSearch()" style="cursor:pointer; opacity:0.6;"><svg viewBox="0 0 24 24" style="width:24px; fill:#fff;"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></div>
 </header>
 
-<main id="main-app">
-    <div class="banner">
-        <img id="bannerImg" src="assets/banner1.jpg" onerror="this.src='https://via.placeholder.com/400x160/0d0d0d/00f2ff?text=NEXA+VAULT'">
-        <div class="progress"></div>
+<main id="home-page" class="page active">
+    <div style="margin: 15px; height: 160px; border-radius: 22px; overflow: hidden; border: 1px solid var(--border);">
+        <img src="assets/banner1.jpg" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://via.placeholder.com/400x160/0d0d0d/00f2ff?text=NEXA+PROMO'">
     </div>
-    <div class="games" id="game_box"></div>
-    <div id="store"></div>
-    
-    <footer id="footer">
-        <div style="font-family: 'Orbitron'; letter-spacing: 2px;">© 2026 NEXA VAULT</div>
-        <div class="footer-links">
-            <span>Terms</span> | <span>Privacy</span> | <span>Contact</span>
-        </div>
-    </footer>
+    <div style="position:relative;">
+        <div class="icon-row" id="gameRow"></div>
+        <div class="indicator-wrap" id="nexaIndicator"></div>
+    </div>
+    <div id="product-area" style="padding: 0 20px;"></div>
 </main>
 
-<div class="bottom">
-    <div class="nav active"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>HOME</span></div>
-    <div class="nav"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg><span>SEARCH</span></div>
-    <div class="nav"><svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg><span>STORE</span></div>
-    <div class="nav"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>PROFILE</span></div>
-    <div class="nav"><svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg><span>MORE</span></div>
-</div>
+<nav class="bottom-nav">
+    <div class="nav-item active" onclick="switchPage('home', this)"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>HOME</span></div>
+    <div class="nav-item" onclick="toggleSearch()"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg><span>SEARCH</span></div>
+    <div class="nav-item" onclick="switchPage('profile', this)"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>PROFILE</span></div>
+</nav>
 
 <script src="config.js"></script>
 <script src="products.js"></script>
 <script>
-const NexaEngine = {
-    init() {
-        this.render();
-        this.sidebarLogic();
-        this.bannerLogic();
-        this.touchPhysics();
-        setTimeout(() => document.querySelector('.game').click(), 300);
-    },
-    sidebarLogic() {
-        const btn = document.getElementById('menuBtn'), side = document.getElementById('sidebar'), over = document.getElementById('overlay');
-        let startX = 0;
-        const toggle = () => { btn.classList.toggle('active'); side.classList.toggle('active'); over.classList.toggle('active'); };
-        btn.onclick = toggle; over.onclick = toggle;
+document.addEventListener("DOMContentLoaded", () => {
+    const gameRow = document.getElementById('gameRow');
+    const indicator = document.getElementById('nexaIndicator');
+    const sidebar = document.getElementById('nexa-sidebar');
+    const overlay = document.getElementById('nexa-overlay');
 
-        side.addEventListener('touchstart', e => { startX = e.touches[0].clientX; sidebar.style.transition = "none"; });
-        side.addEventListener('touchmove', e => {
-            let diff = e.touches[0].clientX - startX;
-            if (diff < 0) side.style.transform = `translateX(${diff}px)`;
-        });
-        side.addEventListener('touchend', e => {
-            side.style.transform = "";
-            if (startX - e.changedTouches[0].clientX > 100) toggle();
-        });
-    },
-    render() {
-        const box = document.getElementById("game_box");
-        if(typeof GAME_NAMES === 'undefined') return;
-        box.innerHTML = Object.keys(GAME_NAMES).map(id => `
-            <div class="game" onclick="selectGame('${id}',this)">
-                <div class="frame">
-                    ${GAME_NAMES[id].tag?`<span class="badge ${GAME_NAMES[id].tag.toLowerCase()}">${GAME_NAMES[id].tag}</span>`:""}
-                    <img src="assets/${id}.png" onerror="this.src='assets/logo.png'">
-                </div>
-                <div class="label">${GAME_NAMES[id].name}</div>
-            </div>`).join("");
-    },
-    bannerLogic() {
-        const banners = ["assets/banner1.jpg","assets/banner2.jpg"]; let i = 0;
-        setInterval(() => {
-            i = (i+1)%banners.length; document.getElementById("bannerImg").src = banners[i];
-        }, 4000);
-    },
-    touchPhysics() {
-        document.addEventListener("click", e => {
-            let f = e.target.closest(".frame"); if(!f) return;
-            f.classList.remove("ripple"); void f.offsetWidth; f.classList.add("ripple");
-        });
-    }
+    // 1. SIDEBAR & SWIPE (Gupt Physics Fix)
+    const toggleSidebar = () => {
+        document.getElementById('menuBtn').classList.toggle('active');
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+    };
+    document.getElementById('menuBtn').onclick = toggleSidebar;
+    overlay.onclick = toggleSidebar;
+
+    let sX = 0;
+    sidebar.ontouchstart = (e) => { sX = e.touches[0].clientX; sidebar.style.transition = "none"; };
+    sidebar.ontouchmove = (e) => { let d = e.touches[0].clientX - sX; if(d < 0) sidebar.style.transform = `translateX(${d}px)`; };
+    sidebar.ontouchend = (e) => { sidebar.style.transition = "0.4s"; sidebar.style.transform = ""; if(sX - e.changedTouches[0].clientX > 80) toggleSidebar(); };
+
+    // 2. GALAXY RENDER (From config.js)
+    const games = (typeof GAME_NAMES !== 'undefined') ? GAME_NAMES : {'ff':{name:'Free Fire'},'bgmi':{name:'BGMI'}};
+    gameRow.innerHTML = Object.keys(games).map(id => `
+        <div class="game-node" id="node-${id}" onclick="nexaActivate('${id}', this)">
+            <div class="nexa-frame"><img src="assets/${id}.png" onerror="this.src='assets/logo.png'"></div>
+            <div style="font-size:10px; margin-top:10px; color:#555; font-weight:800; text-transform:uppercase;">${games[id].name}</div>
+        </div>
+    `).join("");
+
+    window.nexaActivate = (id, el) => {
+        document.querySelectorAll('.game-node').forEach(n => n.classList.remove('active'));
+        el.classList.add('active');
+        const r = el.getBoundingClientRect();
+        indicator.style.width = r.width + "px";
+        indicator.style.transform = `translateX(${el.offsetLeft - gameRow.scrollLeft}px)`;
+        el.scrollIntoView({ behavior: "smooth", inline: "center" });
+        loadProducts(id);
+    };
+
+    // 3. SEARCH ENGINE (Real Filter)
+    window.toggleSearch = () => {
+        const s = document.getElementById('search-overlay');
+        s.style.display = s.style.display === 'block' ? 'none' : 'block';
+        if(s.style.display === 'block') document.getElementById('liveSearch').focus();
+    };
+
+    document.getElementById('liveSearch').oninput = (e) => {
+        const v = e.target.value.toLowerCase();
+        const res = document.getElementById('searchResults');
+        if(!v) { res.innerHTML = ""; return; }
+        const matched = Object.keys(games).filter(id => games[id].name.toLowerCase().includes(v));
+        res.innerHTML = matched.map(id => `<div onclick="nexaActivate('${id}', document.getElementById('node-${id}')); toggleSearch();" style="background:var(--card); padding:15px; border-radius:12px; border:1px solid var(--border);">${games[id].name}</div>`).join("");
+    };
+
+    const loadProducts = (id) => {
+        const pArea = document.getElementById('product-area');
+        const data = (typeof PRODUCTS !== 'undefined') ? PRODUCTS.filter(p => p.game === id) : [];
+        pArea.innerHTML = data.map(p => `<div style="background:var(--card); padding:20px; border-radius:20px; border:1px solid var(--border); margin-bottom:15px;"><div style="font-weight:800;">${p.name}</div><div style="color:var(--cyan); font-weight:900; font-size:18px; margin-top:5px;">₹${p.price}</div><button style="width:100%; padding:12px; background:#fff; border:none; border-radius:12px; font-weight:900; margin-top:15px;">BUY NOW</button></div>`).join("");
+    };
+
+    setTimeout(() => { document.querySelector('.game-node').click(); }, 500);
+});
+
+window.switchPage = (pid, el) => {
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
 };
-
-function selectGame(id, el) {
-    document.querySelectorAll(".game").forEach(g => g.classList.remove("active"));
-    el.classList.add("active");
-    el.scrollIntoView({ behavior: "smooth", inline: "center" });
-
-    const data = PRODUCTS.filter(p => p.game === id);
-    document.getElementById("store").innerHTML = data.map(p => `
-        <div style="background:var(--card); padding:22px; border-radius:22px; border:1px solid #1a1a1a; margin-bottom:15px; animation:ripple .3s;">
-            <div style="font-weight:800; font-size:15px;">${p.name}</div>
-            <div style="color:var(--cyan); font-weight:900; font-size:18px; margin-top:8px;">₹${p.price}</div>
-            <button style="width:100%; padding:15px; border-radius:14px; border:none; background:#fff; color:#000; font-weight:900; margin-top:15px;">ORDER NOW</button>
-        </div>`).join("");
-}
-
-document.addEventListener("DOMContentLoaded", () => NexaEngine.init());
 </script>
 </body>
 </html>
