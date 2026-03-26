@@ -3,108 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>Nexa Vault | Final Master v4.0</title>
+    <title>Nexa Vault | Professional v4.2</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --bg: #050505; --card: #0d0d0d; --cyan: #00f2ff;
-            --red: #ff3c3c; --orange: #ff9d00; --border: rgba(255,255,255,0.08);
-            --sidebar-w: 280px; --header-h: 95px;
+            --red: #ff4d4d; --orange: #ffaa00; --blue: #3399ff; --green: #00cc66;
+            --border: rgba(255,255,255,0.08); --sidebar-w: 280px; --header-h: 95px;
             --anim-ios: cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
 
-        /* ⬇️ COMPONENT: THE BULLSEYE HEADER ⬇️ */
+        /* ⬇️ HEADER: LOGO CIRCLE & BRAND CENTER ⬇️ */
         #header { 
             display: flex; align-items: center; padding: 0 20px; height: var(--header-h); 
             background: var(--bg); border-bottom: 1px solid var(--border); 
             position: sticky; top: 0; z-index: 1000; justify-content: space-between;
         }
 
-        /* Animated Hamburger to X */
-        .menu-btn { 
-            cursor: pointer; width: 30px; height: 18px; display: flex; 
-            flex-direction: column; justify-content: space-between; 
-            background: none; border: none; z-index: 2100; padding: 0;
-        }
+        .menu-btn { cursor: pointer; width: 30px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; background: none; border: none; z-index: 2100; padding: 0; }
         .menu-btn span { display: block; width: 100%; height: 2.5px; background: #fff; border-radius: 10px; transition: 0.4s var(--anim-ios); }
         .menu-btn.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
         .menu-btn.active span:nth-child(2) { opacity: 0; }
         .menu-btn.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
-        /* Raised X Logo & Center Massive Text */
-        .logo-raised { position: absolute; left: 65px; height: 45px; width: 45px; border-radius: 14px; object-fit: cover; box-shadow: 0 0 15px rgba(255, 60, 60, 0.3); }
+        /* 🎯 CIRCULAR LOGO: AS REQUESTED ⚪ */
+        .logo-raised { 
+            position: absolute; left: 65px; height: 48px; width: 48px; 
+            border-radius: 50% !important; /* PERFECT CIRCLE */
+            object-fit: cover; border: 2px solid rgba(255,255,255,0.1);
+            box-shadow: 0 0 15px rgba(255, 60, 60, 0.4); 
+        }
         
         .brand-center { position: absolute; left: 50%; transform: translateX(-50%); pointer-events: none; text-align: center; width: 100%; }
-        .brand-text { 
-            height: clamp(50px, 12vw, 72px); max-width: 280px; object-fit: contain; 
-            animation: breathing 2.5s infinite alternate ease-in-out;
-        }
-        @keyframes breathing {
-            from { filter: drop-shadow(0 0 5px rgba(0,242,255,0.2)); transform: scale(1); }
-            to { filter: drop-shadow(0 0 18px rgba(0,242,255,0.5)); transform: scale(1.02); }
-        }
+        .brand-text { height: clamp(52px, 14vw, 75px); max-width: 280px; object-fit: contain; animation: breathing 2.5s infinite alternate ease-in-out; }
+        @keyframes breathing { from { filter: drop-shadow(0 0 5px rgba(0,242,255,0.2)); transform: scale(1); } to { filter: drop-shadow(0 0 18px rgba(0,242,255,0.5)); transform: scale(1.02); } }
 
-        /* ⬇️ COMPONENT: GAME SCROLL (LOCKED CURVATURE) ⬇️ */
-        .games-area { 
-            display: flex; gap: 22px; padding: 35px 20px; 
-            overflow-x: auto; scrollbar-width: none; scroll-snap-type: x mandatory; 
-        }
+        /* ⬇️ GAMES: 24PX CURVE & SNAP SCROLL 📱 */
+        .games-area { display: flex; gap: 22px; padding: 35px 20px; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
         .games-area::-webkit-scrollbar { display: none; }
-
-        .game-item { min-width: 82px; text-align: center; cursor: pointer; position: relative; scroll-snap-align: center; transition: 0.3s; }
+        .game-item { min-width: 82px; text-align: center; cursor: pointer; position: relative; scroll-snap-align: center; transition: 0.3s; will-change: transform; }
         
         .frame { 
-            width: 72px; height: 72px; border-radius: 24px; /* 🚀 LEGENDARY CURVE */
-            border: 2px solid #1a1a1a; background: var(--card); 
-            display: flex; align-items: center; justify-content: center; 
-            overflow: hidden; transition: 0.4s var(--anim-ios); 
+            width: 74px; height: 74px; border-radius: 24px; /* 🚀 PREMIUM CURVE */
+            border: 2px solid #1a1a1a; background: var(--card); display: flex; align-items: center; justify-content: center; overflow: hidden; transition: 0.4s var(--anim-ios); 
         }
         .frame img { width: 100%; height: 100%; object-fit: contain; padding: 10px; opacity: 0.6; transition: 0.4s; }
 
         .game-item.active .frame { border-color: var(--cyan); transform: translateY(-12px); box-shadow: 0 12px 25px rgba(0,242,255,0.25); }
         .game-item.active .frame img { opacity: 1; transform: scale(1.1); }
-        .game-item.active .badge { transform: translateY(-12px); } /* 🚀 JUMPING BADGE */
+        .game-item.active .badge { transform: translateY(-12px); }
 
-        .badge { 
-            position: absolute; top: -8px; right: -5px; font-size: 8px; font-weight: 900; 
-            padding: 3px 8px; border-radius: 6px; text-transform: uppercase; color: #fff; z-index: 10; 
-            animation: popIn 0.4s var(--anim-ios);
-        }
-        @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
-        .trending { background: var(--red); } .hot { background: var(--orange); color: #000; }
+        /* 🎨 PASTEL BADGES SYSTEM 🎨 */
+        .badge { position: absolute; top: -6px; right: -4px; font-size: 8px; font-weight: 900; padding: 3px 9px; border-radius: 7px; text-transform: uppercase; color: #fff; z-index: 10; animation: pop 0.4s var(--anim-ios); }
+        @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+        
+        .trending { background: var(--red); }
+        .hot      { background: var(--orange); color: #000; }
+        .new      { background: var(--blue); }
+        .sale     { background: var(--green); }
 
-        .label { font-size: 9px; margin-top: 14px; color: #444; font-weight: 800; text-transform: uppercase; transition: 0.3s; }
+        .label { font-size: 9px; margin-top: 14px; color: #444; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
         .game-item.active .label { color: #fff; }
 
-        /* ⬇️ COMPONENT: SIDEBAR (IOS DRAG SYSTEM) ⬇️ */
-        #sidebar { 
-            position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100%; 
-            background: #080808; transform: translateX(-100%); 
-            transition: transform 0.4s var(--anim-ios); z-index: 2000; 
-            padding: 110px 24px; border-right: 1px solid var(--border);
-            box-shadow: 15px 0 50px rgba(0,0,0,0.9); touch-action: pan-y;
-        }
+        /* ⬇️ SIDEBAR & SCRIM ⬇️ */
+        #sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100%; background: #080808; transform: translateX(-100%); transition: transform 0.4s var(--anim-ios); z-index: 2000; padding: 110px 24px; border-right: 1px solid var(--border); box-shadow: 15px 0 50px rgba(0,0,0,0.9); touch-action: pan-y; }
         #sidebar.active { transform: translateX(0); }
-        
-        #overlay { 
-            position: fixed; inset: 0; background: rgba(0,0,0,0.6); 
-            backdrop-filter: blur(12px); opacity: 0; pointer-events: none; 
-            transition: opacity 0.4s ease; z-index: 1500;
-        }
-        #overlay.active { opacity: 1; pointer-events: auto; }
+        #nexa_overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(12px); opacity: 0; pointer-events: none; transition: 0.4s ease; z-index: 1500; }
+        #nexa_overlay.active { opacity: 1; pointer-events: auto; }
 
-        /* ⬇️ COMPONENT: STORE TILES ⬇️ */
+        /* ⬇️ STORE SECTION ⬇️ */
         #store-section { padding: 20px; border-top: 1px solid var(--border); min-height: 300px; transition: opacity 0.3s ease; }
         .product-card { background: var(--card); border-radius: 22px; padding: 25px; margin-bottom: 20px; border: 1px solid var(--border); }
-        .buy-btn { 
-            width: 100%; padding: 15px; background: #fff; color: #000; border-radius: 14px; 
-            font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; font-size: 11px;
-        }
+        .buy-btn { width: 100%; padding: 15px; background: #fff; color: #000; border-radius: 14px; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; font-size: 11px; }
         .buy-btn:active { transform: scale(0.96); }
     </style>
 </head>
@@ -112,7 +87,7 @@
 
     <header id="header">
         <button class="menu-btn" id="menu_trigger"><span></span><span></span><span></span></button>
-        <img src="assets/logo.png" alt="X" class="logo-raised">
+        <img src="assets/logo.png" alt="X" class="logo-raised" onerror="this.style.display='none'">
         <div class="brand-center">
             <img src="assets/nexa-vault-brand.png" alt="NEXA VAULT" class="brand-text">
         </div>
@@ -124,7 +99,7 @@
         <a href="#" style="color:#666; text-decoration:none; display:block; margin-bottom:25px; font-weight:700;">Marketplace</a>
         <a href="#" style="color:#666; text-decoration:none; display:block; font-weight:700;">My Wallet</a>
     </nav>
-    <div id="overlay" id="main_overlay"></div>
+    <div id="nexa_overlay"></div>
 
     <main>
         <div class="games-area" id="game_box"></div>
@@ -136,14 +111,12 @@
 
     <script>
         /**
-         * 🧠 THE NEXA CORE ENGINE (v4.0)
-         * State Driven + Gesture Optimized
+         * 🧠 THE NEXA CORE ENGINE (v4.2 FINAL)
          */
         const Nexa = (() => {
             let _dom = {};
-            
-            // 🧊 REAL-TIME PROXY STATE
             const _stateObj = { menuOpen: false, activeGame: null };
+            
             const _state = new Proxy(_stateObj, {
                 set(target, key, value) {
                     if (target[key] === value) return true;
@@ -160,6 +133,7 @@
                         _dom.sidebar.classList.toggle('active', open);
                         _dom.btn.classList.toggle('active', open);
                         _dom.overlay.classList.toggle('active', open);
+                        // Reset styles to prevent blur leak
                         if (!open) { _dom.sidebar.style.transform = ""; _dom.overlay.style.opacity = ""; }
                     }
                     if (key === 'activeGame') _renderProducts();
@@ -168,18 +142,20 @@
 
             const _renderProducts = () => {
                 const gameId = _state.activeGame;
-                const items = PRODUCTS.filter(p => p.game === gameId);
+                const items = (typeof PRODUCTS !== 'undefined') ? PRODUCTS.filter(p => p.game === gameId) : [];
+                const config = (typeof CONFIG !== 'undefined') ? CONFIG : { whatsappNumber: "91XXXXXXXXXX", emptyStockMsg: "Out of Stock" };
+
                 _dom.store.style.opacity = "0";
                 
                 setTimeout(() => {
                     _dom.store.innerHTML = items.length ? items.map(p => `
                         <div class="product-card">
-                            <span style="color:#00ff88; font-size:9px; font-weight:800; letter-spacing:1px;">VERIFIED ACCOUNT</span>
-                            <div style="font-size:17px; font-weight:800; margin:10px 0;">${p.name}</div>
+                            <span style="color:#00ff88; font-size:9px; font-weight:800; letter-spacing:1px;">✓ SECURE VAULT</span>
+                            <div style="font-size:17px; font-weight:800; margin:10px 0; color:#eee;">${p.name}</div>
                             <div style="font-size:20px; font-weight:900;">₹${p.price}</div>
-                            <button class="buy-btn" onclick="window.open('https://wa.me/91XXXXXXXXXX?text=Order:${p.name}')">Order Now</button>
+                            <button class="buy-btn" onclick="window.open('https://wa.me/${config.whatsappNumber}?text=I want to order: ${encodeURIComponent(p.name)}')">Order Now</button>
                         </div>
-                    `).join("") : `<div style="text-align:center; padding:80px; color:#333;">${CONFIG.emptyStockMsg}</div>`;
+                    `).join("") : `<div style="text-align:center; padding:80px; color:#333; font-size:12px;">${config.emptyStockMsg}</div>`;
                     _dom.store.style.opacity = "1";
                 }, 200);
             };
@@ -189,22 +165,24 @@
                     _dom = {
                         btn: document.getElementById('menu_trigger'),
                         sidebar: document.getElementById('sidebar'),
-                        overlay: document.getElementById('overlay'),
+                        overlay: document.getElementById('nexa_overlay'),
                         gameBox: document.getElementById('game_box'),
                         store: document.getElementById('store-section')
                     };
                     this._initUI();
                     this._bindEvents();
-                    _state.activeGame = CONFIG.defaultGame;
+                    _state.activeGame = (typeof CONFIG !== 'undefined') ? CONFIG.defaultGame : null;
                 },
 
                 _initUI() {
-                    _dom.gameBox.innerHTML = Object.keys(GAME_NAMES).map(id => {
-                        const data = GAME_NAMES[id];
+                    const source = (typeof GAME_NAMES !== 'undefined') ? GAME_NAMES : {};
+                    _dom.gameBox.innerHTML = Object.keys(source).map(id => {
+                        const data = source[id];
                         const tagClass = data.tag ? data.tag.toLowerCase() : "";
                         const badgeHTML = data.tag ? `<span class="badge ${tagClass}">${data.tag}</span>` : "";
+                        const defGame = (typeof CONFIG !== 'undefined') ? CONFIG.defaultGame : "";
                         return `
-                            <div class="game-item ${id === CONFIG.defaultGame ? 'active' : ''}" data-id="${id}">
+                            <div class="game-item ${id === defGame ? 'active' : ''}" data-id="${id}">
                                 ${badgeHTML}
                                 <div class="frame"><img src="assets/${id}.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1055/1055687.png'"></div>
                                 <div class="label">${data.name}</div>
@@ -217,7 +195,7 @@
                     _dom.btn.onclick = () => _state.menuOpen = !_state.menuOpen;
                     _dom.overlay.onclick = () => _state.menuOpen = false;
 
-                    // 🖐️ GESTURE ENGINE (IOS SWIPE)
+                    // 🖐️ GESTURE ENGINE (iOS SWIPE SYNC)
                     let startX = 0;
                     _dom.sidebar.ontouchstart = (e) => { if(_state.menuOpen) { startX = e.touches[0].clientX; _dom.sidebar.style.transition = "none"; _dom.overlay.style.transition = "none"; }};
                     _dom.sidebar.ontouchmove = (e) => {
