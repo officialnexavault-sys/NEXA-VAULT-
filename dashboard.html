@@ -3,137 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexa Vault | v0.036 Stable</title>
+    <title>Nexa Vault | v0.036 Master</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
     
     <style>
-        /* 🎨 STYLE AREA: यहाँ से कलर्स और डिज़ाइन बदलें */
-        :root { --bg:#050505; --cyan:#00f2ff; --silver:rgba(255,255,255,0.2); --border:rgba(255,255,255,0.08); --card:#0d0d0d; }
-        body { margin:0; background:var(--bg); color:#fff; font-family:'Inter',sans-serif; overflow-x:hidden; -webkit-tap-highlight-color: transparent; }
+        :root {
+            --bg: #050505;
+            --card: #0d0d0d;
+            --cyan: #00f2ff;
+            --red: #ff3c3c;
+            --orange: #ff9d00;
+            --blue: #0088ff;
+            --border: rgba(255,255,255,0.08);
+        }
+        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
-        #header { display: grid; grid-template-columns: auto 1fr auto; align-items: center; padding: 0 16px; height: 65px; background: #050505; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(20px); }
-        .left { display: flex; align-items: center; gap: 12px; }
-        .menu { width: 24px; display: flex; flex-direction: column; gap: 5px; cursor: pointer; }
-        .menu span { height: 2px; background: #fff; border-radius: 5px; }
-        .logo { width: 40px; height: 40px; border-radius: 50%; border: 1.2px solid var(--silver); overflow: hidden; }
-        .logo img { width: 100%; height: 100%; object-fit: cover; }
-        .center img { height: 35px; max-width: 160px; object-fit: contain; }
-        .right { width: 45px; }
+        /* 🛑 🅱️ CSS: BIG BRAND HEADER 🛑 */
+        #header { 
+            display: grid; grid-template-columns: auto 1fr auto; align-items: center; 
+            padding: 0 16px; height: 75px; background: #050505; border-bottom: 1px solid var(--border); 
+            position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(20px); 
+        }
+        .menu-icon { width: 24px; display: flex; flex-direction: column; gap: 5px; cursor: pointer; padding: 10px; }
+        .menu-icon span { height: 2px; background: #fff; border-radius: 5px; }
+        
+        .center-brand { display: flex; justify-content: center; align-items: center; }
+        .center-brand img { 
+            height: 48px; /* 🚀 बड़ा लोगो */
+            max-width: 180px; object-fit: contain; 
+            filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.25)); 
+        }
 
-        /* 🔥 SMART BADGE COLORS: लाल और ऑरेंज वाला जादू */
-        .badge { position: absolute; top: -4px; right: -4px; color: #000; font-size: 8px; font-weight: 900; padding: 3px 8px; border-radius: 6px; text-transform: uppercase; z-index: 10; box-shadow: 0 0 12px rgba(255,255,255,0.2); }
-        .badge.trending { background: #ff4444; color: #fff; box-shadow: 0 0 12px rgba(255,68,68,0.5); }
-        .badge.hot { background: #ff9800; color: #000; box-shadow: 0 0 12px rgba(255,152,0,0.5); }
+        /* 🛑 🅲 CSS: COMPACT GAMES SCROLL 🛑 */
+        .games-area { display: flex; gap: 15px; padding: 25px 18px; overflow-x: auto; scrollbar-width: none; }
+        .games-area::-webkit-scrollbar { display: none; }
+        .game-item { min-width: 70px; text-align: center; cursor: pointer; position: relative; transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .game-item:active { transform: scale(0.9); opacity: 0.7; }
+
+        /* 🛑 SMART CONNECTED BADGES 🛑 */
+        .badge {
+            position: absolute; top: -4px; right: -4px;
+            font-size: 8px; font-weight: 900; padding: 3px 7px; border-radius: 6px;
+            text-transform: uppercase; color: #fff; z-index: 10; transition: 0.4s ease;
+        }
+        .badge.trending { background: var(--red); box-shadow: 0 0 12px rgba(255, 60, 60, 0.4); }
+        .badge.hot { background: var(--orange); box-shadow: 0 0 12px rgba(255, 157, 0, 0.4); color: #000; }
+        .badge.popular { background: var(--blue); box-shadow: 0 0 12px rgba(0, 136, 255, 0.4); }
         .badge.default { background: var(--cyan); color: #000; }
 
-        .games { display: flex; gap: 20px; padding: 30px 20px; overflow-x: auto; scrollbar-width: none; }
-        .game { min-width: 85px; text-align: center; cursor: pointer; position: relative; transition: 0.3s; }
-        .frame { width: 76px; height: 76px; background: var(--card); border-radius: 24px; border: 1.5px solid #1a1a1a; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .frame img { width: 100%; height: 100%; object-fit: contain; padding: 8px; opacity: 0.9; }
-        .game.active .frame { border-color: var(--cyan); box-shadow: 0 0 20px rgba(0,242,255,0.15); transform: translateY(-10px); }
-        .label { font-size: 10px; margin-top: 14px; font-weight: 800; color: #444; text-transform: uppercase; letter-spacing: 1px; }
-        .game.active .label { color: #fff; }
+        /* 🎯 SMALLER FRAME (65px) 🎯 */
+        .frame { 
+            width: 65px; height: 65px; background: var(--card); border-radius: 20px; 
+            border: 1.5px solid #1a1a1a; display: flex; align-items: center; justify-content: center; 
+            overflow: hidden; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .frame img { width: 100%; height: 100%; object-fit: contain; padding: 6px; opacity: 0.9; transition: 0.4s; }
 
-        #sidebar { position: fixed; top: 0; left: 0; width: 280px; height: 100%; background: #080808; transform: translateX(-100%); transition: 0.4s; z-index: 2000; border-right: 1px solid var(--border); padding: 75px 20px; }
+        /* 🔥 ACTIVE ANIMATION: ICON + BADGE CONNECTED JUMP 🔥 */
+        .game-item.active .frame { border-color: var(--cyan); box-shadow: 0 0 25px rgba(0, 242, 255, 0.25); transform: translateY(-12px); }
+        .game-item.active .frame img { transform: scale(1.1); opacity: 1; }
+        .game-item.active .badge { transform: translateY(-12px); } /* Badge jumps with icon! */
+
+        .label { font-size: 9px; margin-top: 12px; font-weight: 800; color: #444; text-transform: uppercase; letter-spacing: 0.5px; transition: 0.3s; }
+        .game-item.active .label { color: #fff; }
+
+        /* 🛑 🅳 CSS: STORE SECTION 🛑 */
+        #store-section { padding: 15px 18px; border-top: 1px solid var(--border); min-height: 300px; }
+        .store-header { color: var(--cyan); font-family: 'Orbitron', sans-serif; font-size: 11px; margin-bottom: 20px; letter-spacing: 1px; }
+        .product-card { background: var(--card); border-radius: 20px; border: 1px solid var(--border); padding: 22px; margin-bottom: 15px; position: relative; }
+        .verified-tag { font-size: 9px; color: #00ff88; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .p-name { font-size: 16px; font-weight: 800; color: #eee; margin-bottom: 6px; display: block; }
+        .p-price { font-size: 19px; color: #fff; font-weight: 900; }
+        .p-price span { color: var(--cyan); font-size: 12px; margin-right: 3px; }
+        .buy-btn { margin-top: 18px; width: 100%; padding: 14px; background: #fff; color:#000; border:none; border-radius:12px; font-weight:900; font-size:11px; cursor:pointer; text-transform: uppercase; transition: 0.2s; }
+        .buy-btn:active { transform: scale(0.96); }
+
+        /* 🛑 🅴 CSS: SIDEBAR MENU 🛑 */
+        #sidebar { position: fixed; top: 0; left: 0; width: 280px; height: 100%; background: #080808; transform: translateX(-100%); transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 2000; border-right: 1px solid var(--border); padding: 75px 20px; }
         #sidebar.active { transform: translateX(0); }
         #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); opacity: 0; pointer-events: none; transition: 0.3s; z-index: 1500; }
         #overlay.active { opacity: 1; pointer-events: auto; }
-        .menu-item { padding: 14px; border-radius: 12px; color: #555; font-weight: 700; margin-bottom: 8px; cursor: pointer; }
-        .menu-item.active { background: rgba(0, 242, 255, 0.05); color: var(--cyan); border-left: 2px solid var(--cyan); }
-
-        #store-section { padding: 15px 18px; border-top: 1px solid var(--border); min-height: 300px; }
-        .store-header { color: var(--cyan); font-family: 'Orbitron', sans-serif; font-size: 11px; margin-bottom: 20px; letter-spacing: 1.5px; }
-        .product-card { background: var(--card); border-radius: 20px; border: 1px solid var(--border); padding: 20px; margin-bottom: 15px; }
-        .p-name { font-size: 15px; font-weight: 800; display: block; margin-bottom: 8px; color: #eee; }
-        .p-price { font-size: 18px; color: #fff; font-weight: 900; }
-        .buy-btn { margin-top: 15px; width: 100%; padding: 12px; background: #fff; color:#000; border:none; border-radius:12px; font-weight:900; cursor:pointer; font-size:11px; }
     </style>
 </head>
 <body>
 
     <header id="header">
-        <div class="left"><div class="menu" onclick="toggleMenu()"><span></span><span></span><span></span></div><div class="logo"><img src="assets/logo.png"></div></div>
-        <div class="center"><img src="assets/nexa-vault-brand.png"></div>
-        <div class="right"></div>
+        <div class="menu-icon" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+        <div class="center-brand">
+            <img src="assets/nexa-vault-brand.png" alt="NEXA VAULT">
+        </div>
+        <div style="width: 44px;"></div>
     </header>
 
     <div id="sidebar">
-        <div class="menu-item active">🎮 Explore Store</div>
-        <div class="menu-item">🔥 Trending</div>
-        <div class="menu-item">💰 Wallet</div>
-        <div class="menu-item">📦 Orders</div>
+        <div style="color:var(--cyan); font-weight:900; margin-bottom:30px; letter-spacing:2px;">NEXA SYSTEM</div>
+        <div style="color:#555; font-size:13px; font-weight:700; margin-bottom:20px;">🎮 Explore Market</div>
+        <div style="color:#555; font-size:13px; font-weight:700; margin-bottom:20px;">💰 My Wallet</div>
+        <div style="color:#555; font-size:13px; font-weight:700;">📞 Contact Support</div>
     </div>
     <div id="overlay" onclick="toggleMenu()"></div>
 
-    <div id="gameBox" class="games"></div>
+    <div class="games-area" id="game_box"></div>
 
     <div id="store-section">
-        <div class="store-header" id="storeTitle"></div>
-        <div id="productGrid"></div>
+        <div class="store-header" id="store_title"></div>
+        <div id="product_grid"></div>
     </div>
 
     <script src="config.js"></script>
     <script src="products.js"></script>
 
     <script>
-        // ⚙️ ENGINE AREA: ये साइट का दिमाग है
         function toggleMenu() {
             document.querySelector("#sidebar").classList.toggle("active");
             document.querySelector("#overlay").classList.toggle("active");
         }
 
+        // 💰 PRODUCT ENGINE: FADE ANIMATION ADDED 💰
         function loadProducts(gameId) {
-            const gameData = GAME_NAMES[gameId];
-            document.getElementById("storeTitle").innerText = `${CONFIG.siteName} • ${gameData.name}`;
-            const filtered = PRODUCTS.filter(p => p.game === gameId);
-            const grid = document.getElementById("productGrid");
-            
-            if(filtered.length === 0) {
-                grid.innerHTML = `<div style="text-align:center; margin-top:40px; color:#555;">${CONFIG.emptyStockMsg}</div>`;
-                return;
-            }
+            const grid = document.getElementById("product_grid");
+            grid.style.opacity = "0";
 
-            grid.innerHTML = filtered.map(p => `
-                <div class="product-card">
-                    <span class="p-name">${p.name}</span>
-                    <div class="p-price"><span>${CONFIG.currency}</span>${p.price}</div>
-                    <button class="buy-btn" onclick="sendOrder('${p.name}', '${p.price}')">BUY NOW</button>
-                </div>
-            `).join("");
+            setTimeout(() => {
+                const gameData = GAME_NAMES[gameId];
+                document.getElementById("store_title").innerText = `${CONFIG.siteName} • ${gameData.name}`;
+                const filtered = PRODUCTS.filter(p => p.game === gameId);
+                
+                if(filtered.length === 0) {
+                    grid.innerHTML = `<div style="text-align:center; margin-top:50px; color:#333; font-size:13px;">${CONFIG.emptyStockMsg}</div>`;
+                } else {
+                    grid.innerHTML = filtered.map(p => `
+                        <div class="product-card">
+                            <span class="verified-tag">✓ Verified Account • Instant Delivery</span>
+                            <span class="p-name">${p.name}</span>
+                            <div class="p-price"><span>${CONFIG.currency}</span>${p.price}</div>
+                            <button class="buy-btn" onclick="sendOrder('${p.name}', '${p.price}')">Order on WhatsApp</button>
+                        </div>
+                    `).join("");
+                }
+                grid.style.opacity = "1";
+            }, 200);
         }
 
+        // 📱 WHATSAPP ORDER ENGINE 📱
         function sendOrder(name, price) {
-            const phone = "91XXXXXXXXXX"; // अपना नंबर यहाँ डालें
-            const msg = `नमस्ते! मैं Nexa Vault से यह खरीदना चाहता हूँ:\n\nनाम: ${name}\nकीमत: ₹${price}\n\nकृपया आगे की प्रक्रिया बतायें।`;
+            const phone = "91XXXXXXXXXX"; // अपना नंबर यहाँ बदलें 🛑
+            const msg = `नमस्ते! मुझे Nexa Vault से यह खरीदना है:\n\nनाम: ${name}\nकीमत: ₹${price}\n\nकृपया आगे की प्रक्रिया बतायें।`;
             window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        // 🚀 LOOP AREA: गेम्स को स्क्रीन पर उतारने वाला सिस्टम
-        Object.keys(GAME_NAMES).forEach((id, i) => {
-            const gameData = GAME_NAMES[id];
+        // 🚀 GAME LOOP: COLOR LOGIC & BADGE SYNC 🚀
+        Object.keys(GAME_NAMES).forEach((id) => {
+            const data = GAME_NAMES[id];
             const el = document.createElement("div");
-            el.className = `game ${id === CONFIG.defaultGame ? 'active' : ''}`;
+            el.className = `game-item ${id === CONFIG.defaultGame ? 'active' : ''}`;
             
             el.onclick = function() {
-                document.querySelectorAll(".game").forEach(n => n.classList.remove("active"));
+                document.querySelectorAll(".game-item").forEach(n => n.classList.remove("active"));
                 this.classList.add("active");
                 this.scrollIntoView({ behavior: "smooth", inline: "center" });
                 loadProducts(id);
             };
 
-            // 🧠 COLOR LOGIC: नाम के हिसाब से लाल या ऑरेंज चुनो
+            // 🎨 SMART COLOR LOGIC 🎨
             let colorClass = "default";
-            if (gameData.tag === "TRENDING") colorClass = "trending";
-            if (gameData.tag === "HOT") colorClass = "hot";
+            if (data.tag === "TRENDING") colorClass = "trending";
+            else if (data.tag === "HOT") colorClass = "hot";
+            else if (data.tag === "POPULAR") colorClass = "popular";
 
-            const tagHTML = gameData.tag ? `<span class="badge ${colorClass}">${gameData.tag}</span>` : '';
+            const tagHTML = data.tag ? `<span class="badge ${colorClass}">${data.tag}</span>` : '';
 
             el.innerHTML = `
                 ${tagHTML}
-                <div class="frame"><img src="assets/${id}.png" onerror="this.onerror=null;this.src='https://cdn-icons-png.flaticon.com/512/1055/1055687.png'"></div>
-                <div class="label">${gameData.name}</div>
+                <div class="frame">
+                    <img src="assets/${id}.png" onerror="this.onerror=null;this.src='https://cdn-icons-png.flaticon.com/512/1055/1055687.png'">
+                </div>
+                <div class="label">${data.name}</div>
             `;
-            document.getElementById("gameBox").appendChild(el);
+            document.getElementById("game_box").appendChild(el);
         });
 
         window.onload = () => loadProducts(CONFIG.defaultGame);
