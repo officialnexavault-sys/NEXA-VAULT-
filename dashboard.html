@@ -1,178 +1,274 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexa Vault | v19.0 Ultimate All-In-One</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        /* 🔒 [SYSTEM CONSTITUTION - DO NOT TOUCH] */
-        :root { --bg: #050505; --card: #0d0d0d; --cyan: #00f2ff; --radius: 24px; --sidebar-w: 280px; }
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexa Vault v2</title>
 
-        /* 🛡️ HEADER & BRAND */
-        #header { 
-            display: flex; align-items: center; justify-content: space-between; 
-            padding: 0 20px; height: 95px; background: var(--bg); 
-            border-bottom: 1px solid rgba(255,255,255,0.08); position: sticky; top: 0; z-index: 1000;
-        }
-        .logo-circle { height: 48px; width: 48px; border-radius: 50% !important; border: 2px solid rgba(255,255,255,0.1); object-fit: cover; }
-        .brand-text { height: 60px; filter: none !important; background: transparent !important; }
+<style>
+:root {
+  --bg:#050505;
+  --card:#0d0d0d;
+  --cyan:#00f2ff;
+}
 
-        /* 🛡️ 3-LAYER MENU BUTTON */
-        .menu-btn { cursor: pointer; width: 30px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; z-index: 2100; position: relative; border: none; background: none; }
-        .menu-btn span { display: block; width: 100%; height: 2.5px; background: #fff; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); border-radius: 10px; }
-        .menu-btn.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-        .menu-btn.active span:nth-child(2) { opacity: 0; }
-        .menu-btn.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+body{
+  margin:0;
+  background:var(--bg);
+  color:#fff;
+  font-family:sans-serif;
+  overflow-x:hidden; /* FIX */
+}
 
-        /* 🛡️ SIDEBAR & OVERLAY (PUSH-TO-CLOSE) */
-        #sidebar { 
-            position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100%; 
-            background: #080808; transform: translateX(-100%); 
-            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 2000; 
-            padding: 110px 24px; border-right: 1px solid rgba(255,255,255,0.08);
-            box-shadow: 15px 0 50px rgba(0,0,0,0.9); touch-action: none;
-        }
-        #sidebar.active { transform: translateX(0); }
-        #overlay { 
-            position: fixed; inset: 0; background: rgba(0,0,0,0.6); 
-            backdrop-filter: blur(10px); opacity: 0; pointer-events: none; 
-            transition: opacity 0.4s; z-index: 1500; touch-action: none;
-        }
-        #overlay.active { opacity: 1; pointer-events: auto; }
+/* HEADER */
+#header{
+  height:80px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-bottom:1px solid #111;
+}
 
-        /* 🛡️ ICON FRAME HARD LOCK */
-        .frame { 
-            width: 74px !important; height: 74px !important; 
-            border-radius: var(--radius) !important; 
-            border: 2px solid #1a1a1a !important; background: var(--card) !important; 
-            display: flex !important; align-items: center !important; justify-content: center !important; 
-            overflow: hidden !important; position: relative;
-        }
-        .frame img { width: 100% !important; height: 100% !important; object-fit: contain !important; padding: 8px; border-radius: var(--radius) !important; }
+.logo{
+  height:50px;
+}
 
-        /* 🛡️ UI ELEMENTS */
-        .banner-slot { width: 100%; height: 160px; margin-top: 10px; border: 1px dashed rgba(255,255,255,0.05); }
-        .games-area { display: flex; gap: 20px; padding: 25px 20px; overflow-x: auto; scrollbar-width: none; }
-        .game-item { min-width: 82px; text-align: center; cursor: pointer; position: relative; transition: 0.2s; }
-        .game-item:active { transform: scale(0.9); }
-        .label { font-size: 9px; margin-top: 12px; color: #555; font-weight: 800; text-transform: uppercase; }
-        
-        /* 🎨 BADGES */
-        .badge { position: absolute; top: -5px; right: -5px; font-size: 8px; padding: 3px 8px; border-radius: 6px; font-weight: 900; z-index: 10; color: #fff; text-transform: uppercase; }
-        .badge.trending { background: #ff3b3b; }
-        .badge.hot { background: #ff9800; color: #000; }
-        .badge.new { background: #2196f3; }
-    </style>
+/* SEARCH */
+.search-bar{
+  margin:15px;
+  background:#111;
+  border-radius:14px;
+  padding:12px;
+  display:flex;
+  align-items:center;
+}
+
+.search-bar input{
+  background:none;
+  border:none;
+  color:#fff;
+  outline:none;
+  flex:1;
+}
+
+/* BANNER */
+.banner{
+  height:150px;
+  margin:10px;
+  border-radius:18px;
+  overflow:hidden;
+  position:relative;
+}
+
+.banner img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* PROGRESS BAR */
+.progress{
+  position:absolute;
+  bottom:0;
+  left:0;
+  height:3px;
+  background:var(--cyan);
+  width:0%;
+  animation:load 4s linear infinite;
+}
+
+@keyframes load{
+  from{width:0%}
+  to{width:100%}
+}
+
+/* GAMES */
+.games{
+  display:flex;
+  gap:15px;
+  padding:15px;
+  overflow-x:auto;
+}
+
+.game{
+  text-align:center;
+}
+
+.frame{
+  width:70px;
+  height:70px;
+  border-radius:20px;
+  background:#111;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  transition:.2s;
+}
+
+.frame img{
+  width:100%;
+  height:100%;
+  object-fit:cover; /* FIX */
+}
+
+/* ACTIVE */
+.game.active .frame{
+  box-shadow:0 0 15px var(--cyan);
+  transform:translateY(-5px);
+}
+
+.game:active .frame{
+  transform:scale(.9);
+}
+
+/* BOTTOM NAV (SVG READY) */
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  height:65px;
+  background:#000;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  border-top:1px solid #111;
+}
+
+.nav-item{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  font-size:10px;
+  color:#444;
+}
+
+.nav-item.active{
+  color:var(--cyan);
+}
+
+/* PAGES */
+.page{ display:none; }
+.page.active{ display:block; }
+</style>
 </head>
+
 <body>
 
-    <header id="header">
-        <button class="menu-btn" id="menuBtn"><span></span><span></span><span></span></button>
-        <img src="assets/logo.png" alt="X" class="logo-circle">
-        <img src="assets/nexa-vault-brand.png" alt="NEXA" class="brand-text">
-        <div style="width:30px;"></div>
-    </header>
+<!-- HOME -->
+<div id="home" class="page active">
 
-    <div id="sidebar">
-        <div style="color:var(--cyan); font-family:Orbitron; font-weight:900; font-size:18px; margin-bottom:40px;">NEXA SYSTEM</div>
-        <div style="color:#666; font-size:14px; font-weight:700;">Marketplace</div>
-        </div>
-    <div id="overlay"></div>
+<header id="header">
+<img src="assets/nexa-vault-brand.png" class="logo">
+</header>
 
-    <div class="banner-slot"></div>
+<div class="search-bar" onclick="openSearch()">
+🔍 <input placeholder="Search..." disabled>
+</div>
 
-    <main>
-        <div class="games-area" id="game_box"></div>
-        <div id="store_section" style="padding: 0 20px 40px 20px;"></div>
-    </main>
+<div class="banner">
+<img id="bannerImg" src="assets/banner1.jpg">
+<div class="progress"></div>
+</div>
 
-    <script src="config.js"></script>
-    <script src="products.js"></script>
+<div class="games" id="gamesBox"></div>
 
-    <script>
-        /**
-         * 🚀 THE COMPLETE ENGINE
-         */
-        const NexaEngine = {
-            init() {
-                this.renderGames();
-                this.initSidebar();
-            },
+<div id="store"></div>
 
-            initSidebar() {
-                const btn = document.getElementById('menuBtn');
-                const sidebar = document.getElementById('sidebar');
-                const overlay = document.getElementById('overlay');
-                let startX = 0, isDragging = false;
+</div>
 
-                const toggle = () => {
-                    const isOpen = sidebar.classList.toggle('active');
-                    btn.classList.toggle('active');
-                    overlay.classList.toggle('active');
-                    sidebar.style.transform = "";
-                };
+<!-- SEARCH -->
+<div id="searchPage" class="page">
+<div class="search-bar">
+<input placeholder="Search..." oninput="searchGame(this.value)">
+</div>
+<div id="results"></div>
+</div>
 
-                btn.onclick = toggle;
-                overlay.onclick = toggle;
+<!-- PROFILE -->
+<div id="profile" class="page">
+<h2 style="padding:20px">Profile 👤</h2>
+</div>
 
-                // 🖐️ PUSH-TO-CLOSE GESTURE (Touch Logic)
-                const handleStart = (e) => { if(sidebar.classList.contains('active')) { startX = e.clientX || e.touches[0].clientX; isDragging = true; sidebar.style.transition = "none"; }};
-                const handleMove = (e) => {
-                    if(!isDragging) return;
-                    let currentX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
-                    let diff = currentX - startX;
-                    if(diff < 0) { sidebar.style.transform = `translateX(${diff}px)`; overlay.style.opacity = Math.max(0, 1 + (diff / 280)); }
-                };
-                const handleEnd = (e) => {
-                    if(!isDragging) return;
-                    isDragging = false;
-                    sidebar.style.transition = "";
-                    let endX = e.clientX || (e.changedTouches ? e.changedTouches[0].clientX : 0);
-                    if(endX - startX < -80) toggle();
-                    else sidebar.style.transform = "translateX(0)";
-                };
+<!-- NAV -->
+<div class="bottom-nav">
 
-                [sidebar, overlay].forEach(el => el.addEventListener('touchstart', handleStart));
-                window.addEventListener('touchmove', handleMove);
-                window.addEventListener('touchend', handleEnd);
-            },
+<div class="nav-item active" onclick="switchPage('home',this)">
+🏠<span>Home</span>
+</div>
 
-            renderGames() {
-                const box = document.getElementById("game_box");
-                if (typeof GAME_NAMES === 'undefined') return;
-                box.innerHTML = Object.keys(GAME_NAMES).map(id => {
-                    const data = GAME_NAMES[id];
-                    const tagClass = data.tag ? data.tag.toLowerCase() : "";
-                    return `
-                        <div class="game-item" onclick="loadStore('${id}', this)">
-                            ${data.tag ? `<span class="badge ${tagClass}">${data.tag}</span>` : ""}
-                            <div class="frame"><img src="assets/${id}.png" onerror="this.src='assets/logo.png'"></div>
-                            <p class="label">${data.name}</p>
-                        </div>
-                    `;
-                }).join("");
-            }
-        };
+<div class="nav-item" onclick="switchPage('searchPage',this)">
+🔍<span>Search</span>
+</div>
 
-        function loadStore(id, el) {
-            document.querySelectorAll('.game-item').forEach(i => i.style.opacity = "0.5");
-            el.style.opacity = "1";
-            const container = document.getElementById("store_section");
-            const data = PRODUCTS.filter(p => p.game === id);
-            container.innerHTML = data.map(p => `
-                <div style="background:var(--card); padding:20px; border-radius:20px; border:1px solid #1a1a1a; margin-bottom:15px;">
-                    <div style="font-weight:800;">${p.name}</div>
-                    <div style="color:var(--cyan); font-weight:900; margin-top:5px;">₹${p.price}</div>
-                    <button style="width:100%; padding:15px; border-radius:12px; border:none; background:#fff; font-weight:900; margin-top:15px;">Order on WhatsApp</button>
-                </div>
-            `).join("");
-        }
+<div class="nav-item" onclick="switchPage('profile',this)">
+👤<span>Profile</span>
+</div>
 
-        document.addEventListener("DOMContentLoaded", () => NexaEngine.init());
-    </script>
+</div>
+
+<script>
+
+/* PAGE SWITCH */
+function switchPage(id,el){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+
+document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+el.classList.add('active');
+}
+
+/* SEARCH OPEN */
+function openSearch(){
+switchPage('searchPage',document.querySelectorAll('.nav-item')[1]);
+}
+
+/* DATA */
+const games = [
+{name:"Free Fire",img:"assets/ff.png"},
+{name:"BGMI",img:"assets/bgmi.png"},
+{name:"COD",img:"assets/cod.png"}
+];
+
+/* RENDER */
+const box = document.getElementById("gamesBox");
+box.innerHTML = games.map((g,i)=>`
+<div class="game" onclick="selectGame(${i},this)">
+<div class="frame">
+<img src="${g.img}">
+</div>
+<div>${g.name}</div>
+</div>
+`).join("");
+
+/* SELECT GAME */
+function selectGame(i,el){
+document.querySelectorAll('.game').forEach(g=>g.classList.remove('active'));
+el.classList.add('active');
+
+document.getElementById("store").innerHTML = `
+<div style="padding:20px">
+<b>${games[i].name}</b><br>
+₹100
+</div>`;
+}
+
+/* SEARCH */
+function searchGame(val){
+const res = document.getElementById("results");
+const f = games.filter(g=>g.name.toLowerCase().includes(val.toLowerCase()));
+res.innerHTML = f.map(g=>`<div style="padding:10px">${g.name}</div>`).join("");
+}
+
+/* BANNER */
+const banners=["assets/banner1.jpg","assets/banner2.jpg"];
+let i=0;
+setInterval(()=>{
+i=(i+1)%banners.length;
+document.getElementById("bannerImg").src=banners[i];
+},4000);
+
+</script>
+
 </body>
 </html>
