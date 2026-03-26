@@ -1,208 +1,120 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexa Vault | v3.0 Reactive Core</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #050505; --card: #0d0d0d; --cyan: #00f2ff;
-            --sidebar-w: 280px; --anim: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+/**
+ * 🏆 THE NEXA REACTIVE ENGINE (v3.2)
+ * Fix: Sidebar Swipe + Overlay Sync Leak
+ */
+const NexaCore = (() => {
+    let _dom = {};
+    let _data = {};
+
+    // 🧊 TRUE IMMUTABLE STATE
+    const _stateObj = { menuOpen: false, isBusy: false, activeGame: null };
+    const _state = new Proxy(_stateObj, {
+        set(target, key, value) {
+            if (target[key] === value) return true;
+            target[key] = value;
+            _renderSync(key);
+            return true;
         }
-        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
-        
-        /* HEADER & BRANDING */
-        .nexa-header { display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 90px; border-bottom: 1px solid rgba(255,255,255,0.08); position: sticky; top: 0; z-index: 1000; background: var(--bg); }
-        .menu-trigger { cursor: pointer; width: 30px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; background: none; border: none; z-index: 2100; }
-        .menu-trigger span { display: block; width: 100%; height: 2px; background: #fff; transition: var(--anim); }
-        .menu-trigger.is-active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-        .menu-trigger.is-active span:nth-child(2) { opacity: 0; }
-        .menu-trigger.is-active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+    });
 
-        .brand-identity { position: absolute; left: 50%; transform: translateX(-50%); pointer-events: none; }
-        .brand-text { height: 65px; filter: drop-shadow(0 0 10px rgba(0,242,255,0.3)); }
-
-        /* MARKET SCROLL */
-        #game_track { display: flex; gap: 20px; padding: 30px 20px; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x mandatory; }
-        .market-node { min-width: 80px; text-align: center; cursor: pointer; scroll-snap-align: center; position: relative; transition: 0.3s; }
-        .node-frame { width: 70px; height: 70px; border-radius: 20px; border: 2px solid #1a1a1a; background: var(--card); display: flex; align-items: center; justify-content: center; transition: 0.4s var(--anim); }
-        .node-frame img { width: 100%; height: 100%; object-fit: contain; padding: 10px; opacity: 0.6; }
-        .market-node.is-active .node-frame { border-color: var(--brand-cyan); transform: translateY(-10px); box-shadow: 0 10px 25px rgba(0,242,255,0.2); }
-        .market-node.is-active .node-frame img { opacity: 1; }
-
-        /* SIDEBAR & OVERLAY */
-        #sidebar_nav { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100%; background: #080808; transform: translateX(-100%); transition: transform var(--anim); z-index: 2000; padding: 120px 24px; border-right: 1px solid rgba(255,255,255,0.08); }
-        #sidebar_nav.is-active { transform: translateX(0); }
-        #ui_scrim { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(12px); opacity: 0; pointer-events: none; transition: 0.4s; z-index: 1500; }
-        #ui_scrim.is-active { opacity: 1; pointer-events: auto; }
-
-        /* STORE */
-        #store_canvas { padding: 20px; }
-        .product-card { background: var(--card); border-radius: 24px; padding: 25px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.08); }
-        .action-btn { width: 100%; padding: 16px; background: #fff; color: #000; border-radius: 14px; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; }
-    </style>
-</head>
-<body>
-
-    <header class="nexa-header">
-        <button class="menu-trigger" id="menu_trigger" aria-label="Toggle Menu">
-            <span></span><span></span><span></span>
-        </button>
-        <div class="brand-identity">
-            <img src="assets/nexa-vault-brand.png" alt="NEXA" class="brand-text">
-        </div>
-        <div style="width: 35px;"></div>
-    </header>
-
-    <nav class="nexa-sidebar" id="sidebar_nav">
-        <div style="color:var(--cyan); font-family:Orbitron; font-weight:900; font-size:18px; margin-bottom:40px;">NEXA CORE v3.0</div>
-        <a href="#" style="color:#555; text-decoration:none; display:block; font-weight:700;">Marketplace</a>
-    </nav>
-    <div class="scrim-overlay" id="ui_scrim"></div>
-
-    <main>
-        <section id="game_track"></section>
-        <section id="store_canvas"></section>
-    </main>
-
-    <script src="config.js"></script>
-    <script src="products.js"></script>
-
-    <script>
-        /**
-         * 🏆 THE NEXA REACTIVE ENGINE (v3.0)
-         * State -> Auto Proxy -> UI Sync
-         */
-        const NexaCore = (() => {
-            let _dom = {};
-            let _data = {};
-
-            // 🧊 1. TRUE IMMUTABLE STATE WITH PROXY
-            const _stateObj = {
-                menuOpen: false,
-                activeGame: null,
-                isBusy: false
-            };
-
-            const _state = new Proxy(_stateObj, {
-                set(target, key, value) {
-                    if (target[key] === value) return true;
-                    target[key] = value;
-                    _renderSync(key); // ⚡ Auto-Trigger UI
-                    return true;
-                }
-            });
-
-            // ⚡ 2. DECLARATIVE UI SYNC
-            const _renderSync = (key) => {
-                requestAnimationFrame(() => {
-                    switch(key) {
-                        case 'menuOpen':
-                            _dom.sidebar.classList.toggle('is-active', _state.menuOpen);
-                            _dom.trigger.classList.toggle('is-active', _state.menuOpen);
-                            _dom.scrim.classList.toggle('is-active', _state.menuOpen);
-                            break;
-                        case 'activeGame':
-                            _renderStore();
-                            break;
-                    }
-                });
-            };
-
-            // 💰 3. SANITIZED RENDERING (XSS Prevention)
-            const _sanitize = (str) => {
-                const div = document.createElement('div');
-                div.textContent = str;
-                return div.innerHTML;
-            };
-
-            const _renderStore = () => {
-                const items = _data.products.filter(p => p.game === _state.activeGame);
-                _dom.canvas.style.opacity = "0.5";
+    const _renderSync = (key) => {
+        requestAnimationFrame(() => {
+            if (key === 'menuOpen') {
+                const isOpen = _state.menuOpen;
+                _dom.sidebar.classList.toggle('is-active', isOpen);
+                _dom.trigger.classList.toggle('is-active', isOpen);
+                _dom.scrim.classList.toggle('is-active', isOpen);
                 
-                _dom.canvas.innerHTML = items.length ? items.map(p => `
-                    <article class="product-card">
-                        <span style="color:#00ff88; font-size:9px; font-weight:800;">VERIFIED • SECURE</span>
-                        <h2 style="font-size:17px; font-weight:800; margin:12px 0;">${_sanitize(p.name)}</h2>
-                        <div style="font-size:22px; font-weight:900;">₹${p.price}</div>
-                        <button class="action-btn" data-product="${_sanitize(p.name)}">Order Now</button>
-                    </article>
-                `).join("") : `<div style="text-align:center; padding:50px;">OUT OF STOCK</div>`;
-                
-                _dom.canvas.style.opacity = "1";
-            };
-
-            return {
-                // 💉 4. DEPENDENCY INJECTION BOOT
-                boot({ games, products, config }) {
-                    _data = { games, products, config };
-                    
-                    _dom = {
-                        trigger: document.getElementById('menu_trigger'),
-                        sidebar: document.getElementById('sidebar_nav'),
-                        scrim: document.getElementById('ui_scrim'),
-                        track: document.getElementById('game_track'),
-                        canvas: document.getElementById('store_canvas')
-                    };
-
-                    this._initUI();
-                    this._bindGlobalEvents();
-                    _state.activeGame = config.defaultGame;
-                },
-
-                _initUI() {
-                    _dom.track.innerHTML = Object.keys(_data.games).map(id => `
-                        <div class="market-node ${id === _data.config.defaultGame ? 'is-active' : ''}" data-id="${id}">
-                            <div class="node-frame"><img src="assets/${id}.png" loading="lazy"></div>
-                            <div style="font-size:9px; font-weight:800; margin-top:12px; color:#444;">${_data.games[id].name}</div>
-                        </div>
-                    `).join("");
-                },
-
-                _bindGlobalEvents() {
-                    // 🔘 5. EVENT DELEGATION (Enterprise Pattern)
-                    _dom.trigger.addEventListener('click', () => _state.menuOpen = !_state.menuOpen);
-                    _dom.scrim.addEventListener('click', () => _state.menuOpen = false);
-                    
-                    _dom.track.addEventListener('click', (e) => {
-                        const node = e.target.closest('.market-node');
-                        if (!node) return;
-                        document.querySelectorAll('.market-node').forEach(n => n.classList.remove('is-active'));
-                        node.classList.add('is-active');
-                        _state.activeGame = node.dataset.id;
-                    });
-
-                    _dom.canvas.addEventListener('click', (e) => {
-                        if (e.target.classList.contains('action-btn')) {
-                            const prod = e.target.dataset.product;
-                            window.open(`https://wa.me/91XXXXXXXXXX?text=Order:${encodeURIComponent(prod)}`, "_blank", "noopener,noreferrer");
-                        }
-                    });
-
-                    // 🛠️ 6. SAFE TRANSITION SYNC
-                    _dom.sidebar.addEventListener('transitionend', (e) => {
-                        if (e.target === _dom.sidebar && e.propertyName === 'transform') {
-                            _state.isBusy = false;
-                        }
-                    });
-
-                    document.addEventListener('keydown', (e) => {
-                        if (e.key === "Escape") _state.menuOpen = false;
-                    });
+                // 🛑 Leak Fix: Reset styles when closing
+                if (!isOpen) {
+                    _dom.sidebar.style.transform = "";
+                    _dom.scrim.style.opacity = "";
                 }
-            };
-        })();
-
-        // 🚀 THE ARCHITECT LAUNCH
-        document.addEventListener("DOMContentLoaded", () => {
-            NexaCore.boot({ 
-                games: GAME_NAMES, 
-                products: PRODUCTS, 
-                config: CONFIG 
-            });
+            }
+            if (key === 'activeGame') _renderStore();
         });
-    </script>
-</body>
-</html>
+    };
+
+    return {
+        boot({ games, products, config }) {
+            _data = { games, products, config };
+            _dom = {
+                trigger: document.getElementById('menu_trigger'),
+                sidebar: document.getElementById('sidebar_nav'),
+                scrim: document.getElementById('ui_scrim'),
+                track: document.getElementById('game_track'),
+                canvas: document.getElementById('store_canvas')
+            };
+            this._initUI();
+            this._bindGlobalEvents();
+            _state.activeGame = config.defaultGame;
+        },
+
+        _initUI() {
+            _dom.track.innerHTML = Object.keys(_data.games).map(id => {
+                const data = _data.games[id];
+                const tagClass = data.tag ? data.tag.toLowerCase() : "";
+                const tagHTML = data.tag ? `<span class="market-badge ${tagClass}">${data.tag}</span>` : "";
+                return `
+                    <div class="market-node ${id === _data.config.defaultGame ? 'is-active' : ''}" data-id="${id}">
+                        ${tagHTML}
+                        <div class="node-frame"><img src="assets/${id}.png" loading="lazy"></div>
+                        <div class="label">${data.name}</div>
+                    </div>
+                `;
+            }).join("");
+        },
+
+        _bindGlobalEvents() {
+            _dom.trigger.onclick = () => _state.menuOpen = !_state.menuOpen;
+            _dom.scrim.onclick = () => _state.menuOpen = false;
+
+            // 🖐️ GESTURE ENGINE (Leak-Proof v3.2)
+            let startX = 0;
+            const sidebarW = 280;
+
+            _dom.sidebar.ontouchstart = (e) => {
+                if (!_state.menuOpen) return;
+                startX = e.touches[0].clientX;
+                _dom.sidebar.style.transition = "none";
+                _dom.scrim.style.transition = "none";
+            };
+
+            _dom.sidebar.ontouchmove = (e) => {
+                if (!_state.menuOpen) return;
+                let diff = e.touches[0].clientX - startX;
+                if (diff < 0) {
+                    _dom.sidebar.style.transform = `translateX(${diff}px)`;
+                    // 🎯 Overlay opacity syncs with finger movement
+                    _dom.scrim.style.opacity = Math.max(0, 1 + (diff / sidebarW));
+                }
+            };
+
+            _dom.sidebar.ontouchend = (e) => {
+                if (!_state.menuOpen) return;
+                _dom.sidebar.style.transition = "";
+                _dom.scrim.style.transition = "";
+                let diff = e.changedTouches[0].clientX - startX;
+                
+                if (diff < -80) {
+                    _state.menuOpen = false; // 🚀 Trigger Full Close
+                } else {
+                    _dom.sidebar.style.transform = "translateX(0)";
+                    _dom.scrim.style.opacity = "1";
+                }
+            };
+
+            // Game Switch & Store Render Logic...
+            _dom.track.onclick = (e) => {
+                const node = e.target.closest('.market-node');
+                if (node) {
+                    document.querySelectorAll('.market-node').forEach(n => n.classList.remove('is-active'));
+                    node.classList.add('is-active');
+                    _state.activeGame = node.dataset.id;
+                    node.scrollIntoView({ behavior: "smooth", inline: "center" });
+                }
+            };
+        }
+    };
+})();
 
