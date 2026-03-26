@@ -3,95 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexa Vault | v18.0 Lock-Patch</title>
+    <title>Nexa Vault | v19.0 Ultimate All-In-One</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        /* 🔒 [LOCK ZONE - इसे कभी मत छेड़ना] */
-        :root { --bg: #050505; --card: #0d0d0d; --cyan: #00f2ff; --radius: 24px; }
+        /* 🔒 [SYSTEM CONSTITUTION - DO NOT TOUCH] */
+        :root { --bg: #050505; --card: #0d0d0d; --cyan: #00f2ff; --radius: 24px; --sidebar-w: 280px; }
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: #fff; font-family: sans-serif; overflow-x: hidden; }
+        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
 
-        /* 🛡️ ICON HARD LOCK - 24PX CURVE & NO STRETCH */
+        /* 🛡️ HEADER & BRAND */
+        #header { 
+            display: flex; align-items: center; justify-content: space-between; 
+            padding: 0 20px; height: 95px; background: var(--bg); 
+            border-bottom: 1px solid rgba(255,255,255,0.08); position: sticky; top: 0; z-index: 1000;
+        }
+        .logo-circle { height: 48px; width: 48px; border-radius: 50% !important; border: 2px solid rgba(255,255,255,0.1); object-fit: cover; }
+        .brand-text { height: 60px; filter: none !important; background: transparent !important; }
+
+        /* 🛡️ 3-LAYER MENU BUTTON */
+        .menu-btn { cursor: pointer; width: 30px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; z-index: 2100; position: relative; border: none; background: none; }
+        .menu-btn span { display: block; width: 100%; height: 2.5px; background: #fff; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); border-radius: 10px; }
+        .menu-btn.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+        .menu-btn.active span:nth-child(2) { opacity: 0; }
+        .menu-btn.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+        /* 🛡️ SIDEBAR & OVERLAY (PUSH-TO-CLOSE) */
+        #sidebar { 
+            position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100%; 
+            background: #080808; transform: translateX(-100%); 
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 2000; 
+            padding: 110px 24px; border-right: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 15px 0 50px rgba(0,0,0,0.9); touch-action: none;
+        }
+        #sidebar.active { transform: translateX(0); }
+        #overlay { 
+            position: fixed; inset: 0; background: rgba(0,0,0,0.6); 
+            backdrop-filter: blur(10px); opacity: 0; pointer-events: none; 
+            transition: opacity 0.4s; z-index: 1500; touch-action: none;
+        }
+        #overlay.active { opacity: 1; pointer-events: auto; }
+
+        /* 🛡️ ICON FRAME HARD LOCK */
         .frame { 
             width: 74px !important; height: 74px !important; 
             border-radius: var(--radius) !important; 
-            border: 2px solid #1a1a1a !important; 
-            background: var(--card) !important; 
+            border: 2px solid #1a1a1a !important; background: var(--card) !important; 
             display: flex !important; align-items: center !important; justify-content: center !important; 
             overflow: hidden !important; position: relative;
         }
-        .frame img { 
-            width: 100% !important; height: 100% !important; 
-            object-fit: contain !important; /* 🚀 आइकॉन पूरा दिखेगा */
-            padding: 8px; 
-            border-radius: var(--radius) !important;
-        }
+        .frame img { width: 100% !important; height: 100% !important; object-fit: contain !important; padding: 8px; border-radius: var(--radius) !important; }
 
-        /* 🛡️ BADGE SYSTEM (TRENDING/HOT/NEW) */
+        /* 🛡️ UI ELEMENTS */
+        .banner-slot { width: 100%; height: 160px; margin-top: 10px; border: 1px dashed rgba(255,255,255,0.05); }
+        .games-area { display: flex; gap: 20px; padding: 25px 20px; overflow-x: auto; scrollbar-width: none; }
+        .game-item { min-width: 82px; text-align: center; cursor: pointer; position: relative; transition: 0.2s; }
+        .game-item:active { transform: scale(0.9); }
+        .label { font-size: 9px; margin-top: 12px; color: #555; font-weight: 800; text-transform: uppercase; }
+        
+        /* 🎨 BADGES */
         .badge { position: absolute; top: -5px; right: -5px; font-size: 8px; padding: 3px 8px; border-radius: 6px; font-weight: 900; z-index: 10; color: #fff; text-transform: uppercase; }
         .badge.trending { background: #ff3b3b; }
         .badge.hot { background: #ff9800; color: #000; }
         .badge.new { background: #2196f3; }
-        
-        /* 🛡️ HEADER & LAYOUT */
-        #header { height: 95px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #1a1a1a; position: sticky; top: 0; background: var(--bg); z-index: 100; }
-        .games-area { display: flex; gap: 20px; padding: 25px 20px; overflow-x: auto; scrollbar-width: none; }
-        .game-item { min-width: 80px; text-align: center; cursor: pointer; position: relative; transition: 0.2s; }
-        .game-item:active { transform: scale(0.9); }
-        .label { font-size: 9px; margin-top: 10px; color: #555; font-weight: 800; }
     </style>
 </head>
 <body>
 
     <header id="header">
-        <div style="width:30px;"></div>
-        <img src="assets/logo.png" style="height:48px; border-radius:50%;">
-        <img src="assets/nexa-vault-brand.png" style="height:60px; filter:none; background:transparent;">
+        <button class="menu-btn" id="menuBtn"><span></span><span></span><span></span></button>
+        <img src="assets/logo.png" alt="X" class="logo-circle">
+        <img src="assets/nexa-vault-brand.png" alt="NEXA" class="brand-text">
         <div style="width:30px;"></div>
     </header>
 
-    <div id="banner-slot" style="width:100%; height:160px; margin-top:10px; border: 1px dashed #222;"></div>
+    <div id="sidebar">
+        <div style="color:var(--cyan); font-family:Orbitron; font-weight:900; font-size:18px; margin-bottom:40px;">NEXA SYSTEM</div>
+        <div style="color:#666; font-size:14px; font-weight:700;">Marketplace</div>
+        </div>
+    <div id="overlay"></div>
+
+    <div class="banner-slot"></div>
 
     <main>
         <div class="games-area" id="game_box"></div>
-        <div id="store_section" style="padding: 20px;"></div>
+        <div id="store_section" style="padding: 0 20px 40px 20px;"></div>
     </main>
 
     <script src="config.js"></script>
     <script src="products.js"></script>
 
     <script>
-        // 🚀 THE STABLE ENGINE
-        document.addEventListener("DOMContentLoaded", () => {
-            const box = document.getElementById("game_box");
-            if (typeof GAME_NAMES === 'undefined') return;
+        /**
+         * 🚀 THE COMPLETE ENGINE
+         */
+        const NexaEngine = {
+            init() {
+                this.renderGames();
+                this.initSidebar();
+            },
 
-            box.innerHTML = Object.keys(GAME_NAMES).map(id => {
-                const data = GAME_NAMES[id];
-                const tagClass = data.tag ? data.tag.toLowerCase() : "";
-                return `
-                    <div class="game-item" onclick="loadStore('${id}', this)">
-                        ${data.tag ? `<span class="badge ${tagClass}">${data.tag}</span>` : ""}
-                        <div class="frame"><img src="assets/${id}.png" onerror="this.src='assets/logo.png'"></div>
-                        <p class="label">${data.name}</p>
-                    </div>
-                `;
-            }).join("");
-        });
+            initSidebar() {
+                const btn = document.getElementById('menuBtn');
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.getElementById('overlay');
+                let startX = 0, isDragging = false;
+
+                const toggle = () => {
+                    const isOpen = sidebar.classList.toggle('active');
+                    btn.classList.toggle('active');
+                    overlay.classList.toggle('active');
+                    sidebar.style.transform = "";
+                };
+
+                btn.onclick = toggle;
+                overlay.onclick = toggle;
+
+                // 🖐️ PUSH-TO-CLOSE GESTURE (Touch Logic)
+                const handleStart = (e) => { if(sidebar.classList.contains('active')) { startX = e.clientX || e.touches[0].clientX; isDragging = true; sidebar.style.transition = "none"; }};
+                const handleMove = (e) => {
+                    if(!isDragging) return;
+                    let currentX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
+                    let diff = currentX - startX;
+                    if(diff < 0) { sidebar.style.transform = `translateX(${diff}px)`; overlay.style.opacity = Math.max(0, 1 + (diff / 280)); }
+                };
+                const handleEnd = (e) => {
+                    if(!isDragging) return;
+                    isDragging = false;
+                    sidebar.style.transition = "";
+                    let endX = e.clientX || (e.changedTouches ? e.changedTouches[0].clientX : 0);
+                    if(endX - startX < -80) toggle();
+                    else sidebar.style.transform = "translateX(0)";
+                };
+
+                [sidebar, overlay].forEach(el => el.addEventListener('touchstart', handleStart));
+                window.addEventListener('touchmove', handleMove);
+                window.addEventListener('touchend', handleEnd);
+            },
+
+            renderGames() {
+                const box = document.getElementById("game_box");
+                if (typeof GAME_NAMES === 'undefined') return;
+                box.innerHTML = Object.keys(GAME_NAMES).map(id => {
+                    const data = GAME_NAMES[id];
+                    const tagClass = data.tag ? data.tag.toLowerCase() : "";
+                    return `
+                        <div class="game-item" onclick="loadStore('${id}', this)">
+                            ${data.tag ? `<span class="badge ${tagClass}">${data.tag}</span>` : ""}
+                            <div class="frame"><img src="assets/${id}.png" onerror="this.src='assets/logo.png'"></div>
+                            <p class="label">${data.name}</p>
+                        </div>
+                    `;
+                }).join("");
+            }
+        };
 
         function loadStore(id, el) {
             document.querySelectorAll('.game-item').forEach(i => i.style.opacity = "0.5");
             el.style.opacity = "1";
-            
             const container = document.getElementById("store_section");
             const data = PRODUCTS.filter(p => p.game === id);
             container.innerHTML = data.map(p => `
                 <div style="background:var(--card); padding:20px; border-radius:20px; border:1px solid #1a1a1a; margin-bottom:15px;">
                     <div style="font-weight:800;">${p.name}</div>
                     <div style="color:var(--cyan); font-weight:900; margin-top:5px;">₹${p.price}</div>
-                    <button style="width:100%; padding:12px; border-radius:12px; border:none; background:#fff; font-weight:900; margin-top:15px;">Order Now</button>
+                    <button style="width:100%; padding:15px; border-radius:12px; border:none; background:#fff; font-weight:900; margin-top:15px;">Order on WhatsApp</button>
                 </div>
             `).join("");
         }
+
+        document.addEventListener("DOMContentLoaded", () => NexaEngine.init());
     </script>
 </body>
 </html>
