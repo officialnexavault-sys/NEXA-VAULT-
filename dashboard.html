@@ -3,167 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nexa Vault v30.1 | Final Engine</title>
+    <title>Nexa Vault v32.0 | Final Master Build</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg: #050505; --card: #0d0d0d; --cyan: #00f2ff; --radius: 24px;
-            --border: rgba(255, 255, 255, 0.08); --header-h: 85px; --nav-h: 75px;
-            --sidebar-w: 280px; --font-main: 'Inter', sans-serif; --font-brand: 'Orbitron', sans-serif;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { background: var(--bg); color: #fff; font-family: var(--font-main); overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+        :root { --bg: #050505; --card: #0d0d0d; --cyan: #00f2ff; --radius: 24px; --border: rgba(255, 255, 255, 0.08); --header-h: 85px; --nav-h: 75px; --font-brand: 'Orbitron', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
 
-        /* 🛡️ PAGE ENGINE */
-        .page { display: none; width: 100%; min-height: 100vh; padding-bottom: calc(var(--nav-h) + 20px); }
+        /* 🛡️ PAGE SYSTEM */
+        .page { display: none; width: 100%; min-height: 100vh; padding-bottom: calc(var(--nav-h) + 20px); animation: pageFade 0.4s ease; }
         .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pageFade { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
 
-        /* 🛡️ HEADER & SEARCH */
-        header { display: flex; align-items: center; justify-content: space-between; padding: 0 20px; height: var(--header-h); background: rgba(5, 5, 5, 0.85); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 2000; }
-        .menu-btn { width: 30px; height: 20px; position: relative; cursor: pointer; z-index: 4000; }
-        .menu-btn span { position: absolute; width: 100%; height: 3px; background: #fff; border-radius: 10px; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .menu-btn span:nth-child(1) { top: 0; } .menu-btn span:nth-child(2) { top: 50%; transform: translateY(-50%); } .menu-btn span:nth-child(3) { bottom: 0; }
-        .menu-btn.active span:nth-child(1) { transform: translateY(8.5px) rotate(45deg); background: var(--cyan); }
-        .menu-btn.active span:nth-child(2) { opacity: 0; } .menu-btn.active span:nth-child(3) { transform: translateY(-8.5px) rotate(-45deg); background: var(--cyan); }
+        /* 🛡️ HEADER & SEARCH UX */
+        header { display: flex; align-items: center; justify-content: space-between; padding: 0 15px; height: var(--header-h); background: rgba(5,5,5,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 2000; }
+        .h-center { display: flex; align-items: center; gap: 8px; position: absolute; left: 50%; transform: translateX(-50%); }
+        .logo-box { width: 35px; height: 35px; border-radius: 50%; border: 1px solid var(--cyan); overflow: hidden; }
+        .logo-box img { width: 100%; height: 100%; object-fit: contain; }
 
-        /* 🛡️ SEARCH OVERLAY (REAL LOGIC) */
-        #search-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 5000; display: none; padding: 20px; animation: fadeIn 0.3s ease; }
-        .search-input-box { background: #111; border: 1px solid var(--border); border-radius: 15px; padding: 12px 18px; display: flex; align-items: center; gap: 10px; }
-        .search-input-box input { background: none; border: none; color: #fff; flex: 1; font-size: 16px; font-weight: 600; }
+        #s-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 5000; display: none; padding: 20px; }
+        .s-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .s-box { flex: 1; background: #111; border: 1px solid var(--border); border-radius: 12px; padding: 12px; display: flex; align-items: center; position: relative; }
+        .s-box input { background: none; border: none; color: #fff; width: calc(100% - 25px); outline: none; font-weight: 600; }
+        .clear-s { position: absolute; right: 12px; cursor: pointer; display: none; }
+
+        /* 🛡️ BANNER & GALAXY */
+        .slider-view { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; border-radius: 22px; border: 1px solid var(--border); margin: 15px; }
+        .slider-view::-webkit-scrollbar { display: none; }
+        .slide { min-width: 100%; height: 160px; scroll-snap-align: start; }
+        .slide img { width: 100%; height: 100%; object-fit: cover; }
+        .dots { display: flex; justify-content: center; gap: 8px; margin-top: -5px; margin-bottom: 15px; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: #222; transition: 0.3s; }
+        .dot.active { background: var(--cyan); width: 18px; border-radius: 10px; }
+
+        .galaxy { display: flex; gap: 15px; padding: 10px 15px; overflow-x: auto; scrollbar-width: none; }
+        .galaxy::-webkit-scrollbar { display: none; }
+        .g-item { min-width: 74px; text-align: center; position: relative; transition: 0.3s; }
+        .frame-74 { width: 74px; height: 74px; border-radius: 24px; background: var(--card); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .g-item.active .frame-74 { border-color: var(--cyan); box-shadow: 0 0 15px rgba(0,242,255,0.2); transform: translateY(-5px); }
+        .badge { position: absolute; top: -5px; right: -5px; font-size: 7px; padding: 3px 6px; border-radius: 5px; font-weight: 900; z-index: 10; color: #fff; text-transform: uppercase; }
         
-        /* 🛡️ SIDEBAR & GESTURE */
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); opacity: 0; pointer-events: none; transition: 0.4s; z-index: 2500; }
-        .overlay.active { opacity: 1; pointer-events: auto; }
-        .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100%; background: #080808; transform: translateX(-100%); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 3000; border-right: 1px solid var(--border); display: flex; flex-direction: column; touch-action: none; }
-        .sidebar.active { transform: translateX(0); }
-
-        /* 🛡️ GALAXY & INDICATOR */
-        .icon-row { display: flex; gap: 20px; padding: 10px 20px 25px; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x mandatory; position: relative; }
-        .icon-row::-webkit-scrollbar { display: none; }
-        .game-node { min-width: 82px; display: flex; flex-direction: column; align-items: center; scroll-snap-align: center; cursor: pointer; position: relative; }
-        .nexa-frame { width: 74px; height: 74px; border-radius: var(--radius); background: var(--card); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden; transition: 0.3s; }
-        .game-node.active .nexa-frame { border-color: var(--cyan); box-shadow: 0 0 20px rgba(0,242,255,0.3); transform: translateY(-5px); }
-        .indicator-wrap { position: absolute; bottom: 12px; height: 3px; background: var(--cyan); border-radius: 10px; box-shadow: 0 0 10px var(--cyan); transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); pointer-events: none; }
+        /* 🎨 DYNAMIC BADGE COLORS */
+        .b-trending { background: #ff3b3b; box-shadow: 0 0 10px #ff3b3b; }
+        .b-hot { background: #ff9800; color: #000; box-shadow: 0 0 10px #ff9800; }
+        .b-new { background: #2196f3; box-shadow: 0 0 10px #2196f3; }
 
         /* 🛡️ BOTTOM NAV */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: var(--nav-h); background: rgba(5,5,5,0.95); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid var(--border); z-index: 2000; padding-bottom: 12px; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #444; cursor: pointer; transition: 0.3s; }
-        .nav-item svg { width: 22px; height: 22px; fill: currentColor; }
-        .nav-item.active { color: var(--cyan); transform: translateY(-3px); }
+        .b-nav { position: fixed; bottom: 0; width: 100%; height: var(--nav-h); background: rgba(5,5,5,0.95); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid var(--border); z-index: 4000; padding-bottom: 12px; }
+        .n-btn { color: #444; text-align: center; font-size: 9px; font-weight: 800; cursor: pointer; }
+        .n-btn.active { color: var(--cyan); transform: translateY(-3px); }
     </style>
 </head>
 <body>
 
-<div id="nexa-overlay" class="overlay"></div>
-<aside id="nexa-sidebar" class="sidebar">
-    <div style="padding: 110px 24px 30px; border-bottom: 1px solid var(--border);">
-        <div style="width:55px; height:55px; background:#111; border-radius:50%; border:2px solid var(--cyan); display:flex; align-items:center; justify-content:center; color:var(--cyan); font-size:24px;">👤</div>
-        <div style="margin-top:15px; font-weight:800; font-size:18px;">GUEST USER</div>
+<div id="s-overlay">
+    <div class="s-header">
+        <svg onclick="toggleS()" viewBox="0 0 24 24" style="width:24px; fill:var(--cyan);"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        <div class="s-box">
+            <input type="text" id="liveS" placeholder="Search games...">
+            <span id="clearBtn" class="clear-s" onclick="clearS()">✖</span>
+        </div>
     </div>
-</aside>
-
-<div id="search-overlay">
-    <div class="search-input-box">
-        <input type="text" id="liveSearch" placeholder="Type game name...">
-        <span onclick="toggleSearch()" style="color:var(--cyan); font-weight:800; cursor:pointer;">CLOSE</span>
-    </div>
-    <div id="searchResults" style="margin-top:20px; display:grid; gap:15px;"></div>
+    <div id="resArea" style="display:grid; gap:12px; padding-bottom: 50px;"></div>
 </div>
 
 <header>
-    <div class="menu-btn" id="menuBtn"><span></span><span></span><span></span></div>
-    <div style="font-family:var(--font-brand); font-size:16px; letter-spacing:2px;">NEXA <span style="color:var(--cyan); font-weight:400;">VAULT</span></div>
-    <div onclick="toggleSearch()" style="cursor:pointer; opacity:0.6;"><svg viewBox="0 0 24 24" style="width:24px; fill:#fff;"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></div>
+    <div style="width:40px;"><svg viewBox="0 0 24 24" style="width:24px; fill:#fff;"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></div>
+    <div class="h-center">
+        <div class="logo-box"><img src="assets/logo.png" onerror="this.parentElement.style.background='var(--cyan)'"></div>
+        <div style="font-family:var(--font-brand); font-size:14px; letter-spacing:1.5px;">NEXA <span style="color:var(--cyan); font-weight:400;">VAULT</span></div>
+    </div>
+    <div style="width:40px; text-align:right;" onclick="toggleS()"><svg viewBox="0 0 24 24" style="width:22px; fill:#fff; opacity:0.6;"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></div>
 </header>
 
-<main id="home-page" class="page active">
-    <div style="margin: 15px; height: 160px; border-radius: 22px; overflow: hidden; border: 1px solid var(--border);">
-        <img src="assets/banner1.jpg" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://via.placeholder.com/400x160/0d0d0d/00f2ff?text=NEXA+PROMO'">
+<main id="home-p" class="page active">
+    <div class="slider-view" id="sMain">
+        <div class="slide"><img src="assets/banner1.jpg" onerror="this.src='https://via.placeholder.com/400x160/0d0d0d/00f2ff?text=DEAL+1'"></div>
+        <div class="slide"><img src="assets/banner2.jpg" onerror="this.src='https://via.placeholder.com/400x160/0d0d0d/00f2ff?text=NEW+DEAL'"></div>
     </div>
-    <div style="position:relative;">
-        <div class="icon-row" id="gameRow"></div>
-        <div class="indicator-wrap" id="nexaIndicator"></div>
-    </div>
-    <div id="product-area" style="padding: 0 20px;"></div>
+    <div class="dots" id="dBox"></div>
+
+    <div class="galaxy" id="gBox"></div>
+    <div id="pBox" style="padding:0 15px; min-height:300px;"></div>
 </main>
 
-<nav class="bottom-nav">
-    <div class="nav-item active" onclick="switchPage('home', this)"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>HOME</span></div>
-    <div class="nav-item" onclick="toggleSearch()"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg><span>SEARCH</span></div>
-    <div class="nav-item" onclick="switchPage('profile', this)"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>PROFILE</span></div>
+<main id="profile-p" class="page">
+    <div style="padding:40px 20px; text-align:center;">
+        <div style="width:80px; height:80px; background:#111; border-radius:50%; border:2px solid var(--cyan); margin:0 auto; display:flex; align-items:center; justify-content:center; color:var(--cyan); font-size:32px;">👤</div>
+        <h2 style="margin-top:20px;">NEXA GUEST</h2>
+        <p style="color:#444; font-weight:800; font-size:12px;">LOGIN REQUIRED FOR FULL ACCESS</p>
+        <button style="width:100%; background:var(--cyan); color:#000; border:none; padding:15px; border-radius:12px; margin-top:30px; font-weight:900;">GO TO FIREBASE LOGIN</button>
+    </div>
+</main>
+
+<nav class="b-nav">
+    <div class="n-btn active" onclick="switchN('home',this)"><svg viewBox="0 0 24 24" style="width:22px; fill:currentColor;"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><div>HOME</div></div>
+    <div class="n-btn" onclick="toggleS()"><svg viewBox="0 0 24 24" style="width:22px; fill:currentColor;"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg><div>SEARCH</div></div>
+    <div class="n-btn" onclick="switchN('profile',this)"><svg viewBox="0 0 24 24" style="width:22px; fill:currentColor;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><div>PROFILE</div></div>
 </nav>
 
 <script src="config.js"></script>
 <script src="products.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    const gameRow = document.getElementById('gameRow');
-    const indicator = document.getElementById('nexaIndicator');
-    const sidebar = document.getElementById('nexa-sidebar');
-    const overlay = document.getElementById('nexa-overlay');
+    const games = (typeof GAME_NAMES !== 'undefined') ? GAME_NAMES : {'ff':{name:'Free Fire',tag:'TRENDING'},'bgmi':{name:'BGMI',tag:'HOT'},'cod':{name:'COD Mobile',tag:'NEW'}};
+    const gBox = document.getElementById('gBox'), sMain = document.getElementById('sMain'), dBox = document.getElementById('dBox');
 
-    // 1. SIDEBAR & SWIPE (Gupt Physics Fix)
-    const toggleSidebar = () => {
-        document.getElementById('menuBtn').classList.toggle('active');
-        sidebar.classList.toggle('active');
-        overlay.classList.toggle('active');
+    // 🛡️ POINT #3: MULTI-BADGE RENDER
+    gBox.innerHTML = Object.keys(games).map(id => {
+        const tag = games[id].tag;
+        const bClass = tag === 'TRENDING' ? 'b-trending' : tag === 'HOT' ? 'b-hot' : 'b-new';
+        return `
+        <div class="g-item" id="g-${id}" onclick="selG('${id}',this)">
+            ${tag ? `<span class="badge ${bClass}">${tag}</span>` : ''}
+            <div class="frame-74"><img src="assets/${id}.png" style="width:100%; padding:10px;" onerror="this.src='assets/logo.png'"></div>
+            <div style="font-size:9px; margin-top:8px; color:#555; font-weight:800; text-transform:uppercase;">${games[id].name}</div>
+        </div>`;
+    }).join("");
+
+    // 🛡️ POINT #1: SMART AUTO-SLIDE & DOT SYNC
+    const count = sMain.children.length;
+    dBox.innerHTML = Array.from({length:count}).map((_,i)=>`<div class="dot ${i===0?'active':''}"></div>`).join("");
+    let curS = 0, isInterrupted = false;
+
+    const runS = () => {
+        if(isInterrupted) return;
+        curS = (curS + 1) % count;
+        sMain.scrollTo({left: sMain.offsetWidth * curS, behavior: 'smooth'});
     };
-    document.getElementById('menuBtn').onclick = toggleSidebar;
-    overlay.onclick = toggleSidebar;
+    let autoInterval = setInterval(runS, 4000);
 
-    let sX = 0;
-    sidebar.ontouchstart = (e) => { sX = e.touches[0].clientX; sidebar.style.transition = "none"; };
-    sidebar.ontouchmove = (e) => { let d = e.touches[0].clientX - sX; if(d < 0) sidebar.style.transform = `translateX(${d}px)`; };
-    sidebar.ontouchend = (e) => { sidebar.style.transition = "0.4s"; sidebar.style.transform = ""; if(sX - e.changedTouches[0].clientX > 80) toggleSidebar(); };
-
-    // 2. GALAXY RENDER (From config.js)
-    const games = (typeof GAME_NAMES !== 'undefined') ? GAME_NAMES : {'ff':{name:'Free Fire'},'bgmi':{name:'BGMI'}};
-    gameRow.innerHTML = Object.keys(games).map(id => `
-        <div class="game-node" id="node-${id}" onclick="nexaActivate('${id}', this)">
-            <div class="nexa-frame"><img src="assets/${id}.png" onerror="this.src='assets/logo.png'"></div>
-            <div style="font-size:10px; margin-top:10px; color:#555; font-weight:800; text-transform:uppercase;">${games[id].name}</div>
-        </div>
-    `).join("");
-
-    window.nexaActivate = (id, el) => {
-        document.querySelectorAll('.game-node').forEach(n => n.classList.remove('active'));
-        el.classList.add('active');
-        const r = el.getBoundingClientRect();
-        indicator.style.width = r.width + "px";
-        indicator.style.transform = `translateX(${el.offsetLeft - gameRow.scrollLeft}px)`;
-        el.scrollIntoView({ behavior: "smooth", inline: "center" });
-        loadProducts(id);
+    sMain.onscroll = () => {
+        const idx = Math.round(sMain.scrollLeft / sMain.offsetWidth);
+        document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active', i===idx));
     };
+    sMain.addEventListener('touchstart', () => { isInterrupted = true; clearInterval(autoInterval); });
 
-    // 3. SEARCH ENGINE (Real Filter)
-    window.toggleSearch = () => {
-        const s = document.getElementById('search-overlay');
-        s.style.display = s.style.display === 'block' ? 'none' : 'block';
-        if(s.style.display === 'block') document.getElementById('liveSearch').focus();
+    // 🛡️ POINT #2: SEARCH CLEAR (X) LOGIC
+    window.toggleS = () => {
+        const o = document.getElementById('s-overlay');
+        o.style.display = o.style.display === 'block' ? 'none' : 'block';
+        if(o.style.display==='block') document.getElementById('liveS').focus();
     };
-
-    document.getElementById('liveSearch').oninput = (e) => {
-        const v = e.target.value.toLowerCase();
-        const res = document.getElementById('searchResults');
+    window.clearS = () => { document.getElementById('liveS').value = ""; document.getElementById('resArea').innerHTML = ""; document.getElementById('clearBtn').style.display = "none"; };
+    
+    document.getElementById('liveS').oninput = (e) => {
+        const v = e.target.value.toLowerCase(), res = document.getElementById('resArea'), clear = document.getElementById('clearBtn');
+        clear.style.display = v ? "block" : "none";
         if(!v) { res.innerHTML = ""; return; }
         const matched = Object.keys(games).filter(id => games[id].name.toLowerCase().includes(v));
-        res.innerHTML = matched.map(id => `<div onclick="nexaActivate('${id}', document.getElementById('node-${id}')); toggleSearch();" style="background:var(--card); padding:15px; border-radius:12px; border:1px solid var(--border);">${games[id].name}</div>`).join("");
+        res.innerHTML = matched.map(id => `<div onclick="selG('${id}',document.getElementById('g-${id}')); toggleS();" style="background:var(--card); padding:15px; border-radius:12px; border:1px solid var(--border);">${games[id].name}</div>`).join("");
     };
 
-    const loadProducts = (id) => {
-        const pArea = document.getElementById('product-area');
-        const data = (typeof PRODUCTS !== 'undefined') ? PRODUCTS.filter(p => p.game === id) : [];
-        pArea.innerHTML = data.map(p => `<div style="background:var(--card); padding:20px; border-radius:20px; border:1px solid var(--border); margin-bottom:15px;"><div style="font-weight:800;">${p.name}</div><div style="color:var(--cyan); font-weight:900; font-size:18px; margin-top:5px;">₹${p.price}</div><button style="width:100%; padding:12px; background:#fff; border:none; border-radius:12px; font-weight:900; margin-top:15px;">BUY NOW</button></div>`).join("");
+    // 🛡️ POINT #4: REAL PAGE SWITCHING
+    window.switchN = (pid, el) => {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.n-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(pid + '-p').classList.add('active');
+        el.classList.add('active');
     };
 
-    setTimeout(() => { document.querySelector('.game-node').click(); }, 500);
+    window.selG = (id, el) => {
+        document.querySelectorAll('.g-item').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
+        el.scrollIntoView({behavior:'smooth', inline:'center'});
+        const pData = (typeof PRODUCTS !== 'undefined') ? PRODUCTS.filter(p => p.game === id) : [];
+        document.getElementById('pBox').innerHTML = pData.length ? pData.map(p => `
+            <div style="background:var(--card); padding:20px; border-radius:22px; border:1px solid var(--border); margin-bottom:15px; animation:pageFade .3s;">
+                <div style="font-weight:800; font-size:14px;">${p.name}</div>
+                <div style="color:var(--cyan); font-weight:900; font-size:18px; margin-top:5px;">₹${p.price}</div>
+                <button style="width:100%; padding:14px; background:#fff; border:none; border-radius:12px; font-weight:900; margin-top:15px;">ORDER NOW</button>
+            </div>`).join("") : `<div style="text-align:center; padding:40px; color:#333; font-weight:800;">No Products Available</div>`;
+    };
+
+    setTimeout(() => document.querySelector('.g-item').click(), 500);
 });
-
-window.switchPage = (pid, el) => {
-    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-    el.classList.add('active');
-};
 </script>
 </body>
 </html>
