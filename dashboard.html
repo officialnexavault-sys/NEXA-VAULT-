@@ -1,305 +1,169 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nexa Vault Cosmic</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nexa Vault v25.0 | Cosmic Slayer</title>
+    <style>
+        :root { --bg:#050505; --card:#0d0d0d; --cyan:#00f2ff; --radius:24px; }
+        * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+        body { background:var(--bg); color:#fff; font-family:sans-serif; overflow-x:hidden; }
 
-<style>
-:root{
---bg:#050505;
---card:#0d0d0d;
---cyan:#00f2ff;
---radius:22px;
-}
+        /* 🛡️ HEADER & 3-LAYER MENU */
+        #header { display:flex; align-items:center; justify-content:space-between; padding:0 20px; height:90px; border-bottom:1px solid #111; position:sticky; top:0; background:var(--bg); z-index:1000; }
+        .menu-btn { width:25px; height:18px; display:flex; flex-direction:column; justify-content:space-between; cursor:pointer; z-index:2100; }
+        .menu-btn span { height:2px; background:#fff; border-radius:10px; transition:.4s; }
+        .menu-btn.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+        .menu-btn.active span:nth-child(2) { opacity:0; }
+        .menu-btn.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
-/* BASE */
-body{
-margin:0;
-background:var(--bg);
-color:#fff;
-font-family:sans-serif;
-overflow-x:hidden;
-}
+        .logo { height:45px; border-radius:50%; border:1px solid rgba(255,255,255,0.1); }
+        .brand { height:55px; }
 
-/* HEADER */
-#header{
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:0 15px;
-height:85px;
-border-bottom:1px solid #111;
-}
+        /* 🛡️ SEARCH (COSMIC STYLE) */
+        .search { margin:15px; background:#111; border-radius:14px; padding:12px; display:flex; align-items:center; border:1px solid #1a1a1a; }
+        .search input { background:none; border:none; color:#fff; outline:none; flex:1; margin-left:10px; }
+        .icon-search { width:16px; height:16px; border:2px solid var(--cyan); border-radius:50%; position:relative; }
+        .icon-search::after { content:""; position:absolute; width:6px; height:2px; background:var(--cyan); bottom:-4px; right:-4px; transform:rotate(45deg); }
 
-/* MENU */
-.menu{
-width:25px;
-height:16px;
-display:flex;
-flex-direction:column;
-justify-content:space-between;
-cursor:pointer;
-}
-.menu span{
-height:2px;
-background:#fff;
-border-radius:10px;
-transition:.3s;
-}
+        /* 🛡️ BANNER & PROGRESS */
+        .banner { margin:10px; height:160px; border-radius:20px; overflow:hidden; position:relative; border:1px solid #1a1a1a; }
+        .banner img { width:100%; height:100%; object-fit:cover; }
+        .progress { position:absolute; bottom:0; left:0; height:3px; background:var(--cyan); box-shadow:0 0 10px var(--cyan); animation:load 4s linear infinite; }
+        @keyframes load { from{width:0%} to{width:100%} }
 
-/* LOGO */
-.logo{
-height:45px;
-border-radius:50%;
-}
+        /* 🛡️ GAMES & FRAME LOCK */
+        .games { display:flex; gap:18px; padding:20px; overflow-x:auto; scrollbar-width:none; scroll-snap-type:x mandatory; }
+        .game { text-align:center; scroll-snap-align:center; min-width:85px; cursor:pointer; transition: 0.3s; position:relative; }
+        .frame { 
+            width:74px !important; height:74px !important; border-radius:var(--radius) !important; 
+            background:var(--card); border:2px solid #1a1a1a; display:flex; align-items:center; 
+            justify-content:center; overflow:hidden; position:relative; transition:0.3s;
+        }
+        .frame img { width:100% !important; height:100% !important; object-fit:contain !important; padding:8px; }
 
-/* BRAND */
-.brand{
-height:50px;
-}
+        /* ACTIVE & RIPPLE */
+        .game.active { transform: translateY(-8px); }
+        .game.active .frame { border-color:var(--cyan); box-shadow:0 0 20px rgba(0,242,255,0.3); }
+        .frame::after { content:""; position:absolute; width:0; height:0; background:rgba(0,242,255,0.3); border-radius:50%; top:50%; left:50%; transform:translate(-50%,-50%); }
+        .frame.ripple::after { animation:ripple .5s; }
+        @keyframes ripple { to { width:150px; height:150px; opacity:0; } }
 
-/* SEARCH */
-.search{
-margin:15px;
-background:#111;
-border-radius:14px;
-padding:12px;
-display:flex;
-align-items:center;
-border:1px solid #1a1a1a;
-}
+        /* 🛡️ BADGE SYSTEM */
+        .badge { position:absolute; top:-5px; right:-5px; font-size:8px; padding:3px 8px; border-radius:6px; font-weight:900; z-index:10; color:#fff; text-transform:uppercase; }
+        .trending { background:#ff3b3b; }
+        .hot { background:#ff9800; color:#000; }
+        .new { background:#2196f3; }
 
-.search input{
-background:none;
-border:none;
-color:#fff;
-outline:none;
-flex:1;
-}
+        /* 🛡️ SIDEBAR & NAV */
+        #sidebar { position:fixed; top:0; left:0; width:280px; height:100%; background:#080808; transform:translateX(-100%); transition:0.4s cubic-bezier(0.2, 0.8, 0.2, 1); z-index:2000; border-right:1px solid #111; padding:100px 20px; }
+        #sidebar.active { transform:translateX(0); }
+        #overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(5px); opacity:0; pointer-events:none; transition:0.4s; z-index:1500; }
+        #overlay.active { opacity:1; pointer-events:auto; }
 
-/* ICON SEARCH */
-.icon-search{
-width:18px;
-height:18px;
-border:2px solid #888;
-border-radius:50%;
-position:relative;
-}
-.icon-search::after{
-content:"";
-position:absolute;
-width:7px;
-height:2px;
-background:#888;
-bottom:-4px;
-right:-4px;
-transform:rotate(45deg);
-}
-
-/* BANNER */
-.banner{
-margin:10px;
-height:150px;
-border-radius:18px;
-overflow:hidden;
-position:relative;
-}
-.banner img{
-width:100%;
-height:100%;
-object-fit:cover;
-}
-
-/* PROGRESS */
-.progress{
-position:absolute;
-bottom:0;
-left:0;
-height:3px;
-background:var(--cyan);
-animation:load 4s linear infinite;
-}
-@keyframes load{
-from{width:0}
-to{width:100%}
-}
-
-/* GAMES */
-.games{
-display:flex;
-gap:15px;
-padding:15px;
-overflow-x:auto;
-scroll-snap-type:x mandatory;
-}
-
-.game{
-scroll-snap-align:center;
-text-align:center;
-cursor:pointer;
-}
-
-/* FRAME LOCK */
-.frame{
-width:72px;
-height:72px;
-border-radius:var(--radius);
-background:var(--card);
-display:flex;
-align-items:center;
-justify-content:center;
-overflow:hidden;
-transition:.3s;
-position:relative;
-}
-.frame img{
-width:100%;
-height:100%;
-object-fit:cover;
-}
-
-/* ACTIVE */
-.game.active .frame{
-box-shadow:0 0 15px var(--cyan);
-transform:translateY(-5px);
-}
-
-/* RIPPLE */
-.frame::after{
-content:"";
-position:absolute;
-width:0;
-height:0;
-background:rgba(0,242,255,0.3);
-border-radius:50%;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-}
-.frame.ripple::after{
-animation:ripple .5s;
-}
-@keyframes ripple{
-to{width:120px;height:120px;opacity:0;}
-}
-
-/* BADGE */
-.badge{
-position:absolute;
-top:-5px;
-right:-5px;
-font-size:8px;
-padding:3px 6px;
-border-radius:5px;
-font-weight:900;
-}
-.trending{background:#ff3b3b;}
-.hot{background:#ff9800;color:#000;}
-.new{background:#2196f3;}
-.popular{background:#9c27b0;}
-.classic{background:gold;color:#000;}
-
-/* BOTTOM NAV */
-.bottom{
-position:fixed;
-bottom:0;
-width:100%;
-height:65px;
-background:#000;
-display:flex;
-justify-content:space-around;
-align-items:center;
-border-top:1px solid #111;
-}
-
-.nav{
-text-align:center;
-color:#555;
-font-size:10px;
-}
-.nav.active{
-color:var(--cyan);
-}
-</style>
+        .bottom { position:fixed; bottom:0; width:100%; height:70px; background:#000; display:flex; justify-content:space-around; align-items:center; border-top:1px solid #111; z-index:1000; }
+        .nav { text-align:center; color:#444; font-size:10px; font-weight:800; }
+        .nav.active { color:var(--cyan); text-shadow:0 0 10px var(--cyan); }
+    </style>
 </head>
-
 <body>
 
-<!-- HEADER -->
-<div id="header">
-<div class="menu"><span></span><span></span><span></span></div>
-<img src="assets/logo.png" class="logo">
-<img src="assets/nexa-vault-brand.png" class="brand">
+<div id="overlay"></div>
+<div id="sidebar">
+    <div style="color:var(--cyan); font-weight:900; font-size:20px;">NEXA SYSTEM</div>
+    <p style="color:#444; margin-top:20px;">v25.0 Cosmic Slayer</p>
 </div>
 
-<!-- SEARCH -->
-<div class="search">
-<div class="icon-search"></div>
-<input placeholder="Search games...">
-</div>
+<header id="header">
+    <div class="menu-btn" id="menuBtn"><span></span><span></span><span></span></div>
+    <img src="assets/logo.png" class="logo">
+    <img src="assets/nexa-vault-brand.png" class="brand">
+    <div style="width:25px;"></div>
+</header>
 
-<!-- BANNER -->
+<div class="search"><div class="icon-search"></div><input placeholder="Search games..."></div>
+
 <div class="banner">
-<img id="bannerImg" src="assets/banner1.jpg" onerror="this.src='https://via.placeholder.com/400x150'">
-<div class="progress"></div>
+    <img id="bannerImg" src="assets/banner1.jpg" onerror="this.src='https://via.placeholder.com/400x150/0d0d0d/00f2ff?text=NEXA+VAULT'">
+    <div class="progress"></div>
 </div>
 
-<!-- GAMES -->
-<div class="games" id="games"></div>
+<div class="games" id="game_box"></div>
+<div id="store" style="padding:0 20px 100px 20px;"></div>
 
-<!-- NAV -->
 <div class="bottom">
-<div class="nav active">Home</div>
-<div class="nav">Search</div>
-<div class="nav">Profile</div>
+    <div class="nav active">HOME</div>
+    <div class="nav">SEARCH</div>
+    <div class="nav">PROFILE</div>
 </div>
 
+<script src="config.js"></script>
+<script src="products.js"></script>
 <script>
+const NexaEngine = {
+    init() {
+        this.render();
+        this.events();
+        this.banner();
+        setTimeout(() => document.querySelector('.game').click(), 300);
+    },
+    render() {
+        const box = document.getElementById("game_box");
+        if(typeof GAME_NAMES === 'undefined') return;
+        box.innerHTML = Object.keys(GAME_NAMES).map(id => {
+            const g = GAME_NAMES[id];
+            return `
+            <div class="game" onclick="selectGame('${id}',this)">
+                <div class="frame">
+                    ${g.tag?`<span class="badge ${g.tag.toLowerCase()}">${g.tag}</span>`:""}
+                    <img src="assets/${id}.png" onerror="this.src='assets/logo.png'">
+                </div>
+                <div style="font-size:10px; margin-top:10px; color:#555; font-weight:800;">${g.name}</div>
+            </div>`;
+        }).join("");
+    },
+    events() {
+        const btn = document.getElementById('menuBtn');
+        const side = document.getElementById('sidebar');
+        const over = document.getElementById('overlay');
+        const toggle = () => { btn.classList.toggle('active'); side.classList.toggle('active'); over.classList.toggle('active'); };
+        btn.onclick = toggle; over.onclick = toggle;
 
-const games=[
-{name:"Free Fire",img:"assets/ff.png",tag:"trending"},
-{name:"BGMI",img:"assets/bgmi.png",tag:"hot"},
-{name:"COD",img:"assets/cod.png",tag:"new"},
-{name:"Clash",img:"assets/clash.png",tag:"popular"},
-{name:"Mini",img:"assets/mini.png",tag:"classic"},
-];
+        document.addEventListener("click", e => {
+            let f = e.target.closest(".frame");
+            if(!f) return;
+            f.classList.remove("ripple");
+            void f.offsetWidth;
+            f.classList.add("ripple");
+        });
+    },
+    banner() {
+        const banners = ["assets/banner1.jpg","assets/banner2.jpg"];
+        let i = 0;
+        setInterval(() => {
+            i = (i+1)%banners.length;
+            document.getElementById("bannerImg").src = banners[i];
+        }, 4000);
+    }
+};
 
-const box=document.getElementById("games");
+function selectGame(id, el) {
+    document.querySelectorAll(".game").forEach(g => g.classList.remove("active"));
+    el.classList.add("active");
+    el.scrollIntoView({ behavior: "smooth", inline: "center" });
 
-box.innerHTML=games.map((g,i)=>`
-<div class="game" onclick="selectGame(${i},this)">
-<div class="frame">
-${g.tag?`<span class="badge ${g.tag}">${g.tag}</span>`:""}
-<img src="${g.img}" onerror="this.src='assets/logo.png'">
-</div>
-<div>${g.name}</div>
-</div>
-`).join("");
-
-function selectGame(i,el){
-document.querySelectorAll(".game").forEach(g=>g.classList.remove("active"));
-el.classList.add("active");
+    const data = PRODUCTS.filter(p => p.game === id);
+    document.getElementById("store").innerHTML = data.map(p => `
+        <div style="background:var(--card); padding:20px; border-radius:20px; border:1px solid #1a1a1a; margin-bottom:15px; animation:ripple .3s;">
+            <div style="font-weight:800;">${p.name}</div>
+            <div style="color:var(--cyan); font-weight:900; font-size:18px; margin-top:5px;">₹${p.price}</div>
+            <button style="width:100%; padding:14px; border:none; border-radius:12px; margin-top:12px; background:#fff; font-weight:900;">BUY NOW</button>
+        </div>
+    `).join("");
 }
 
-/* RIPPLE */
-document.addEventListener("click",e=>{
-let f=e.target.closest(".frame");
-if(!f)return;
-f.classList.remove("ripple");
-void f.offsetWidth;
-f.classList.add("ripple");
-});
-
-/* BANNER */
-const banners=["assets/banner1.jpg","assets/banner2.jpg"];
-let i=0;
-setInterval(()=>{
-i=(i+1)%banners.length;
-document.getElementById("bannerImg").src=banners[i];
-},4000);
-
+document.addEventListener("DOMContentLoaded", () => NexaEngine.init());
 </script>
-
 </body>
 </html>
+
