@@ -3,262 +3,293 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nexa Vault v2</title>
+<title>Nexa Vault Cosmic</title>
 
 <style>
-:root {
-  --bg:#050505;
-  --card:#0d0d0d;
-  --cyan:#00f2ff;
+:root{
+--bg:#050505;
+--card:#0d0d0d;
+--cyan:#00f2ff;
+--radius:22px;
 }
 
+/* BASE */
 body{
-  margin:0;
-  background:var(--bg);
-  color:#fff;
-  font-family:sans-serif;
-  overflow-x:hidden; /* FIX */
+margin:0;
+background:var(--bg);
+color:#fff;
+font-family:sans-serif;
+overflow-x:hidden;
 }
 
 /* HEADER */
 #header{
-  height:80px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-bottom:1px solid #111;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 15px;
+height:85px;
+border-bottom:1px solid #111;
 }
 
+/* MENU */
+.menu{
+width:25px;
+height:16px;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+cursor:pointer;
+}
+.menu span{
+height:2px;
+background:#fff;
+border-radius:10px;
+transition:.3s;
+}
+
+/* LOGO */
 .logo{
-  height:50px;
+height:45px;
+border-radius:50%;
+}
+
+/* BRAND */
+.brand{
+height:50px;
 }
 
 /* SEARCH */
-.search-bar{
-  margin:15px;
-  background:#111;
-  border-radius:14px;
-  padding:12px;
-  display:flex;
-  align-items:center;
+.search{
+margin:15px;
+background:#111;
+border-radius:14px;
+padding:12px;
+display:flex;
+align-items:center;
+border:1px solid #1a1a1a;
 }
 
-.search-bar input{
-  background:none;
-  border:none;
-  color:#fff;
-  outline:none;
-  flex:1;
+.search input{
+background:none;
+border:none;
+color:#fff;
+outline:none;
+flex:1;
+}
+
+/* ICON SEARCH */
+.icon-search{
+width:18px;
+height:18px;
+border:2px solid #888;
+border-radius:50%;
+position:relative;
+}
+.icon-search::after{
+content:"";
+position:absolute;
+width:7px;
+height:2px;
+background:#888;
+bottom:-4px;
+right:-4px;
+transform:rotate(45deg);
 }
 
 /* BANNER */
 .banner{
-  height:150px;
-  margin:10px;
-  border-radius:18px;
-  overflow:hidden;
-  position:relative;
+margin:10px;
+height:150px;
+border-radius:18px;
+overflow:hidden;
+position:relative;
 }
-
 .banner img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
+width:100%;
+height:100%;
+object-fit:cover;
 }
 
-/* PROGRESS BAR */
+/* PROGRESS */
 .progress{
-  position:absolute;
-  bottom:0;
-  left:0;
-  height:3px;
-  background:var(--cyan);
-  width:0%;
-  animation:load 4s linear infinite;
+position:absolute;
+bottom:0;
+left:0;
+height:3px;
+background:var(--cyan);
+animation:load 4s linear infinite;
 }
-
 @keyframes load{
-  from{width:0%}
-  to{width:100%}
+from{width:0}
+to{width:100%}
 }
 
 /* GAMES */
 .games{
-  display:flex;
-  gap:15px;
-  padding:15px;
-  overflow-x:auto;
+display:flex;
+gap:15px;
+padding:15px;
+overflow-x:auto;
+scroll-snap-type:x mandatory;
 }
 
 .game{
-  text-align:center;
+scroll-snap-align:center;
+text-align:center;
+cursor:pointer;
 }
 
+/* FRAME LOCK */
 .frame{
-  width:70px;
-  height:70px;
-  border-radius:20px;
-  background:#111;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
-  transition:.2s;
+width:72px;
+height:72px;
+border-radius:var(--radius);
+background:var(--card);
+display:flex;
+align-items:center;
+justify-content:center;
+overflow:hidden;
+transition:.3s;
+position:relative;
 }
-
 .frame img{
-  width:100%;
-  height:100%;
-  object-fit:cover; /* FIX */
+width:100%;
+height:100%;
+object-fit:cover;
 }
 
 /* ACTIVE */
 .game.active .frame{
-  box-shadow:0 0 15px var(--cyan);
-  transform:translateY(-5px);
+box-shadow:0 0 15px var(--cyan);
+transform:translateY(-5px);
 }
 
-.game:active .frame{
-  transform:scale(.9);
+/* RIPPLE */
+.frame::after{
+content:"";
+position:absolute;
+width:0;
+height:0;
+background:rgba(0,242,255,0.3);
+border-radius:50%;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+}
+.frame.ripple::after{
+animation:ripple .5s;
+}
+@keyframes ripple{
+to{width:120px;height:120px;opacity:0;}
 }
 
-/* BOTTOM NAV (SVG READY) */
-.bottom-nav{
-  position:fixed;
-  bottom:0;
-  width:100%;
-  height:65px;
-  background:#000;
-  display:flex;
-  justify-content:space-around;
-  align-items:center;
-  border-top:1px solid #111;
+/* BADGE */
+.badge{
+position:absolute;
+top:-5px;
+right:-5px;
+font-size:8px;
+padding:3px 6px;
+border-radius:5px;
+font-weight:900;
+}
+.trending{background:#ff3b3b;}
+.hot{background:#ff9800;color:#000;}
+.new{background:#2196f3;}
+.popular{background:#9c27b0;}
+.classic{background:gold;color:#000;}
+
+/* BOTTOM NAV */
+.bottom{
+position:fixed;
+bottom:0;
+width:100%;
+height:65px;
+background:#000;
+display:flex;
+justify-content:space-around;
+align-items:center;
+border-top:1px solid #111;
 }
 
-.nav-item{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  font-size:10px;
-  color:#444;
+.nav{
+text-align:center;
+color:#555;
+font-size:10px;
 }
-
-.nav-item.active{
-  color:var(--cyan);
+.nav.active{
+color:var(--cyan);
 }
-
-/* PAGES */
-.page{ display:none; }
-.page.active{ display:block; }
 </style>
 </head>
 
 <body>
 
-<!-- HOME -->
-<div id="home" class="page active">
-
-<header id="header">
-<img src="assets/nexa-vault-brand.png" class="logo">
-</header>
-
-<div class="search-bar" onclick="openSearch()">
-🔍 <input placeholder="Search..." disabled>
-</div>
-
-<div class="banner">
-<img id="bannerImg" src="assets/banner1.jpg">
-<div class="progress"></div>
-</div>
-
-<div class="games" id="gamesBox"></div>
-
-<div id="store"></div>
-
+<!-- HEADER -->
+<div id="header">
+<div class="menu"><span></span><span></span><span></span></div>
+<img src="assets/logo.png" class="logo">
+<img src="assets/nexa-vault-brand.png" class="brand">
 </div>
 
 <!-- SEARCH -->
-<div id="searchPage" class="page">
-<div class="search-bar">
-<input placeholder="Search..." oninput="searchGame(this.value)">
-</div>
-<div id="results"></div>
+<div class="search">
+<div class="icon-search"></div>
+<input placeholder="Search games...">
 </div>
 
-<!-- PROFILE -->
-<div id="profile" class="page">
-<h2 style="padding:20px">Profile 👤</h2>
+<!-- BANNER -->
+<div class="banner">
+<img id="bannerImg" src="assets/banner1.jpg" onerror="this.src='https://via.placeholder.com/400x150'">
+<div class="progress"></div>
 </div>
+
+<!-- GAMES -->
+<div class="games" id="games"></div>
 
 <!-- NAV -->
-<div class="bottom-nav">
-
-<div class="nav-item active" onclick="switchPage('home',this)">
-🏠<span>Home</span>
-</div>
-
-<div class="nav-item" onclick="switchPage('searchPage',this)">
-🔍<span>Search</span>
-</div>
-
-<div class="nav-item" onclick="switchPage('profile',this)">
-👤<span>Profile</span>
-</div>
-
+<div class="bottom">
+<div class="nav active">Home</div>
+<div class="nav">Search</div>
+<div class="nav">Profile</div>
 </div>
 
 <script>
 
-/* PAGE SWITCH */
-function switchPage(id,el){
-document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-document.getElementById(id).classList.add('active');
-
-document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-el.classList.add('active');
-}
-
-/* SEARCH OPEN */
-function openSearch(){
-switchPage('searchPage',document.querySelectorAll('.nav-item')[1]);
-}
-
-/* DATA */
-const games = [
-{name:"Free Fire",img:"assets/ff.png"},
-{name:"BGMI",img:"assets/bgmi.png"},
-{name:"COD",img:"assets/cod.png"}
+const games=[
+{name:"Free Fire",img:"assets/ff.png",tag:"trending"},
+{name:"BGMI",img:"assets/bgmi.png",tag:"hot"},
+{name:"COD",img:"assets/cod.png",tag:"new"},
+{name:"Clash",img:"assets/clash.png",tag:"popular"},
+{name:"Mini",img:"assets/mini.png",tag:"classic"},
 ];
 
-/* RENDER */
-const box = document.getElementById("gamesBox");
-box.innerHTML = games.map((g,i)=>`
+const box=document.getElementById("games");
+
+box.innerHTML=games.map((g,i)=>`
 <div class="game" onclick="selectGame(${i},this)">
 <div class="frame">
-<img src="${g.img}">
+${g.tag?`<span class="badge ${g.tag}">${g.tag}</span>`:""}
+<img src="${g.img}" onerror="this.src='assets/logo.png'">
 </div>
 <div>${g.name}</div>
 </div>
 `).join("");
 
-/* SELECT GAME */
 function selectGame(i,el){
-document.querySelectorAll('.game').forEach(g=>g.classList.remove('active'));
-el.classList.add('active');
-
-document.getElementById("store").innerHTML = `
-<div style="padding:20px">
-<b>${games[i].name}</b><br>
-₹100
-</div>`;
+document.querySelectorAll(".game").forEach(g=>g.classList.remove("active"));
+el.classList.add("active");
 }
 
-/* SEARCH */
-function searchGame(val){
-const res = document.getElementById("results");
-const f = games.filter(g=>g.name.toLowerCase().includes(val.toLowerCase()));
-res.innerHTML = f.map(g=>`<div style="padding:10px">${g.name}</div>`).join("");
-}
+/* RIPPLE */
+document.addEventListener("click",e=>{
+let f=e.target.closest(".frame");
+if(!f)return;
+f.classList.remove("ripple");
+void f.offsetWidth;
+f.classList.add("ripple");
+});
 
 /* BANNER */
 const banners=["assets/banner1.jpg","assets/banner2.jpg"];
